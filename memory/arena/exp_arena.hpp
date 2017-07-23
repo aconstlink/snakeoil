@@ -1,0 +1,237 @@
+//------------------------------------------------------------
+// snakeoil (c) Alexis Constantin Link
+// Distributed under the MIT license
+//------------------------------------------------------------
+#ifndef _SNAKEOIL_MEMORY_ARENA_ARENA_HPP_
+#define _SNAKEOIL_MEMORY_ARENA_ARENA_HPP_
+
+#include "../typedefs.h"
+#include "../memory.h"
+#include <snakeoil/core/macros/move.h>
+
+#include <mutex>
+#include <vector>
+
+namespace so_memory
+{
+    namespace so_experimental
+    {
+        template< typename T >
+        class arena
+        {
+            so_this_typedefs( arena<T> ) ;
+            so_typedefs( T, type ) ;
+
+            struct page
+            {
+                so_this_typedefs( page ) ;
+
+            public:
+
+                page( void_t ) {}
+                page( this_cref_t ) = delete ;
+                page( this_rref_t rhv ) {
+                    so_move_member_ptr( mem_ptr, rhv ) ;
+                    free_elems = rhv.free_elems ;
+                    rhv.free_elems = 0 ;
+
+                    so_move_member_ptr( free_ptr, rhv ) ;
+                    free_pos = rhv.free_pos ;
+                    rhv.free_pos = 0 ;
+                }
+
+                ~page( void_t )
+                {}
+
+            public:
+
+                std::mutex mtx ;
+                size_t free_elems = 0 ;
+                byte_ptr_t mem_ptr = nullptr ;
+                
+                size_t free_pos = 0 ;
+                size_t * free_ptr = nullptr ;
+
+            };
+            so_typedef( page ) ;
+            so_typedefs( std::vector< page_ptr_t >, pages ) ;
+
+        private:
+
+            size_t _prealloc = 100 ;
+
+            std::mutex _mtx ;
+            pages_t _pages ;
+
+        public:
+
+            arena( void_t )
+            {
+                this_t::alloc_page( _prealloc ) ;
+            }
+
+            arena( size_t const prealloc )
+            {
+                _prealloc = prealloc ;
+                this_t::alloc_page( _prealloc ) ;
+            }
+
+            arena( this_cref_t ) = delete ;
+            arena( this_rref_t rhv )
+            {
+                _prealloc = rhv._prealloc ;
+                _pages = std::move( rhv._pages ) ;
+            }
+
+            ~arena( void_t ) 
+            {
+                for( auto * p : _pages )
+                {
+                    so_memory::memory::dealloc( p->mem_ptr ) ;
+                    so_memory::memory::dealloc( p->free_ptr ) ;
+                    so_memory::memory::dealloc( p ) ;
+                }
+            }
+
+        public:
+
+            //**********************************************************************************
+            type_ptr_t alloc( type_rref_t rhv )
+            {
+                page_ptr_t use_ptr = nullptr ;
+
+                // 1. find a page with free memory
+                {
+                    std::lock_guard< std::mutex > lk( _mtx ) ;
+                    for( auto * p : _pages )
+                    {
+                        if( p->free_elems > 0 )
+                        {
+                            use_ptr = p ;
+                            break ;
+                        }
+                    }
+                }
+
+                // 2. if no page is found, allocate a new page
+                if( so_core::is_nullptr( use_ptr ) )
+                {
+                    use_ptr = this_t::alloc_page( _prealloc ) ;
+                }
+
+                size_t index = 0 ;
+
+                // 3. get a free location
+                {
+                    std::lock_guard< std::mutex > lk( use_ptr->mtx ) ;
+                    size_t const free_pos = use_ptr->free_pos++ ;
+                    use_ptr->free_elems-- ;
+
+                    index = use_ptr->free_ptr[ free_pos ] ;
+                }
+
+                size_t const access_loc = index *
+                    ( sizeof( T ) + sizeof( size_t ) + sizeof( page_ptr_t ) ) ;
+    
+                // 4. shift pointer for info storage
+                byte_ptr_t ptr_start = use_ptr->mem_ptr + access_loc ;
+
+                byte_ptr_t ptr_return = ptr_start + 
+                    sizeof( size_t ) + sizeof( page_ptr_t ) ;
+
+                // 5. store page pointer
+                {
+                    page_ptr_t * tmp_ptr = ( page_ptr_t * ) ptr_start ;
+                    *tmp_ptr = use_ptr ;
+                }
+
+                // 6. store free pos
+                {
+                    size_t * tmp_ptr = ( size_t * ) (ptr_start+sizeof(page_ptr_t)) ;
+                    *tmp_ptr = index ;
+                }
+
+
+                return new( ptr_return ) T( std::move( rhv ) ) ;
+            }
+
+            //**********************************************************************************
+            type_ptr_t alloc( void_t )
+            {
+                return this_t::alloc( type_t() ) ;
+            }
+
+            //**********************************************************************************
+            void_t dealloc( type_ptr_t ptr )
+            {
+                byte_ptr_t ptr_start = byte_ptr_t(ptr) - sizeof( size_t ) - sizeof(page_ptr_t) ;
+
+                page_ptr_t page_ptr = *(( page_ptr_t * ) ptr_start) ;
+                size_t const index = *( ( size_t* ) ( ptr_start + sizeof( page_ptr_t ) ) ) ;
+
+                ptr->~type_t() ;
+
+                // return memory
+                {
+                    std::lock_guard< std::mutex > lk( page_ptr->mtx ) ;
+                    page_ptr->free_elems++ ;
+                    page_ptr->free_pos = --page_ptr->free_pos ;
+                    page_ptr->free_ptr[ page_ptr->free_pos ] = index ;
+                }
+            }
+
+        private:
+
+            //**********************************************************************************
+            page_ptr_t alloc_page( size_t const prealloc )
+            {
+                page_t p ;
+
+                // 1. the memory block itself
+                {
+                    size_t const sib = prealloc * sizeof( T ) ;
+                    size_t const sibx = prealloc * ( sizeof( size_t ) << 1 ) ;
+
+                    byte_ptr_t raw_mem = so_memory::memory::alloc_raw<byte_t>( sib + sibx,
+                        "[so_memory::arena] : raw memory data" ) ;
+
+                    p.mem_ptr = raw_mem ;
+                }
+
+                // 2. the freelist
+                {
+                    size_t const sib = prealloc * sizeof( size_t ) ;
+                    byte_ptr_t raw_mem = so_memory::memory::alloc_raw<byte_t>( sib,
+                        "[so_memory::arena] : raw memory freelist" ) ;
+
+                    p.free_ptr = (size_t*)raw_mem ;
+
+                    {
+                        size_t * ptr = ( size_t* ) raw_mem ;
+                        for( size_t i = 0; i < prealloc; ++i )
+                        {
+                            ptr[ i ] = i ;
+                        }
+                    }
+                }
+
+                // 3. properties
+                {
+                    p.free_elems = prealloc ;
+                }
+
+                page_ptr_t ret = so_memory::memory::alloc( std::move( p ),
+                    "[arena::alloc_page] : page" ) ;
+
+                {
+                    std::lock_guard< std::mutex > lk( _mtx ) ;
+                    _pages.push_back( ret ) ;
+                }
+
+                return ret ;
+            }
+        };
+    }
+}
+
+#endif

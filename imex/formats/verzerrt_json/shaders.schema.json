@@ -1,0 +1,115 @@
+
+{
+    @schema
+    "shaders" :
+    {
+        "shader_id" : 
+        {
+            "type" : 
+            {
+                "type" : "string"
+                "existance" : "required",
+                "allowed_values" : ["vertex_shader", "geometry_shader", "pixel_shader" ]
+            },
+            "uri" : 
+            {
+                "type" : "string"
+                "existance" : "required",
+                "allowed_values" : "file_location"
+            },
+            
+            "inputs" :
+            {
+                "variable_name" :
+                {
+                    "type" : 
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["float"] 
+                    },
+                    "type_struct" :
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["vec1", "vec2", "vec3", "vec4"] 
+                    },
+                    "binding_point" :
+                    {
+                        "type" : "string",
+                        "existance" : "required" ,
+                        "allowed_values" : ["position", "normal", 
+                            "texcoord0", "texcoord1", "texcoord2", "texcoord3"]
+                    }
+                }
+            },
+            
+            "outputs" :
+            {
+                "variable_name" :
+                {
+                    "type" : 
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["int", "uint", "float"] 
+                    },
+                    "type_struct" :
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["vec1", "vec2", "vec3", "vec4", "texture1d", "texture2d", "buffer1d"] 
+                    },
+                    "binding_point" :
+                    {
+                        "type" : "string",
+                        "existance" : "required" ,
+                        "allowed_values" : [
+                            "color_out_0","color_out_1",
+                            "color_out_2","color_out_3", 
+                            "vertex_out_0", "vertex_out_1",
+                            "vertex_out_2", "vertex_out_3"]
+                    }
+                }
+            },
+            
+            "uniforms" :
+            {
+                "variable_name" :
+                {
+                    "type" : 
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["int", "uint", "float"] 
+                    },
+                    
+                    "type_struct" :
+                    {
+                        "type" : "string"
+                        "existance" : "required",
+                        "allowed_values" : ["vec1", "vec2", "vec3", "vec4", 
+                            "mat2", "mat3", "mat4"] 
+                    },
+                    
+                    "binding_point" : 
+                    {
+                        "type" : "string",
+                        "existance" : "required",
+                        "allowed_values" : 
+                        [
+                            object_transformation,
+                            world_transformation,
+                            camera_transformation,
+                            view_transformation,
+                            projection_transformation,
+                            projection_parameters_0,
+                            custom
+                        ]
+                    }
+                }
+            }
+        }
+        
+    }
+}

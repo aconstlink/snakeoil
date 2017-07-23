@@ -1,0 +1,33 @@
+{
+    @schema
+    "effects" :
+    {
+        "effect_id" : 
+        {
+            "vertex_shader" : 
+            {
+                "type" : "string"
+                "existance" : "required"
+                "allowed_values" : ["shader_id"]
+            },
+            
+            "geometry_shader" : 
+            {
+                "type" : "string"
+                "existance" : "optional"
+                "allowed_values" : ["shader_id"]
+            },
+            
+            "pixel_shader" : 
+            {
+                "type" : "string"
+                "existance" : "optional"
+                "allowed_values" : ["shader_id"]
+            },
+            
+            "render_states" :
+            {}
+            
+        }
+    }    
+}

@@ -1,0 +1,10 @@
+{
+    "fragments" : 
+    {   
+        "fragment_id" :
+        {
+            "desc" : "a fragment can be a simple code snippet or a complete script"
+            "uri" : "string"
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<graphics>
+	<render_programs>
+	
+		<render_program key="name">
+			<vertex_shaders>
+				<vertex_shader key="name" />
+			</vertex_shaders>
+			<geometry_shaders>
+				<geometry_shader key="name" />
+			</geometry_shaders>
+			<pixel_shaders>
+				<pixel_shader key="name" />
+			</pixel_shaders>
+			
+			<!-- order! -->
+			<feedback_names type="interleaved|separate">
+				<name>feedback_variable_name</name>
+			</feedback_names>
+		</render_program>
+		
+	</render_programs>
+</graphics>

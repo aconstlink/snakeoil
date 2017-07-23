@@ -1,0 +1,135 @@
+
+{
+    "shaders" :
+    {
+        "shader_one_vs" :
+        {
+            "type" : "vertex_shader",
+            "uri" : "./shaders/shader_one.vs.glsl",
+            
+            "fragment_ids" :
+            [
+                "part_a.frag.glsl", "part_b.frag.glsl"
+            ],
+            
+            "inputs" : 
+            {
+                "in_pos" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec3",
+                    "binding_point" : "position"
+                },
+                
+                "in_nrm" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec3",
+                    "binding_point" : "normal"
+                },
+                
+                "in_tx0" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec3",
+                    "binding_point" : "texcoord0"
+                },
+            },
+            
+            "outputs" :
+            {
+                "out_vertex0" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec4",
+                    "binding_point" : "vertex_out_0"
+                },
+                
+                "out_vertex1" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec4",
+                    "binding_point" : "vertex_out_1"
+                }
+            },
+            
+            "uniforms" :
+            {
+                "u_mat_object" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "mat4",
+                    "binding_point" : "object_transformation"
+                },
+                
+                "u_mat_world" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "mat4",
+                    "binding_point" : "world_transformation"
+                },
+                
+                "u_mat_view" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "mat4",
+                    "binding_point" : "view_transformation"
+                },
+                
+                "u_mat_proj" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "mat4",
+                    "binding_point" : "projection_transformation"
+                },
+               
+                "u_custom_0" :
+                {
+                    "type" : "uint",
+                    "type_struct" : "buffer1d",
+                    "binding_point" : "custom"
+                }
+            }
+        },
+        
+        "shader_one_ps" :
+        {
+            "type" : "pixel_shader",
+            "uri" : "./shaders/shader_one.ps.glsl",
+            
+            "outputs" :
+            {
+                "out_color0" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec4",
+                    "binding_point" : "color_out_0"
+                },
+                
+                "out_color1" : 
+                {
+                    "type" : "float",
+                    "type_struct" : "vec4",
+                    "binding_point" : "color_out_1"
+                }
+            },
+            
+            "uniforms" :
+            {
+                "u_custom_1" :
+                {
+                    "type" : "float",
+                    "type_struct" : "vec1",
+                    "binding_point" : "custom"
+                },
+                
+                "u_custom_2" :
+                {
+                    "type" : "float",
+                    "type_struct" : "texture2d",
+                    "binding_point" : "custom"
+                }
+            }
+        }
+    }
+}

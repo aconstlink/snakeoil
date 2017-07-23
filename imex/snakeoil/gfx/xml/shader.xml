@@ -1,0 +1,25 @@
+<graphics>
+	<shaders>
+	
+		<vertex_shader key="name">
+			<fragments>
+				<fragment key="name" />
+			</fragments>
+		</vertex_shader>
+		
+		<geometry_shader key="name">
+			<input type="points|lines|triangles"/>
+			<output type="points|line_strip|triangle_strip" vertices="number"/>
+			<fragments>
+				<fragment key="name" />
+			</fragments>
+		</geometry_shader>
+		
+		<pixel_shader key="name">
+			<fragments>
+				<fragment key="name" />
+			</fragments>
+		</pixel_shader>
+		
+	</shaders>
+</graphics>

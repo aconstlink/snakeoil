@@ -1,0 +1,64 @@
+<!-- thought to be a early dev version for rapid prototyping. 
+
+	This file allows to rapid prototype ideas by allowing the user
+	to recompile a shader and relink variables, or even add new variables.
+	
+	At later version might be an effect where multiple render programs can be 
+	used and blending properties can be set.
+-->
+<graphics>
+	<render_configurations>
+	
+		<render_configuration>
+
+			<render_program key="name" />
+				
+			<!-- 
+				access the geometry manager and grab 
+				all necessary information .
+			-->
+			<input_geometry key="name" />
+			
+			<!-- tells what type of vertex attribute is mapped to which variable.
+				va: position -> in_pos
+				va: normal -> in_nrm 
+				va: color0 -> in_color ...
+			-->
+			<input_variables>
+				<mapping>
+					<type>[so_gfx::vertex_attribute]</type>
+					<variable>input_variable_name</variable>
+				</mapping>
+			</input_variables>
+			
+			<!--
+			allows to connect a slot to a shader variable.
+			
+			Each variable set allow the configuration to draw 
+			differently by rendering the config with another 
+			varialbe set.
+			
+			NOTE: At the moment, not implemented, because its 
+				usability is not certain. I think the regual use case
+				is to set the variables from code.
+			-->
+			<variable_sets>
+				<variable_set>
+					<mapping>
+						<slot>key</slot>
+						<variable>variable</variable>
+					</mapping>
+				</variable_set>
+			</variable_sets>
+			
+			<!-- currently not used 
+			This is currently not used, but required for later. 
+			Transform Feedback, pixel output, mutli-render target
+			-->
+			<output_variables>
+			</output_variables>
+			
+		</render_configuration>
+		
+	</render_configurations>
+</graphics>

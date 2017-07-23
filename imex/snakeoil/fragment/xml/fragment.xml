@@ -1,0 +1,28 @@
+
+<!-- 
+	can be any code fragments 
+	It could also be embeded into other tag spaces.
+-->
+
+<!-- [once, optional]
+		base_path="path" allows to specify a global base file directory which will be used
+		for all file paths in this fragments collection.
+		path[default]: allows to specify an utf-8 file name directly in the tag.
+	-->
+<fragments base_path="path">
+		
+	<!-- [multi, optional]
+		key: the name this code fragment can be refered with
+		type: is it a path, code or a varialbe name
+		encoding: 
+			- utf-8: path [default]
+			- ascii: code, var_name [default]
+		note:
+		the path will be relative to the base path
+	-->
+	<fragment key="name" type="path" encoding="utf-8">path_to_file</fragment>
+	
+	<!-- not implemented right now-->
+	<fragment key="name" type="[code, var_name]" encoding="[ascii|utf-8]"></fragment>
+	
+</fragments>

@@ -1,0 +1,25 @@
+{
+    "assets" :
+    {
+        "files" :
+        [ 
+            "./project/fragments/shaders_app1.vzt",
+            "./project/fragments/shaders_app2.vzt",
+            "./project/shaders/shaders_app1.vzt",
+            "./project/shaders/shaders_app2.vzt"
+        ],
+        "fragments" :
+        {
+            "some_code_snippet" :
+            {
+                "uri" : "./shaders/fragments/some_func.frag.glsl"
+            }
+        },
+        "shaders" :
+        {
+        },
+        "effects" :
+        {
+        }
+    }
+}

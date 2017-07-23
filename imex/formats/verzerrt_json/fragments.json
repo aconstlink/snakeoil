@@ -1,0 +1,21 @@
+{
+    "fragments" :
+    {
+        "some_code_snippet" :
+        {
+            "uri" : "./shaders/fragments/some_func.frag.glsl"
+        },
+        "some_other_code_snippet" :
+        {
+            "uri" : "./shaders/fragments/some_other_func.frag.glsl"
+        },
+        "complete_shader_code" :
+        {
+            "uri" : "./shaders/fragments/shader.vs.glsl"
+        },
+        "some_other_script" :
+        {
+            "uri" : "./scripts/lua/script.lua"
+        }
+    }
+}

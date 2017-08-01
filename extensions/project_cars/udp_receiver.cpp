@@ -45,7 +45,7 @@ void_t udp_receiver::destroy( this_ptr_t ptr )
 }
 
 //**********************************************************************************
-void_t udp_receiver::start( so_project_cars::shared_data_ptr_t shd_ptr, so_thread::sync_object_ptr_t sptr )
+bool_t udp_receiver::start( so_project_cars::shared_data_ptr_t shd_ptr, so_thread::sync_object_ptr_t sptr )
 {
     _shared = shd_ptr ;
 
@@ -82,6 +82,8 @@ void_t udp_receiver::start( so_project_cars::shared_data_ptr_t shd_ptr, so_threa
     auto const res = _sys->recv( bp, funk, sptr ) ;
     so_log::log::error( so_net::no_success( res ), 
         "[so_project_cars::udp_receiver::start] : failed to start recv" ) ;
+
+    return so_core::is_not( so_net::no_success( res ) ) ;
 }
 
 //**********************************************************************************

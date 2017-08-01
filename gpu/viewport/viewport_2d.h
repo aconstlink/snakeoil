@@ -79,7 +79,7 @@ namespace so_gpu
         { return so_math::vector4< type_t >( _xywh ) ; }
     } ;
 
-    typedef viewport_2d const & viewport_2d_cref_t ;
+    so_typedef( viewport_2d ) ;
 } 
 
 #endif

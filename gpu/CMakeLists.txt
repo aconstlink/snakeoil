@@ -89,6 +89,8 @@ set( SOURCES
     buffer/iindex_buffer.h
     buffer/feedback_buffer.h
     buffer/feedback_buffer.cpp
+    buffer/geometry.h
+    buffer/geometry.cpp
 
     image/image.h
     image/image.cpp

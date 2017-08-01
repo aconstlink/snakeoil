@@ -193,6 +193,16 @@ namespace so_resource
             return _key ;
         }
 
+        type_ptr_t get_ptr( void_t )
+        {
+            return _ptr ;
+        }
+
+        type_cptr_t get_ptr( void_t ) const
+        {
+            return _ptr ;
+        }
+
     public:
 
         bool_t is_valid( void_t ) const 

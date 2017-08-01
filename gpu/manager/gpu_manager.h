@@ -22,12 +22,17 @@ namespace so_gpu
     public:
 
         so_typedefs( so_resource::resource_manager< so_gpu::framebuffer_2d >, fb2d_manager ) ;
+        so_typedefs( so_resource::resource_manager< so_gpu::texture_2d >, tx2d_manager ) ;
+        
+
         so_typedefs( so_resource::resource_manager< so_gpu::ivertex_buffer>, vb_manager ) ;
         so_typedefs( so_resource::resource_manager< so_gpu::iindex_buffer>, ib_manager ) ;
 
     private:
 
         fb2d_manager_ptr_t _fb2d_mgr = nullptr ;
+        tx2d_manager_ptr_t _tx2d_mgr = nullptr ;
+
         vb_manager_ptr_t _vb_mgr = nullptr ;
         ib_manager_ptr_t _ib_mgr = nullptr ;
 
@@ -46,6 +51,8 @@ namespace so_gpu
     public:
         
         fb2d_manager_ptr_t get_fb2d_mgr( void_t ) ;
+        tx2d_manager_ptr_t get_tx2d_mgr( void_t ) ;
+
         vb_manager_ptr_t get_vb_mgr( void_t ) ;
         ib_manager_ptr_t get_ib_mgr( void_t ) ;
     };

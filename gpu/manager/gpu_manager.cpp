@@ -12,6 +12,9 @@ gpu_manager::gpu_manager( void_t )
     _fb2d_mgr = so_gpu::memory::alloc( this_t::fb2d_manager_t(), 
         "[gpu_manager::gpu_manager] : fb2d manager" ) ;
 
+    _tx2d_mgr = so_gpu::memory::alloc( this_t::tx2d_manager_t(),
+        "[gpu_manager::gpu_manager] : tx2d manager" ) ;
+
     _vb_mgr = so_gpu::memory::alloc( this_t::vb_manager_t(), 
         "[gpu_manager::gpu_manager] : vb manager" ) ;
 
@@ -23,6 +26,7 @@ gpu_manager::gpu_manager( void_t )
 gpu_manager::gpu_manager( this_rref_t rhv ) 
 {
     so_move_member_ptr( _fb2d_mgr, rhv ) ;
+    so_move_member_ptr( _tx2d_mgr, rhv ) ;
     so_move_member_ptr( _vb_mgr, rhv ) ;
     so_move_member_ptr( _ib_mgr, rhv ) ;
 }
@@ -31,6 +35,7 @@ gpu_manager::gpu_manager( this_rref_t rhv )
 gpu_manager::~gpu_manager( void_t )
 {
     so_gpu::memory::dealloc( _fb2d_mgr ) ;
+    so_gpu::memory::dealloc( _tx2d_mgr ) ;
     so_gpu::memory::dealloc( _vb_mgr ) ;
     so_gpu::memory::dealloc( _ib_mgr ) ;
 }
@@ -51,6 +56,12 @@ void_t gpu_manager::destroy( this_ptr_t ptr )
 gpu_manager::fb2d_manager_ptr_t gpu_manager::get_fb2d_mgr( void_t )
 {
     return _fb2d_mgr ;
+}
+
+//***************************************************************
+gpu_manager::tx2d_manager_ptr_t gpu_manager::get_tx2d_mgr( void_t )
+{
+    return _tx2d_mgr ;
 }
 
 //***************************************************************

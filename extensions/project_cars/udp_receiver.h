@@ -41,7 +41,7 @@ namespace so_project_cars
 
     public:
 
-        void_t start( so_project_cars::shared_data_ptr_t, so_thread::sync_object_ptr_t ) ;
+        bool_t start( so_project_cars::shared_data_ptr_t, so_thread::sync_object_ptr_t ) ;
 
     private:
 

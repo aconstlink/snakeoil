@@ -134,8 +134,8 @@ so_net::result win32_socket_system::send( ip4_address_cref_t addr, uint_t const 
 }
 
 //**********************************************************************************
-so_net::result win32_socket_system::recv( 
-    ip4_binding_point_cref_t bp, recv_funk_t user_funk, so_thread::sync_object_ptr_t sobj )
+so_net::result win32_socket_system::recv( ip4_binding_point_cref_t bp, 
+    recv_funk_t user_funk, so_thread::sync_object_ptr_t sobj )
 {    
     socket_data_t sd ;
 
@@ -163,6 +163,19 @@ so_net::result win32_socket_system::recv(
         {
             so_log::log::error( "[win32_socket_system::recv] : bind" ) ;
             so_log::log::error( "[win32_socket_system::recv] : WSAGetLastError " + 
+                std::to_string( WSAGetLastError() ) ) ;
+            return so_net::failed ;
+        }
+    }
+
+    // allow multiple applications to bind the same port
+    {
+        BOOL reuse_addr = true ;
+        auto const res = setsockopt( sd.s, SOL_SOCKET, SO_REUSEADDR, char_cptr_t(&reuse_addr), sizeof(BOOL) ) ;
+        if( res != 0 )
+        {
+            so_log::log::error( "[win32_socket_system::recv] : setsockopt SO_REUSEADDR" ) ;
+            so_log::log::error( "[win32_socket_system::recv] : WSAGetLastError " +
                 std::to_string( WSAGetLastError() ) ) ;
             return so_net::failed ;
         }

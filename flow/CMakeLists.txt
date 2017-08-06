@@ -55,6 +55,11 @@ set( SOURCES ${SOURCES}
     data/data.hpp
     data/compatibility_funk.h
     data/generic_funk.h
+
+    variable/ivariable.h
+    variable/variable.hpp
+    variable/variable_set.h
+    variable/variable_set.cpp
     )
 
 so_vs_src_dir( SOURCES )
@@ -66,13 +71,11 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     add_definitions( 
         -DSNAKEOIL_FLOW_EXPORT 
-        -DSNAKEOIL_VARIABLE_IMPORT
         -DSNAKEOIL_MEMORY_IMPORT
         -DSNAKEOIL_LOG_IMPORT
         )
 
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_variable
         snakeoil_thread
         snakeoil_memory
         snakeoil_log

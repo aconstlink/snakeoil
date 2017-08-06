@@ -36,7 +36,6 @@ if( NOT snakeoil_FIND_COMPONENTS )
     #snakeoil_collide
     snakeoil_geometry
     snakeoil_flow
-    snakeoil_variable
     #snakeoil_resource
     snakeoil_io
     snakeoil_thread

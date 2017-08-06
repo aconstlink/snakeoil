@@ -57,6 +57,8 @@ namespace so_flow
             node_input_policy( void_t ) ;
             node_input_policy( this_rref_t ) ;
 
+            this_ref_t operator = ( this_rref_t ) ;
+
         public:
 
             ~node_input_policy( void_t ) ;

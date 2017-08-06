@@ -23,6 +23,13 @@ node_input_policy::node_input_policy( this_rref_t rhv )
 }
 
 //***********************************************************************
+node_input_policy::this_ref_t node_input_policy::operator = ( this_rref_t rhv )
+{
+    _inputs = std::move( rhv._inputs ) ;
+    return *this ;
+}
+
+//***********************************************************************
 node_input_policy::~node_input_policy( void_t )
 {
     for( auto & item : _inputs )

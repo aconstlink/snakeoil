@@ -46,7 +46,6 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         -DSNAKEOIL_AUDIOX_EXPORT 
         -DSNAKEOIL_IMEX_IMPORT
         -DSNAKEOIL_FLOW_IMPORT
-        -DSNAKEOIL_VARIABLE_IMPORT
         -DSNAKEOIL_AUDIO_IMPORT
         -DSNAKEOIL_THREAD_IMPORT
         -DSNAKEOIL_LOG_IMPORT
@@ -58,7 +57,6 @@ endif()
 target_link_libraries( ${CUR_LIB_NAME}
     snakeoil_imex
     snakeoil_flow
-    snakeoil_variable
     snakeoil_audio
     snakeoil_thread
     snakeoil_log

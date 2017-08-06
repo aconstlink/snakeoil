@@ -7,8 +7,7 @@
 
 #include "../node.h"
 
-#include <snakeoil/variable/protos.h>
-#include <snakeoil/variable/variable_set/variable_set.h>
+#include "../../variable/variable_set.h"
 
 namespace so_flow
 {
@@ -26,14 +25,21 @@ namespace so_flow
 
     public:
 
+        this_ref_t operator = ( this_rref_t ) ;
+
+    public:
+
         static this_ptr_t create( so_memory::purpose_cref_t ) ;
         static this_ptr_t create( this_rref_t, so_memory::purpose_cref_t ) ;
         static void_t destroy( this_ptr_t ) ;
 
     public:
 
-        so_flow::result create_input_connections( so_var::variable_set_cref_t ) ;
-        so_flow::result create_input_connection( so_flow::key_in_t, so_var::ivariable_ptr_t ) ;        
+        so_flow::result create_output_connections( so_flow::variable_set_cref_t ) ;
+        so_flow::result create_output_connection( so_flow::key_in_t, so_flow::ivariable_ptr_t ) ;
+
+        so_flow::result create_input_connections( so_flow::variable_set_cref_t ) ;
+        so_flow::result create_input_connection( so_flow::key_in_t, so_flow::ivariable_ptr_t ) ;        
 
     public: // interface
 

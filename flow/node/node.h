@@ -39,6 +39,10 @@ namespace so_flow
         node( this_rref_t ) ;
         virtual ~node( void_t ) ;
     
+    public:
+
+        this_ref_t operator = ( this_rref_t ) ;
+
     public: 
 
         virtual so_flow::result connect( so_flow::key_cref_t, so_flow::ioutput_slot_ptr_t ) ;
@@ -52,6 +56,10 @@ namespace so_flow
         
     public:
 
+        so_flow::result create_input_slot( so_std::string_cref_t name, so_flow::ivariable_ptr_t ) ;
+        so_flow::result create_output_slot( so_std::string_cref_t name, so_flow::ivariable_ptr_t ) ;
+
+#if 0
         template< typename T >
         so_flow::result create_input_slot( so_std::string_cref_t name, T * var_ptr )
         {
@@ -96,6 +104,7 @@ namespace so_flow
 
             return so_flow::ok ;
         }
+#endif 
 
     protected: // interface
         

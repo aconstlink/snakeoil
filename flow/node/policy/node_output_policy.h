@@ -60,6 +60,8 @@ namespace so_flow
             node_output_policy( void_t ) ;
             node_output_policy( this_rref_t ) ;
 
+            this_ref_t operator = ( this_rref_t ) ;
+
         public:
 
             ~node_output_policy( void_t ) ;

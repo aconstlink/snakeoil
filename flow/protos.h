@@ -17,6 +17,8 @@ namespace so_flow
     so_class_proto_typedefs( ilogic ) ;
     so_class_proto_typedefs( variable_node ) ;
 
+    so_class_proto_typedefs( ivariable ) ;
+    so_class_proto_typedefs( variable_set ) ;
 }
     
 #endif

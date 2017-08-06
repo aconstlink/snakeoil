@@ -8,7 +8,7 @@ project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 0 )
-set( SNAKEOIL_PATCH_VERSION 3 )
+set( SNAKEOIL_PATCH_VERSION 4 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -124,7 +124,7 @@ set( SUBDIRS
     "thread"
     "io"
     "resource"
-    "variable"
+    #"variable"
     "flow"
     "geometry"
     "collide"

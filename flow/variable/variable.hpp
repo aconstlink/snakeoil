@@ -2,12 +2,14 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_VARIABLE_VARIABLE_HPP_
-#define _SNAKEOIL_VARIABLE_VARIABLE_HPP_
+#ifndef _SNAKEOIL_FLOW_VARIABLE_HPP_
+#define _SNAKEOIL_FLOW_VARIABLE_HPP_
 
 #include "ivariable.h"
+#include "../slot/input/input_slot.hpp"
+#include "../slot/output/output_slot.hpp"
 
-namespace so_var
+namespace so_flow
 {
     template< typename T >
     class variable : public ivariable
@@ -47,17 +49,30 @@ namespace so_var
 
         static this_ptr_t create( type_t val, so_memory::purpose_cref_t p )
         {
-            return so_var::memory::alloc( this_t(val), p ) ;
+            return so_flow::memory::alloc( this_t(val), p ) ;
         }
 
         static this_ptr_t create( this_rref_t rhv, so_memory::purpose_cref_t p )
         {
-            return so_var::memory::alloc( std::move(rhv), p ) ;
+            return so_flow::memory::alloc( std::move(rhv), p ) ;
         }
 
         static void_t destroy( this_ptr_t ptr )
         {
-            so_var::memory::dealloc( ptr ) ;
+            so_flow::memory::dealloc( ptr ) ;
+        }
+
+
+        virtual so_flow::iinput_slot_ptr_t create_input_slot( so_memory::purpose_cref_t p )
+        {
+            return so_flow::generic_input_slot<type_t>::create(
+                so_flow::generic_input_slot<type_t>( this_t::get_data_ptr() ), p ) ;
+        }
+
+        virtual so_flow::ioutput_slot_ptr_t create_output_slot( so_memory::purpose_cref_t p )
+        {
+            return so_flow::generic_output_slot<type_t>::create(
+                so_flow::generic_output_slot<type_t>( this_t::get_data_ptr() ), p ) ;
         }
 
     public:

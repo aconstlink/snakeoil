@@ -22,6 +22,13 @@ node_output_policy::node_output_policy( this_rref_t rhv )
 }
 
 //***********************************************************************
+node_output_policy::this_ref_t node_output_policy::operator = ( this_rref_t rhv )
+{
+    _outputs = std::move( rhv._outputs ) ;
+    return *this ;
+}
+
+//***********************************************************************
 node_output_policy::~node_output_policy( void_t ) 
 {
     for(auto & item : _outputs)

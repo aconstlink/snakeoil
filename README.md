@@ -3,6 +3,15 @@ snakeoil is my C++ programming framework that I use mainly for experimentation a
 
 snakeoil is supposed to be a game/animation engine written in C++ with much multi-threading in mind. The framework will build out of the box with the most common requirements included like rendering, threading, game devices or fonts. There is even a basic audio engine implemented using XAudio2.
 
+## How to build
+
+1. Check out snakeoil (this repo)
+2. Generate a Visual Studio 2015 x64 project **outside** of the source tree using CMake  
+3. [required] Set SNAKEOIL_TARGET_GRAPHICS_API to OpenGL
+3. [optional] Uncheck SNAKEOIL_LIBRARY_BUILD_SHARED for easy use with static libraries  
+4. Open the generated VS project and hit build for debug or/and release  
+5. Finised - snakeoil is ready to use
+
 ## Compiler Support
 
 A C++11 Compiler is required
@@ -27,15 +36,6 @@ Build-in means that these libraries are shipped with the framework code and that
 [STB](https://github.com/nothings/stb)  
 [Ogg](https://www.xiph.org/ogg/)  
 [Vorbis](https://xiph.org/vorbis/)  
-
-## How to build
-
-1. Check out snakeoil (this repo)
-2. Generate a Visual Studio 2015 x64 project **outside** of the source tree using CMake  
-3. [required] Set SNAKEOIL_TARGET_GRAPHICS_API to OpenGL
-3. [optional] Uncheck SNAKEOIL_LIBRARY_BUILD_SHARED for easy use with static libraries  
-4. Open the generated VS project and hit build for debug or/and release  
-5. Finised - snakeoil is ready to use
 
 ## Contribution
 

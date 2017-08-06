@@ -23,7 +23,7 @@ A C++11 Compiler is required
 - Windows 7/8/10 64 bit
 - Linux 64 bit (only low level library support) (tested on Fedora 25)  
 
-Windows 10 is not tested. The compilation is based on Windows OS SDKs and I did not have the opportunity to use Windows 10 privatly in order to support this OS.
+Windows 10 is not tested. The compilation is based on Windows OS SDKs and I did not have the opportunity to use Windows 10 privatly in order to support this OS. But it should be possible to install the Windows 8.1 SDK and set the SNAKEOIL_TARGET_OS to Windows 8.
 
 ## Build-In External Libraries
 

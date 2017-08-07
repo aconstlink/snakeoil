@@ -12,7 +12,7 @@ Personally, I also want to see snakeoil as a support framework since it provides
 3. [required] Set SNAKEOIL_TARGET_GRAPHICS_API to OpenGL
 3. [optional] Uncheck SNAKEOIL_LIBRARY_BUILD_SHARED for easy use with static libraries  
 4. Open the generated VS project and hit build for debug or/and release  
-5. Finised - snakeoil is ready to use
+5. Finised - snakeoil is ready to be used
 
 ## Compiler Support
 

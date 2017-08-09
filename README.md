@@ -42,7 +42,7 @@ Build-in means that these libraries are shipped with the framework code and that
 
 ## Contribution
 
-At the moment, this is a mirror repository and I only accept bug fixes. 
+At the moment, this is a mirror repository and I only accept bug fixes.
 
 ## Examples
 

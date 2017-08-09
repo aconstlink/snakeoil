@@ -46,6 +46,11 @@ appx_system::appx_system( this_rref_t rhv )
 //*************************************************************************************
 appx_system::~appx_system( void_t ) 
 {
+    for( auto & a : _apps )
+    {
+        a.app_ptr->destroy() ;
+    }
+
     if( so_core::is_not_nullptr( _dev_ptr ) )
         _dev_ptr->destroy() ;
     

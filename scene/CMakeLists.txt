@@ -11,14 +11,14 @@ set( SOURCES ${SOURCES}
 
     converter/geometry_binding_converter.h
 
-    creator/base_scene_creator.h
-    creator/base_scene_creator.cpp
-    creator/full_mld_scene_creator.h
-    creator/full_mld_scene_creator.cpp
-    creator/full_scene_creator.h
-    creator/full_scene_creator.cpp
-    creator/scene_creator_context.h
-    creator/scene_creator_context.cpp
+    #creator/base_scene_creator.h
+    #creator/base_scene_creator.cpp
+    #creator/full_mld_scene_creator.h
+    #creator/full_mld_scene_creator.cpp
+    #creator/full_scene_creator.h
+    #creator/full_scene_creator.cpp
+    #creator/scene_creator_context.h
+    #creator/scene_creator_context.cpp
 
     node/node.h
     node/node.cpp
@@ -61,8 +61,8 @@ set( SOURCES ${SOURCES}
     visitor/std_out/std_out.h
     visitor/std_out/std_out.cpp
 
-    visitor/render/direct_gpx_render.h
-    visitor/render/direct_gpx_render.cpp
+    #visitor/render/direct_gpx_render.h
+    #visitor/render/direct_gpx_render.cpp
     )
 
 so_vs_src_dir( SOURCES )
@@ -75,7 +75,6 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
     add_definitions( 
         -DSNAKEOIL_SCENE_EXPORT 
         -DSNAKEOIL_FLOW_IMPORT
-        -DSNAKEOIL_VARIABLE_IMPORT
         -DSNAKEOIL_SHADE_IMPORT
         -DSNAKEOIL_GPX_IMPORT
         -DSNAKEOIL_GPU_IMPORT
@@ -83,7 +82,6 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         -DSNAKEOIL_LOG_IMPORT
         -DSNAKEOIL_IMEX_IMPORT
         -DSNAKEOIL_GEOMETRY_IMPORT
-        -DSNAKEOIL_MANAGER_IMPORT
         -DSNAKEOIL_GFX_IMPORT
         )
 
@@ -93,12 +91,10 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         snakeoil_flow
         snakeoil_gpx
         snakeoil_gpu
-        snakeoil_variable
         snakeoil_memory
         snakeoil_log
         snakeoil_imex
         snakeoil_geometry
-        snakeoil_manager
         snakeoil_gfx
     )
 	

@@ -7,7 +7,7 @@
 
 #include "../decorator.h"
 
-#include <snakeoil/variable/variable.hpp>
+#include <snakeoil/flow/variable/variable.hpp>
 #include <snakeoil/math/utility/3d/transformation.hpp>
 
 namespace so_scene
@@ -20,7 +20,7 @@ namespace so_scene
             so_this_typedefs( transform_3d ) ;
 
             so_typedefs( so_math::so_3d::trafof_t, trafo ) ;
-            so_typedefs( so_var::variable< so_math::mat4f_t >, var_mat4f ) ;
+            so_typedefs( so_flow::variable< so_math::mat4f_t >, var_mat4f ) ;
 
         private:
 

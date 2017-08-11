@@ -8,7 +8,7 @@ project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 0 )
-set( SNAKEOIL_PATCH_VERSION 4 )
+set( SNAKEOIL_PATCH_VERSION 5 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -142,7 +142,7 @@ set( SUBDIRS
     "font"
     "script"
     #"manager"
-    #"scene"
+    "scene"
     "appx"
     "application"
     "spline"

@@ -11,7 +11,6 @@
 #include "../../result.h"
 
 #include <snakeoil/flow/protos.h>
-#include <snakeoil/variable/protos.h>
 
 namespace so_scene
 {
@@ -24,7 +23,7 @@ namespace so_scene
         private:
 
             /// will be viewed as shared resource
-            so_var::variable_set_ptr_t _var_set_ptr = nullptr ;
+            so_flow::variable_set_ptr_t _var_set_ptr = nullptr ;
             so_flow::variable_node_ptr_t _var_node_ptr = nullptr ;
 
         public:
@@ -42,7 +41,7 @@ namespace so_scene
             /// allows to connect slots
             so_flow::variable_node_ptr_t get_flow_node( void_t ) ;
 
-            bool_t bind_variable( so_std::string_in_t, so_var::ivariable_ptr_t ) ;
+            bool_t bind_variable( so_std::string_in_t, so_flow::ivariable_ptr_t ) ;
 
 
         public:

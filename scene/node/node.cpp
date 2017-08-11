@@ -67,7 +67,7 @@ bool_t node::reconnect_flow_node( void_t )
 }
 
 //*******************************************************************
-bool_t node::bind_variable( so_std::string_in_t bp, so_var::ivariable_ptr_t ptr ) 
+bool_t node::bind_variable( so_std::string_in_t bp, so_flow::ivariable_ptr_t ptr ) 
 {
     return variable_node_policy_t::bind_variable( bp, ptr ) ;
 }

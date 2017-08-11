@@ -18,8 +18,8 @@ Personally, I also want to see snakeoil as a support framework since it provides
 
 A C++11 Compiler is required
 
-- Visual Studio 2015 64 bit
-- Visual Studio 2017 64 bit
+- Visual Studio 2015 x64
+- Visual Studio 2017 x64
 - GCC 6.3.1 64 bit
 
 ## Platform Support

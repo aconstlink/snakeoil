@@ -7,15 +7,12 @@
 
 #include "../leaf.h"
 
-#include <snakeoil/manager/graphics/geometry/geometry_manager.h>
-
 #include <snakeoil/flow/protos.h>
 #include <snakeoil/gpu/protos.h>
-#include <snakeoil/variable/protos.h>
 #include <snakeoil/math/matrix/matrix4.hpp>
 #include <snakeoil/math/vector/vector4.hpp>
 
-#include <snakeoil/variable/variable.hpp>
+#include <snakeoil/flow/variable/variable.hpp>
 
 #include <snakeoil/std/container/vector.hpp>
 
@@ -30,8 +27,8 @@ namespace so_scene
 
             so_typedefs( so_std::vector< so_gpu::variable_set_ptr_t>, gpu_varsets ) ;
             
-            so_typedefs( so_var::variable< so_math::mat4f_t >, var_mat4f ) ;
-            so_typedefs( so_var::variable< so_math::vec4f_t >, var_vec4f ) ;
+            so_typedefs( so_flow::variable< so_math::mat4f_t >, var_mat4f ) ;
+            so_typedefs( so_flow::variable< so_math::vec4f_t >, var_vec4f ) ;
 
         private:
 

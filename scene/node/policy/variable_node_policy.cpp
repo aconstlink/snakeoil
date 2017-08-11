@@ -5,7 +5,7 @@
 #include "variable_node_policy.h"
 
 #include <snakeoil/flow/node/variable/variable_node.h>
-#include <snakeoil/variable/variable_set/variable_set.h>
+#include <snakeoil/flow/variable/variable_set.h>
 
 #include <snakeoil/log/log.h>
 
@@ -18,7 +18,7 @@ variable_node_policy::variable_node_policy( void_t )
     _var_node_ptr = so_flow::variable_node_t::create( 
         "[variable_node_policy::variable_node_policy] : variable_node" ) ;
 
-    _var_set_ptr = so_var::variable_set_t::create(
+    _var_set_ptr = so_flow::variable_set_t::create(
         "[variable_node_policy::variable_node_policy] : variable_set" ) ;
 }
 
@@ -42,7 +42,7 @@ variable_node_policy::this_ref_t variable_node_policy::operator = ( this_rref_t 
 variable_node_policy::~variable_node_policy( void_t )
 {
     so_flow::variable_node_t::destroy( _var_node_ptr ) ;
-    so_var::variable_set_t::destroy( _var_set_ptr ) ;
+    so_flow::variable_set_t::destroy( _var_set_ptr ) ;
 }
 
 //*************************************************************************************
@@ -64,13 +64,13 @@ so_flow::variable_node_ptr_t variable_node_policy::get_flow_node( void_t )
 }
 
 //*************************************************************************************
-bool_t variable_node_policy::bind_variable( so_std::string_in_t bp, so_var::ivariable_ptr_t ptr ) 
+bool_t variable_node_policy::bind_variable( so_std::string_in_t bp, so_flow::ivariable_ptr_t ptr ) 
 {
     if( so_core::is_nullptr( _var_set_ptr ) )
         return false ;
 
     auto const res = _var_set_ptr->add( bp, ptr ) ;
-    so_log::log::error_and_exit( so_var::no_success( res ),
+    so_log::log::error_and_exit( so_flow::no_success( res ),
         "[renderable::bind_object_matrix] : rebind not handled" ) ;
 
     return true ;

@@ -8,7 +8,7 @@
 #include "../decorator.h"
 
 #include <snakeoil/gpu/enums/attribute_state.h>
-#include <snakeoil/gpu/driver/state_set.h> 
+#include <snakeoil/gpu/state_set.h>
 
 namespace so_scene
 {

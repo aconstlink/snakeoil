@@ -19,11 +19,6 @@ set( LINUX_SOURCES
     socket/linux/linux_socket_system_creator.cpp
     )
 
-set( VECTORXL_SOURCES
-    can/xl/can_xl_system.h
-    can/xl/can_xl_system.cpp
-)
-
 #
 # sources
 #
@@ -43,11 +38,6 @@ set( SOURCES
     socket/socket_system_creator.h
     socket/socket_system_creator.cpp
     
-    can/ican_system.h
-    can/can_funk.h
-    can/null/can_null_system.h
-    can/null/can_null_system.cpp
-    
     address/ip4_address.h
     binding/ip4_binding_point.h
     )
@@ -58,10 +48,6 @@ elseif( SNAKEOIL_TARGET_OS_LIN )
     set( SOURCES ${SOURCES} ${LINUX_SOURCES} )
 else() 
     message( "No proper socket system available." )
-endif()
-
-if( VECTORXL_ENABLE )
-    set( SOURCES ${SOURCES} ${VECTORXL_SOURCES} )
 endif()
 
 so_vs_src_dir( SOURCES )
@@ -94,8 +80,3 @@ target_link_libraries( ${CUR_LIB_NAME}
 )
 
 target_link_libraries( ${CUR_LIB_NAME} ${OS_LIBS} ) 
-
-if( VECTORXL_ENABLE )
-    target_link_libraries( ${CUR_LIB_NAME} ${VECTORXL_LIBRARIES} ) 
-endif()
-

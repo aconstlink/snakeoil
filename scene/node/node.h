@@ -48,7 +48,7 @@ namespace so_scene
             so_flow::variable_node_ptr_t get_flow_node( void_t ) ;
             bool_t reconnect_flow_node( void_t ) ;
 
-            bool_t bind_variable( so_std::string_in_t, so_var::ivariable_ptr_t ) ;
+            bool_t bind_variable( so_std::string_in_t, so_flow::ivariable_ptr_t ) ;
 
         public:
 

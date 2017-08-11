@@ -9,7 +9,7 @@
 #include <snakeoil/gpu/program/config.h>
 
 #include <snakeoil/flow/node/variable/variable_node.h>
-#include <snakeoil/variable/variable_set/variable_set.h>
+#include <snakeoil/flow/variable/variable_set.h>
 
 #include <snakeoil/log/log.h>
 #include <snakeoil/core/macros/move.h>

@@ -3,8 +3,6 @@ snakeoil is my C++ programming framework that I use mainly for experimentation a
 
 snakeoil is supposed to be a game/animation engine written in C++ with much multi-threading in mind. The framework will build out of the box with the most common requirements included like rendering, threading, game devices or fonts. There is even a basic audio engine implemented using XAudio2.
 
-Personally, I also want to see snakeoil as a support framework since it provides some features out of the box without using 3rd party support. For example you can use the device library to integrate devices in your application or you can use it to retrieve project cars UDP data and many more scenarios.
-
 ## How to build
 
 1. Check out snakeoil (this repo)

@@ -17,7 +17,8 @@ set( SNAKEOIL_TARGET_GRAPHICS_OPENGL OFF )
 set( SNAKEOIL_TARGET_GRAPHICS_OPENGLES OFF )
 set( SNAKEOIL_TARGET_GRAPHICS_DIRECT3D OFF )
 
-set( SNAKEOIL_TARGET_GRAPHICS_API "null" CACHE STRING 
+# by default, lets just choose OpenGL until there are more api implemented
+set( SNAKEOIL_TARGET_GRAPHICS_API "OpenGL" CACHE STRING 
     "Select the graphics api to be compiled into the package." )
 
 set_property(CACHE SNAKEOIL_TARGET_GRAPHICS_API PROPERTY STRINGS 

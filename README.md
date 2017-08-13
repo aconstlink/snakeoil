@@ -9,7 +9,6 @@ Personally, I also want to see snakeoil as a support framework since it provides
 
 1. Check out snakeoil (this repo)
 2. Generate a Visual Studio 2015/2017 x64 project **outside** of the source tree using CMake  
-3. [required] Set SNAKEOIL_TARGET_GRAPHICS_API to OpenGL
 3. [optional] Uncheck SNAKEOIL_LIBRARY_BUILD_SHARED for easy use with static libraries  
 4. Open the generated VS project and hit build for debug or/and release  
 5. Finised - snakeoil is ready to be used

@@ -85,6 +85,7 @@ namespace so_imex
         virtual so_imex::result destroy( void_t ) = 0 ;
 
     };
+    so_typedef( iimage_module ) ;
 }
 
 #endif

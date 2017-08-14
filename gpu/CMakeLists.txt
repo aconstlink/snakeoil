@@ -98,6 +98,8 @@ set( SOURCES
     image/depth_image_2d.hpp
     image/iimage_2d.h
     image/iimage_3d.h
+    image/image_creator.h
+    image/image_creator.cpp
 
     texture/texture.h
     texture/texture.cpp
@@ -251,6 +253,7 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     add_definitions( 
         -DSNAKEOIL_GPU_EXPORT
+        -DSNAKEOIL_IMEX_IMPORT
         -DSNAKEOIL_THREAD_IMPORT
         -DSNAKEOIL_LOG_IMPORT
         -DSNAKEOIL_MEMORY_IMPORT
@@ -258,9 +261,10 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_log
-        snakeoil_memory
-        snakeoil_thread
+      snakeoil_imex
+      snakeoil_log
+      snakeoil_memory
+      snakeoil_thread
     )
     
     if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )

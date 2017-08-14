@@ -82,7 +82,7 @@ so_thread::task_graph_t stb_module::import_image( import_params_cref_t params_in
 
             int index = 0 ;
             
-#if 0
+#if 1
             for( int y=height-1; y>=0; --y )
             {
                 for( int x=0; x<width; ++x )

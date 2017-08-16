@@ -117,14 +117,6 @@ set( SOURCES
     module/stb/stb_module_import.cpp
     module/stb/stb_module_export.cpp
     
-    module/so/so_document.h
-    module/so/so_module.h
-    module/so/so_module.cpp
-    module/so/so_module_import.cpp
-    module/so/so_module_export.cpp
-    module/so/so_import_context.h
-    module/so/so_import_context.cpp
-    
     module/module_registry.h
     module/module_registry.cpp
     

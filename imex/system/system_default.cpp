@@ -6,8 +6,6 @@
 
 #include <snakeoil/log/log.h>
 
-#include "../module/so/so_module.h"
-
 // stb ships with the engine, so it can be a default module
 #include "../module/stb/stb_module.h"
 #include "../module/dae/dae_module.h"
@@ -45,13 +43,6 @@ system::this_ptr_t system::create_with_default_modules( so_memory::purpose_cref_
         auto res = sys_ptr->register_module( stb_ptr ) ;
         so_log::log::error( so_imex::no_success(res), 
             "[so_imex::system::create_with_default_modules] : register stb module" ) ;
-    }
-
-    {
-        auto * so_ptr = so_imex::snakeoil_module_t::create( p + " : snakeoil module" ) ;
-        auto res = sys_ptr->register_module( so_ptr ) ;
-        so_log::log::error( so_imex::no_success( res ),
-            "[so_imex::system::create_with_default_modules] : register snakeoil module" ) ;
     }
 
     {

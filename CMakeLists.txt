@@ -85,7 +85,7 @@ set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
 # build-in header only
 find_package( Stb REQUIRED )
 find_package( RapidXml REQUIRED )
-find_package( RapidJson REQUIRED )
+#find_package( RapidJson REQUIRED )
 
 #
 # optionals

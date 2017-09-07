@@ -2,7 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#include "xinput_module.h"
+#include "xinput_api.h"
 
 #include "../../../devices/gamepad/gamepad_device.h"
 #include "../../../component/buttons/binary_button.h"
@@ -532,17 +532,14 @@ so_device::gamepad_device_ptr_t xinput_module::create_gamepad( void_t )
                     comp.state = so_device::so_component::button_state::pressed ;
                 }
                 
-                comp.value = msg.value ;
+                comp.value = float_t( msg.value ) / 255.0f ;
                 return true ;
             }
             return false ;
         } ;
 
-        so_device::so_component::value_button vb ;
-        vb.max_value = 255 ;
-
         gamepad_ptr->add_component( mapping.name, logic,
-            so_device::so_component::value_button_t::create( std::move(vb),
+            so_device::so_component::value_button_t::create( 
             "[so_device::xinput_module::create_gamepad] : value_button : "+ mapping.name) ) ;
     } ) ;
 

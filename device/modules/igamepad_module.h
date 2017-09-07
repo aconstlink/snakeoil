@@ -5,36 +5,15 @@
 #ifndef _SNAKEOIL_DEVICE_MODULES_IGAMEPAD_MODULE_H_
 #define _SNAKEOIL_DEVICE_MODULES_IGAMEPAD_MODULE_H_
 
-#include "../typedefs.h"
-#include "../protos.h"
-#include "../result.h"
-#include "../api.h"
-
-#include "../devices/gamepad/gamepad_message.h"
+#include "imodule.h"
 
 namespace so_device
 {
-    class igamepad_module
+    class SNAKEOIL_DEVICE_API igamepad_module : public so_device::imodule
     {
     public:
-
-        virtual so_device::result register_device( so_device::key_cref_t,
-            so_device::gamepad_device_ptr_t ) = 0 ;
-        virtual so_device::result unregister_device( so_device::key_cref_t ) = 0 ;
-
-        virtual so_device::gamepad_device_ptr_t find_any_device( void_t ) = 0 ;
-        
-        /// register a passed virtual device for any(first found) gamepad device
-        /// if the virtual device is not unregistered, it will be destroyed on 
-        /// module destruction time.
-        virtual bool_t register_for_any_device( so_device::so_vdev::ivdev_ptr_t ) = 0 ;
-        virtual bool_t unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t ) = 0 ;
-
-    public:
-
-        virtual void_t update( void_t ) = 0 ;
-        virtual void_t destroy( void_t ) = 0 ;
     };
+    so_typedef( igamepad_module ) ;
 }
 
 #endif

@@ -13,6 +13,7 @@ set( SOURCES
     window/window_id.h
     system/render_system.h
     system/render_system.cpp
+    system/render_system_structs.h
     
     technique/technique_id.h
     technique/itechnique.h

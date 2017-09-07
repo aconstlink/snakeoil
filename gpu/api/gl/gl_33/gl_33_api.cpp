@@ -16,7 +16,7 @@ gl_33_api::gl_33_api( void_t )
 }
 
 //*****************************************************************************************************
-gl_33_api::gl_33_api( gl_33_api && rhv ) : base_t( std::move(rhv) )
+gl_33_api::gl_33_api( gl_33_api_rref_t rhv ) : base_t( std::move(rhv) )
 {
     _context = rhv._context ;
     rhv._context = nullptr ;

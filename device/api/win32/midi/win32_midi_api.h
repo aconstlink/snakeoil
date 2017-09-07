@@ -2,10 +2,10 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_MODULE_WIN32_MIDI_MODULE_H_
-#define _SNAKEOIL_DEVICE_MODULE_WIN32_MIDI_MODULE_H_
+#ifndef _SNAKEOIL_DEVICE_API_WIN32_MIDI_API_H_
+#define _SNAKEOIL_DEVICE_API_WIN32_MIDI_API_H_
 
-#include "../../imidi_module.h"
+#include "../../imidi_api.h"
 #include "../../../devices/midi/midi_message.h"
 
 #include <snakeoil/std/container/vector.hpp>
@@ -17,9 +17,9 @@ namespace so_device
 {
     namespace so_win32
     {
-        class SNAKEOIL_DEVICE_API midi_module : public imidi_module
+        class SNAKEOIL_DEVICE_API win32_midi_api : public imidi_api
         {
-            so_this_typedefs( midi_module ) ;
+            so_this_typedefs( win32_midi_api ) ;
             
         public:
 
@@ -118,11 +118,17 @@ namespace so_device
             so_thread::mutex_t _mtx_in ;
             in_messages_t _ins ;
 
+        private:
+            so_typedefs( so_std::vector< so_device::imidi_notify_ptr_t >, midi_notifies ) ;
+
+            so_thread::mutex_t _mtx_notifies ;
+            midi_notifies_t _midi_notifies ;
+
         public:
 
-            midi_module( void_t ) ;
-            midi_module( this_rref_t ) ;
-            virtual ~midi_module( void_t ) ;
+            win32_midi_api( void_t ) ;
+            win32_midi_api( this_rref_t ) ;
+            virtual ~win32_midi_api( void_t ) ;
 
         public:
             
@@ -132,12 +138,15 @@ namespace so_device
 
         public:
 
-            virtual so_device::result register_device( so_device::key_cref_t, 
-                so_device::midi_device_ptr_t ) ;
+            virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
 
-            virtual so_device::result unregister_device( so_device::key_cref_t ) ;
+            virtual void_t create_devices( so_device::module_registry_ptr_t ) ;
 
-            virtual so_device::midi_device_ptr_t find_device( so_device::key_cref_t ) ;
+            virtual void_t get_device_names( so_std::vector< so_std::string_t > & ) const ;
+
+            virtual so_device::midi_device_ptr_t find_midi_device( so_device::key_cref_t ) ;
+            virtual so_device::midi_device_ptr_t find_any_midi_device( void_t ) ;
+            
 
             virtual void_t update( void_t ) ;
 
@@ -158,7 +167,7 @@ namespace so_device
 
         };
 
-        so_typedef( midi_module ) ;
+        so_typedef( win32_midi_api ) ;
     }
 }
 

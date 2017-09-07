@@ -16,6 +16,8 @@
 
 #include "../service/service.h"
 
+#include "render_system_structs.h"
+
 #include <snakeoil/thread/mutex.h>
 #include <snakeoil/std/container/map.hpp>
 
@@ -32,6 +34,7 @@ namespace so_gpx
         {
             so_gpx::technique_schedule_goal ts ;
             technique_ptr_t tptr ;
+            so_gpx::schedule_instance_t si ;
         };
         so_typedef( schedule_data ) ;
         so_typedefs( so_std::vector<schedule_data_t>, schedule_datas ) ;
@@ -170,12 +173,14 @@ namespace so_gpx
     public:
 
         so_gpx::technique_id_t register_technique( so_gpx::iplug_factory_ptr_t ) ;
+        bool_t unregister_technique( so_gpx::technique_id_t ) ;
 
     public:
         
         /// schedule for main window
         so_gpx::result schedule( so_gpx::technique_id_t ) ;
         so_gpx::result schedule( so_gpx::technique_id_t, so_gpx::window_id_t ) ;
+        so_gpx::result schedule( so_gpx::technique_id_t, so_gpx::window_id_t, so_gpx::schedule_instance_cref_t ) ;
         so_gpx::result schedule_for_init( so_gpx::technique_id_t ) ;
         so_gpx::result schedule_for_init( so_gpx::technique_id_t, so_gpx::window_id_t ) ;
         so_gpx::result schedule_for_release( so_gpx::technique_id_t ) ;
@@ -188,6 +193,9 @@ namespace so_gpx
 
         so_gpx::result schedule_for( so_gpx::technique_id_t, so_gpx::window_id_t, 
             so_gpx::technique_schedule_goal ) ;
+
+        so_gpx::result schedule_for( so_gpx::technique_id_t, so_gpx::window_id_t,
+            so_gpx::technique_schedule_goal, so_gpx::schedule_instance_cref_t ) ;
         
     public: // update thread
 

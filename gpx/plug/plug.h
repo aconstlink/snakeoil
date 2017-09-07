@@ -43,7 +43,7 @@ namespace so_gpx
 
         api_ptr_t api( void_t ) { return _api_ptr ; }
         so_gpx::iglobal_service_ptr_t global_service( void_t ) { return _gservice_ptr ; }
-        so_gpx::ilocal_service_ptr_t local_service( void_t ) { return _gservice_ptr ; }
+        so_gpx::ilocal_service_ptr_t local_service( void_t ) { return _lservice_ptr ; }
 
     public:
 

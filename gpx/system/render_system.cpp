@@ -325,6 +325,28 @@ so_gpx::technique_id_t render_system::register_technique( so_gpx::iplug_factory_
 }
 
 //**********************************************************************************************
+bool_t render_system::unregister_technique( so_gpx::technique_id_t tid )
+{
+    so_gpx::technique_ptr_t tptr = nullptr ;
+    
+    {
+        so_thread::lock_guard_t lk( _mtx_tecs ) ;
+
+        auto const iter = _tecs.find( tid ) ;
+        if( iter == _tecs.end() )
+            return false ;
+
+        tptr = iter->second.tptr ;
+
+        _tecs.erase( iter ) ;
+    }
+
+    so_gpx::technique_t::destroy( tptr ) ;
+
+    return true ;
+}
+
+//**********************************************************************************************
 so_gpx::window_id_t render_system::get_window_id( so_std::string_cref_t name )
 {
     auto const iter = std::find_if( _wis.begin(), _wis.end(), [&]( window_info_cref_t wi )
@@ -379,6 +401,13 @@ so_gpx::result render_system::schedule( so_gpx::technique_id_t tid, so_gpx::wind
 }
 
 //**********************************************************************************************
+so_gpx::result render_system::schedule( so_gpx::technique_id_t tid, 
+    so_gpx::window_id_t wid, so_gpx::schedule_instance_cref_t si )
+{
+    return this_t::schedule_for( tid, wid, technique_schedule_goal::for_exec, si ) ;
+}
+
+//**********************************************************************************************
 so_gpx::result render_system::schedule_for_init( so_gpx::technique_id_t tid )
 {
     return this_t::schedule_for( tid, window_id_t( 0 ), technique_schedule_goal::for_online ) ;
@@ -403,8 +432,15 @@ so_gpx::result render_system::schedule_for_release( so_gpx::technique_id_t tid )
 }
 
 //**********************************************************************************************
-so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::window_id_t wid, 
+so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::window_id_t wid,
     so_gpx::technique_schedule_goal goal )
+{
+    return this_t::schedule_for( tid, wid, goal, so_gpx::schedule_instance_t() ) ;
+}
+
+//**********************************************************************************************
+so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::window_id_t wid, 
+    so_gpx::technique_schedule_goal goal, so_gpx::schedule_instance_cref_t si )
 {
     if( _wis.size() == 0 )
         return so_gpx::failed ;
@@ -424,6 +460,7 @@ so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::
         schedule_data_t sd ;
         sd.ts = goal ;
         sd.tptr = tptr ;
+        sd.si = si ;
 
         so_thread::lock_guard_t lk( _wis[ wid ].shared_ptr->mtx_scheduled ) ;
         _wis[ wid ].shared_ptr->write_buffer().push_back( sd ) ;

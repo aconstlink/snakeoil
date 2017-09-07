@@ -2,8 +2,8 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_MODULES_WIN32_XINPUT_XINPUT_DEVICE_H_
-#define _SNAKEOIL_DEVICE_MODULES_WIN32_XINPUT_XINPUT_DEVICE_H_
+#ifndef _SNAKEOIL_DEVICE_API_WIN32_XINPUT_XINPUT_DEVICE_H_
+#define _SNAKEOIL_DEVICE_API_WIN32_XINPUT_XINPUT_DEVICE_H_
 
 #include "../../../typedefs.h"
 

@@ -16,20 +16,19 @@ namespace so_device
     class SNAKEOIL_DEVICE_API device_system : public idevice_system
     {
         so_this_typedefs( device_system ) ;
-
-        typedef so_std::map< so_std::string_t, so_device::imidi_module_ptr_t > __midi_modules_t ;
-        so_typedefs( __midi_modules_t, midi_modules ) ;
-
-        typedef so_std::map< so_std::string_t, so_device::igamepad_module_ptr_t > __gamepad_modules_t ;
-        so_typedefs( __gamepad_modules_t, gamepad_modules ) ;
+        
+        so_typedefs( so_std::vector<so_device::imidi_api_ptr_t>, midi_apis ) ;
+        so_typedefs( so_std::vector<so_device::igamepad_api_ptr_t>, gamepad_apis ) ;
 
     private:
 
         so_thread::mutex_t _midi_mtx ;
-        midi_modules_t _midis ;
+        midi_apis_t _midis ;
 
         so_thread::mutex_t _gamepad_mtx ;
-        gamepad_modules_t _gamepads ;
+        gamepad_apis_t _gamepads ;
+
+        module_registry_ptr_t _mod_reg ;
 
     public:
 
@@ -45,17 +44,20 @@ namespace so_device
 
     public:
 
-        virtual so_device::result register_module( so_std::string_cref_t, so_device::imidi_module_ptr_t ) ;
-        virtual so_device::result register_module( so_std::string_cref_t, so_device::igamepad_module_ptr_t ) ;
+        so_device::result register_api( so_device::imidi_api_ptr_t ) ;
+        so_device::result register_api( so_device::igamepad_api_ptr_t ) ;
+
+    public: // interface
+
+        virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
+        virtual bool_t get_midi_device_names( so_std::vector< so_std::string_t > & names ) ;
+        virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) ;
+        virtual so_device::midi_device_ptr_t find_any_midi_device( void_t ) ;
+        virtual so_device::gamepad_device_ptr_t find_gamepad_device( void_t ) ;
+        virtual so_device::keyboard_device_ptr_t find_keyboard_device( void_t ) ;
+        virtual so_device::mouse_device_ptr_t find_mouse_device( void_t ) ;
 
         virtual so_device::result update( void_t ) ;
-
-    public:
-
-        virtual so_device::imidi_module_ptr_t get_midi_module( so_std::string_cref_t ) ;
-        virtual so_device::igamepad_module_ptr_t get_gamepad_module( so_std::string_cref_t ) ;
-
-    public: 
 
         virtual void_t destroy( void_t ) ;
 

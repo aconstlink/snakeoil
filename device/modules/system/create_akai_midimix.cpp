@@ -2,31 +2,29 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#include "korg.h"
+#include "system_module.h"
 
-#include "../../../component/buttons/binary_button.h"
-#include "../../../component/sliders/slider.h"
-#include "../../../component/leds/binary_led.h"
-#include "../../../component/knobs/rotary_knob.h"
+#include "../../devices/midi/midi_device.h"
+
+#include "../../component/buttons/binary_button.h"
+#include "../../component/sliders/slider.h"
+#include "../../component/leds/binary_led.h"
+#include "../../component/knobs/rotary_knob.h"
+
+#include <chrono>
 
 using namespace so_device ;
-using namespace so_device::so_midi ;
 
-//****************************************************************************************
-so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
+//*************************************************************************************
+so_device::midi_device_ptr_t system_module::create_akai_midimix( void_t )
 {
-#if 0
     so_device::midi_device::device_info di ;
-    di.device_name = "nanoPAD2" ;
+    di.device_name = "MIDI Mix" ;
     so_device::midi_device mdev( di ) ;
 
     // buttons
     {
-        so_std::vector< size_t > const ids = {
-            // 3 rows
-            32, 33, 34, 35, 36, 37, 38, 39, 48, 49, 50, 51, 52, 53, 54, 55, 64, 65, 66, 67, 68, 69, 70, 71,
-            // left
-            41, 42, 43, 44, 45, 46, 58, 59, 60, 61, 62 } ;
+        so_std::vector< size_t > ids = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 } ;
         for( auto i : ids )
         {
             so_std::string_t i_str = std::to_string( i ) ;
@@ -57,13 +55,13 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
                 auto & b = *reinterpret_cast< so_device::so_component::binary_button_ptr_t >( cptr ) ;
 
                 // press
-                if( msg == so_device::midi_message_t( 176, byte_t( i ), 127, 0 ) )
+                if( msg == so_device::midi_message_t( 144, byte_t( i ), 127, 0 ) )
                 {
                     b.state = so_device::so_component::button_state::pressed ;
                     return true ;
                 }
                 // release
-                else if( msg == so_device::midi_message_t( 176, byte_t( i ), 0, 0 ) )
+                else if( msg == so_device::midi_message_t( 128, byte_t( i ), 127, 0 ) )
                 {
                     b.state = so_device::so_component::button_state::released ;
                     return true ;
@@ -73,13 +71,13 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "b_" + i_str, logic,
                 so_device::so_component::binary_button_t::create(
-                    "[so_device::korg::create_nanopad2] : b_" + i_str ) ) ;
+                    "[system_module::create_akai_midimix] : b_" + i_str ) ) ;
         }
     }
 
     // sliders
     {
-        so_std::vector< size_t > ids = { 0, 1, 2, 3, 4, 5, 6, 7 } ;
+        so_std::vector< size_t > ids = { 19, 23, 27, 31, 49, 53, 57, 61, 62 } ;
         for( auto i : ids )
         {
             so_std::string_t i_str = std::to_string( i ) ;
@@ -106,13 +104,13 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "s_" + i_str, logic,
                 so_device::so_component::slider_t::create(
-                    "[so_device::korg::create_nanopad2] : Slider " + i_str ) ) ;
+                    "[system_module::create_akai_midimix] : Slider " + i_str ) ) ;
         }
     }
 
     // knobs
     {
-        so_std::vector< size_t > ids = { 16, 17, 18, 19, 20, 21, 22, 23 } ;
+        so_std::vector< size_t > ids = { 16, 17, 18, 20, 21, 22, 24, 25, 26, 28, 29, 30, 46, 47, 48, 50, 51, 52, 54, 55, 56, 58, 59, 60 } ;
         for( auto i : ids )
         {
             so_std::string_t i_str = std::to_string( i ) ;
@@ -139,7 +137,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "k_" + i_str, logic,
                 so_device::so_component::rotary_knob_t::create(
-                    "[so_device::korg::create_nanopad2] : Rotary Knob " + i_str ) ) ;
+                    "[system_module::create_akai_midimix] : Rotary Knob " + i_str ) ) ;
         }
     }
 
@@ -147,11 +145,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
     {
         typedef std::chrono::high_resolution_clock iclock_t ;
 
-        so_std::vector< size_t > ids = { // 3 rows
-            32, 33, 34, 35, 36, 37, 38, 39, 48, 49, 50, 51, 52, 53, 54, 55, 64, 65, 66, 67, 68, 69, 70, 71,
-            // left
-            41, 42, 43, 44, 45, 46, 58, 59, 60, 61, 62 } ;
-
+        so_std::vector< size_t > ids = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 } ;
         for( auto i : ids )
         {
             so_std::string_t i_str = std::to_string( i ) ;
@@ -172,12 +166,12 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
                         led.tp = iclock_t::now() ;
                         led.value = true ;
 
-                        msg = so_device::midi_message_t( 176, byte_t( i ), 127, 127 ) ;
+                        msg = so_device::midi_message_t( 144, byte_t( i ), 127, 0 ) ;
                         return so_device::midi_output_result::transmit_and_queue ;
                     }
                     else if( ls == so_device::so_component::led_state::off )
                     {
-                        msg = so_device::midi_message_t( 176, byte_t( i ), 0, 0 ) ;
+                        msg = so_device::midi_message_t( 144, byte_t( i ), 0, 0 ) ;
                         return so_device::midi_output_result::transmit_and_dismiss ;
                     }
                 }
@@ -192,7 +186,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
                     {
                         led.tp = tp ;
                         led.value = !led.value ;
-                        msg = so_device::midi_message_t( 176, byte_t( i ), led.value ? 127 : 0, 127 ) ;
+                        msg = so_device::midi_message_t( 144, byte_t( i ), led.value ? 127 : 0, 0 ) ;
                         return so_device::midi_output_result::transmit_and_queue ;
                     }
 
@@ -204,12 +198,10 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "led_" + i_str, logic,
                 so_device::so_component::binary_led_t::create(
-                    "[so_device::korg::create_nanopad2] : Binary Led " + i_str ) ) ;
+                    "[system_module::create_akai_midimix] : Binary Led " + i_str ) ) ;
         }
     }
 
     return so_device::midi_device_t::create( std::move( mdev ),
-        "[so_device::korg::create_nanopad2] : Midi Mix Midi Controller Device" ) ;
-#endif
-    return nullptr ;
+        "[system_module::create_akai_midimix] : AKAI MidiMix" ) ;
 }

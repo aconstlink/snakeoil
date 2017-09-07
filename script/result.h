@@ -15,7 +15,7 @@ namespace so_script
         failed,
         invalid_argument,
         invalid_argname,
-        invalid_pointer        
+        invalid_pointer
     };
 
     namespace so_internal

@@ -26,6 +26,7 @@ set( COMPONENT_SOURCES
 
     component/leds/led_state.h
     component/leds/binary_led.h
+    component/leds/multi_led.h
 
     component/motors/motor_state.h
     component/motors/value_motor.h
@@ -38,6 +39,12 @@ set( COMPONENT_SOURCES
     component/sticks/stick_state.h
     component/sticks/stick.h
     component/sticks/value_stick.h
+
+    component/touch/single_touch.h
+    component/touch/touch_state.h
+
+    component/lights/light_state.h
+    component/lights/light_bar.h
 )
 
 #
@@ -49,14 +56,7 @@ set( MIDI_SOURCES
     devices/midi/midi_device.h
     devices/midi/midi_device.cpp
     devices/midi/midi_enums.h
-    devices/midi/akai/akai.h
-    devices/midi/akai/akai.cpp
-    devices/midi/akai/midimix.cpp
-    devices/midi/korg/korg.h
-    devices/midi/korg/korg.cpp
-    devices/midi/korg/nanokontrol2.cpp
-    devices/midi/korg/nanopad2.cpp
-    devices/midi/behringer/cmd_mm_1.h
+    devices/midi/midi_device_desc.h
 )
 
 #
@@ -82,28 +82,46 @@ set( DEVICE_SOURCES
     ${VDEV_SOURCES}
 )
 
-
 #
 # modules
 #
-set( MODULE_SOURCES
-    modules/imidi_module.h
-    modules/igamepad_module.h
-)
-set( WIN32_MODULE_SOURCES
-    modules/win32/midi/midi_module.h
-    modules/win32/midi/midi_module.cpp
-    modules/win32/xinput/xinput_module.h
-    modules/win32/xinput/xinput_module.cpp
-    modules/win32/xinput/xinput_device.h
-    modules/win32/xinput/xinput_device.cpp
-    modules/win32/xinput/xinput_enums.h
-    modules/win32/xinput/xinput_mappings.h
-    modules/win32/xinput/xinput_mappings.cpp
+set( MODULES_SOURCES
+  modules/module_structs.h
+  modules/script_type.h
+  modules/module_registry.h
+  modules/module_registry.cpp
+  modules/imodule.h
+  modules/igamepad_module.h
+  modules/ikeyboard_module.h
+  modules/imouse_module.h
+  modules/imidi_module.h
+  modules/system/system_module.h
+  modules/system/system_module.cpp
+  modules/system/create_korg_nanopad2.cpp
+  modules/system/create_korg_nanokontrol2.cpp
+  modules/system/create_akai_apckeys25.cpp
+  modules/system/create_akai_midimix.cpp
+  modules/system/create_behringer_cmdmm1.cpp
 )
 
-set( WIN32_SOURCES
-
+#
+# apis
+#
+set( API_SOURCES
+  api/midi_notify.h
+    api/imidi_api.h
+    api/igamepad_api.h
+)
+set( WIN32_API_SOURCES
+    api/win32/midi/win32_midi_api.h
+    api/win32/midi/win32_midi_api.cpp
+    api/win32/xinput/xinput_api.h
+    api/win32/xinput/xinput_api.cpp
+    api/win32/xinput/xinput_device.h
+    api/win32/xinput/xinput_device.cpp
+    api/win32/xinput/xinput_enums.h
+    api/win32/xinput/xinput_mappings.h
+    api/win32/xinput/xinput_mappings.cpp
 )
 
 set( WIN32_SYSTEM_SOURCES
@@ -131,7 +149,7 @@ if( SNAKEOIL_TARGET_OS_WIN )
     set( OS_SPECIFIC_SOURCES
         ${OS_SPECIFIC_SOURCES}
         ${WIN32_SOURCES}
-        ${WIN32_MODULE_SOURCES}
+        ${WIN32_API_SOURCES}
         ${WIN32_SYSTEM_SOURCES}
     )	
     set( OS_SPECIFIC_LIBS winmm.lib )
@@ -149,8 +167,9 @@ set( SOURCES
     ${COMPONENT_SOURCES}
     ${DEVICE_SOURCES}
     ${SYSTEM_SOURCES}
-    ${MODULE_SOURCES}
+    ${API_SOURCES}
     ${OS_SPECIFIC_SOURCES}
+    ${MODULES_SOURCES}
 )
 
 so_vs_src_dir( SOURCES )

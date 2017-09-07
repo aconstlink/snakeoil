@@ -2,8 +2,12 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#include "midi_module.h"
+#include "win32_midi_api.h"
 #include "../../../devices/midi/midi_device.h"
+
+#include "../../midi_notify.h"
+
+#include "../../../modules/module_registry.h"
 
 #include <snakeoil/log/log.h>
 #include <snakeoil/core/macros/move.h>
@@ -23,8 +27,8 @@ void CALLBACK midi_in_proc(
     DWORD_PTR dwParam2
     )
 {
-    so_device::so_win32::midi_module_t::global_self_ptr_t gptr = 
-        (so_device::so_win32::midi_module_t::global_self_ptr_t)(dwInstance) ;
+    so_device::so_win32::win32_midi_api_t::global_self_ptr_t gptr = 
+        (so_device::so_win32::win32_midi_api_t::global_self_ptr_t)(dwInstance) ;
 
     if( so_core::is_nullptr(gptr) )
     {
@@ -32,7 +36,7 @@ void CALLBACK midi_in_proc(
         return ;
     }
 
-    so_device::so_win32::midi_module_ptr_t _midi_mod_ptr = 
+    so_device::so_win32::win32_midi_api_ptr_t _midi_mod_ptr = 
         gptr->self_ptr ;
 
     if( wMsg == MIM_OPEN )
@@ -74,25 +78,26 @@ void CALLBACK midi_out_proc(
 }
 
 //****************************************************************************************
-midi_module::midi_module( void_t ) 
+win32_midi_api::win32_midi_api( void_t ) 
 {
     _global_self_ptr = so_device::memory::alloc<global_self_t>(
         "[so_device::midi_module::midi_module] : global self") ;
 }
 
 //****************************************************************************************
-midi_module::midi_module( this_rref_t rhv ) 
+win32_midi_api::win32_midi_api( this_rref_t rhv ) 
 {
     _devices = std::move( rhv._devices ) ;
     _ins = std::move( rhv._ins ) ;
 
     so_move_member_ptr( _global_self_ptr, rhv ) ;
     _global_self_ptr->self_ptr = this ;
-    
+
+    _midi_notifies = std::move( rhv._midi_notifies ) ;
 }
 
 //****************************************************************************************
-midi_module::~midi_module( void_t ) 
+win32_midi_api::~win32_midi_api( void_t ) 
 {
     for( auto & item : _devices )
     {
@@ -112,104 +117,89 @@ midi_module::~midi_module( void_t )
             midiOutClose( item.mdata.outh ) ;*/
     }
 
+    for( auto * ptr : _midi_notifies )
+    {
+        ptr->destroy() ;
+    }
+
     so_device::memory::dealloc( _global_self_ptr ) ;
 }
 
 //****************************************************************************************
-midi_module::this_ptr_t midi_module::create( so_memory::purpose_cref_t p ) 
+win32_midi_api::this_ptr_t win32_midi_api::create( so_memory::purpose_cref_t p ) 
 {
     return so_device::memory::alloc( this_t(), p ) ;
 }
 
 //****************************************************************************************
-midi_module::this_ptr_t midi_module::create( this_rref_t rhv, so_memory::purpose_cref_t p ) 
+win32_midi_api::this_ptr_t win32_midi_api::create( this_rref_t rhv, so_memory::purpose_cref_t p ) 
 {
     return so_device::memory::alloc( std::move(rhv), p ) ;
 }
 
 //****************************************************************************************
-void_t midi_module::destroy( this_ptr_t ptr ) 
+void_t win32_midi_api::destroy( this_ptr_t ptr ) 
 {
     so_device::memory::dealloc( ptr ) ;
 }
 
 //****************************************************************************************
-so_device::result midi_module::register_device( so_device::key_cref_t key, 
-    so_device::midi_device_ptr_t dptr ) 
-{        
-    so_thread::lock_guard_t lk( _mtx ) ;
-
-    {
-        auto iter = std::find_if( _devices.begin(), _devices.end(), 
-            [&]( this_t::store_data_cref_t item )
-            {
-                return key == item.key ;
-            } ) ;
-
-        if( iter != _devices.end() )
-        {
-            so_log::log::error( "[so_device::so_win32::midi_module::register_device] : \
-                                 key already in use :" + key ) ;
-            return so_device::invalid_argument ;
-        }
-    }
-
-    {
-        auto iter = std::find_if( _devices.begin(), _devices.end(), 
-            [&]( this_t::store_data_cref_t item )
-            {
-                return item.dev_ptr == dptr ;
-            } ) ;
-
-        if( iter != _devices.end() )
-        {
-            so_log::log::error( "[so_device::so_win32::midi_module::register_device] : \
-                                    device already registered : " + iter->key ) ;
-            return so_device::ok ;
-        }
-    }
-
-    this_t::store_data sd ;
-    sd.key = key ;
-    sd.dev_ptr = dptr ;
-    _devices.push_back( sd ) ;    
-
-    check_handle_for_device( _devices.size()-1 ) ;
-    
-    return so_device::ok ;
-}
-
-//****************************************************************************************
-so_device::result midi_module::unregister_device( so_device::key_cref_t key ) 
+void_t win32_midi_api::install_midi_notify( so_device::imidi_notify_ptr_t nptr )
 {
-    this_t::store_data_t item ;
-
+    so_thread::lock_guard_t lk( _mtx_notifies ) ;
+    
     {
-        so_thread::lock_guard_t lk( _mtx ) ;
-
-        auto iter = std::find_if( _devices.begin(), _devices.end(),
-            [&]( this_t::store_data_cref_t item )
-        {
-            return item.key == key ;
-        } ) ;
-
-        if( iter == _devices.end() )
-        {
-            so_log::log::error( "[so_device::so_win32::midi_module::unregister_device] : \
-                                                              invalid key : " + key ) ;
-            return so_device::invalid_argument ;
-        }
-
-        item = *iter ;
-
-        _devices.erase( iter ) ;
+        auto const iter = std::find( _midi_notifies.begin(), _midi_notifies.end(), nptr ) ;
+        if( iter != _midi_notifies.end() )
+            return ;
     }
 
-    return this_t::unregister_device( item ) ;
+    _midi_notifies.push_back( nptr ) ;
 }
 
 //****************************************************************************************
-so_device::midi_device_ptr_t midi_module::find_device( so_device::key_cref_t key ) 
+void_t win32_midi_api::create_devices( so_device::module_registry_ptr_t mreg_ptr )
+{
+    so_std::vector< so_std::string_t > names ;
+    this_t::get_device_names( names ) ;
+
+    for( auto const & name : names )
+    {
+        auto * mdev = mreg_ptr->create_midi_device( name ) ;
+        if( so_core::is_not_nullptr( mdev ) )
+        {
+            this_t::store_data sd ;
+            sd.key = name ;
+            sd.dev_ptr = mdev ;
+            _devices.push_back( sd ) ;
+
+            check_handle_for_device( _devices.size() - 1 ) ;
+        }
+    }
+}
+
+//****************************************************************************************
+void_t win32_midi_api::get_device_names( so_std::vector< so_std::string_t > & names_out ) const
+{
+    for( uint_t i = 0; i < midiInGetNumDevs(); ++i )
+    {
+        MIDIINCAPS caps ;
+        ZeroMemory( &caps, sizeof( MIDIINCAPS ) ) ;
+
+        MMRESULT const res = midiInGetDevCaps( i, &caps, sizeof( MIDIINCAPS ) ) ;
+        if( res != MMSYSERR_NOERROR )
+        {
+            so_log::log::warning( "[so_device::win32_midi_api::get_device_names] : "
+                                   "unable to retrieve device caps" ) ;
+            continue ;
+        }
+
+        names_out.push_back( so_std::string_t( caps.szPname ) ) ;
+    }
+}
+
+//****************************************************************************************
+so_device::midi_device_ptr_t win32_midi_api::find_midi_device( so_device::key_cref_t key ) 
 {
     so_thread::lock_guard_t lk(_mtx) ;
 
@@ -228,7 +218,18 @@ so_device::midi_device_ptr_t midi_module::find_device( so_device::key_cref_t key
 }
 
 //****************************************************************************************
-so_device::result midi_module::unregister_device( store_data_ref_t item ) 
+so_device::midi_device_ptr_t win32_midi_api::find_any_midi_device( void_t )
+{
+    so_thread::lock_guard_t lk( _mtx ) ;
+
+    if( _devices.size() > 0 )
+        return _devices[ 0 ].dev_ptr ;
+
+    return nullptr ;
+}
+
+//****************************************************************************************
+so_device::result win32_midi_api::unregister_device( store_data_ref_t item ) 
 {
     if( item.mdata.inh != NULL )
     {
@@ -276,7 +277,7 @@ so_device::result midi_module::unregister_device( store_data_ref_t item )
 }
 
 //****************************************************************************************
-void_t midi_module::update( void_t ) 
+void_t win32_midi_api::update( void_t ) 
 {
     // time interval
     // check periodically, so devices can be 
@@ -318,23 +319,30 @@ void_t midi_module::update( void_t )
 }
 
 //****************************************************************************************
-void_t midi_module::destroy( void_t ) 
+void_t win32_midi_api::destroy( void_t ) 
 {
     this_t::destroy( this ) ;
 }
 
 //****************************************************************************************
-void_t midi_module::handle_message( HMIDIIN hin, so_device::midi_message_cref_t msg ) 
+void_t win32_midi_api::handle_message( HMIDIIN hin, so_device::midi_message_cref_t msg ) 
 {
     for( auto & item : _devices )
     {
         if( item.mdata.inh == hin )
+        {
+            for( auto * ptr : _midi_notifies )
+            {
+                ptr->on_message( item.dev_ptr->get_device_info().device_name, msg ) ;
+            }
+
             item.dev_ptr->receive_message( msg ) ;
+        }
     }
 }
 
 //****************************************************************************************
-void_t midi_module::check_handle_for_device( size_t slot ) 
+void_t win32_midi_api::check_handle_for_device( size_t slot ) 
 {
     if( slot >= _devices.size() ) 
         return ;
@@ -358,7 +366,7 @@ void_t midi_module::check_handle_for_device( size_t slot )
         MIDIINCAPS caps ;
         ZeroMemory( &caps, sizeof(MIDIINCAPS) ) ;
 
-        MMRESULT res = midiInGetDevCaps( i, &caps, sizeof(MIDIINCAPS) ) ;
+        MMRESULT const res = midiInGetDevCaps( i, &caps, sizeof(MIDIINCAPS) ) ;
         if( res != MMSYSERR_NOERROR )
         {
             so_log::log::warning( "[so_device::midi_module::check_handle_for_device] : \
@@ -386,7 +394,7 @@ void_t midi_module::check_handle_for_device( size_t slot )
         MIDIOUTCAPS caps ;
         ZeroMemory( &caps, sizeof( MIDIOUTCAPS ) ) ;
 
-        MMRESULT res = midiOutGetDevCaps( i, &caps, sizeof( MIDIOUTCAPS ) ) ;
+        MMRESULT const res = midiOutGetDevCaps( i, &caps, sizeof( MIDIOUTCAPS ) ) ;
         if(res != MMSYSERR_NOERROR)
         {
             so_log::log::warning( "[so_device::midi_module::check_handle_for_device] : \
@@ -460,7 +468,7 @@ void_t midi_module::check_handle_for_device( size_t slot )
 }
 
 //****************************************************************************************
-void_t midi_module::check_for_new_devices( void_t ) 
+void_t win32_midi_api::check_for_new_devices( void_t ) 
 {
 
 }

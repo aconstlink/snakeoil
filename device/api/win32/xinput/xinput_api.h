@@ -2,10 +2,10 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_MODULES_WIN32_XINPUT_MODULE_H_
-#define _SNAKEOIL_DEVICE_MODULES_WIN32_XINPUT_MODULE_H_
+#ifndef _SNAKEOIL_DEVICE_API_WIN32_XINPUT_API_H_
+#define _SNAKEOIL_DEVICE_API_WIN32_XINPUT_API_H_
 
-#include "../../igamepad_module.h"
+#include "../../igamepad_api.h"
 #include "../../../devices/gamepad/gamepad_device.h"
 #include "../../../devices/gamepad/gamepad_message.h"
 
@@ -19,7 +19,7 @@ namespace so_device
 {
     namespace so_win32
     {
-        class xinput_module : public igamepad_module
+        class xinput_module : public igamepad_api
         {
             so_this_typedefs( xinput_module ) ;
 

@@ -6,7 +6,7 @@
 
 #include "../../component/iinput_component.h"
 #include "../../component/ioutput_component.h"
-#include "../../modules/imidi_module.h"
+//#include "../../api/imidi_api.h"
 
 #include "../notification/iuser_notify.h"
 

@@ -3,7 +3,7 @@
 // Distributed under the MIT license
 //------------------------------------------------------------
 #include "gamepad_device.h"
-#include "../../modules/igamepad_module.h"
+//#include "../../api/igamepad_api.h"
 #include "../../component/iinput_component.h"
 #include "../../component/ioutput_component.h"
 

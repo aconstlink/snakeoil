@@ -2,8 +2,8 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_MODULES_XINPUT_XINPUT_MAPPINGS_H_
-#define _SNAKEOIL_DEVICE_MODULES_XINPUT_XINPUT_MAPPINGS_H_
+#ifndef _SNAKEOIL_DEVICE_API_XINPUT_XINPUT_MAPPINGS_H_
+#define _SNAKEOIL_DEVICE_API_XINPUT_XINPUT_MAPPINGS_H_
 
 #include "xinput_enums.h"
 

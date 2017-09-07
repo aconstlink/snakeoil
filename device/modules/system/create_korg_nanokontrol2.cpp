@@ -2,31 +2,32 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#include "korg.h"
+#include "system_module.h"
 
-#include "../../../component/buttons/binary_button.h"
-#include "../../../component/sliders/slider.h"
-#include "../../../component/leds/binary_led.h"
-#include "../../../component/knobs/rotary_knob.h"
+#include "../../devices/midi/midi_device.h"
+
+#include "../../component/buttons/binary_button.h"
+#include "../../component/sliders/slider.h"
+#include "../../component/leds/binary_led.h"
+#include "../../component/knobs/rotary_knob.h"
 
 using namespace so_device ;
-using namespace so_device::so_midi ;
 
-//****************************************************************************************
-so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
+//*************************************************************************************
+so_device::midi_device_ptr_t system_module::create_korg_nanokontrol2( void_t )
 {
-#if 0
     so_device::midi_device::device_info di ;
-    di.device_name = "nanoPAD2" ;
+    di.device_name = "nanoKONTROL2" ;
     so_device::midi_device mdev( di ) ;
 
     // buttons
     {
-        so_std::vector< size_t > const ids = {
+        so_std::vector< size_t > ids = {
             // 3 rows
             32, 33, 34, 35, 36, 37, 38, 39, 48, 49, 50, 51, 52, 53, 54, 55, 64, 65, 66, 67, 68, 69, 70, 71,
             // left
             41, 42, 43, 44, 45, 46, 58, 59, 60, 61, 62 } ;
+
         for( auto i : ids )
         {
             so_std::string_t i_str = std::to_string( i ) ;
@@ -73,7 +74,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "b_" + i_str, logic,
                 so_device::so_component::binary_button_t::create(
-                    "[so_device::korg::create_nanopad2] : b_" + i_str ) ) ;
+                    "[system_module::create_korg_nanokontrol2] : b_" + i_str ) ) ;
         }
     }
 
@@ -106,7 +107,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "s_" + i_str, logic,
                 so_device::so_component::slider_t::create(
-                    "[so_device::korg::create_nanopad2] : Slider " + i_str ) ) ;
+                    "[system_module::create_korg_nanokontrol2] : Slider " + i_str ) ) ;
         }
     }
 
@@ -139,7 +140,7 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "k_" + i_str, logic,
                 so_device::so_component::rotary_knob_t::create(
-                    "[so_device::korg::create_nanopad2] : Rotary Knob " + i_str ) ) ;
+                    "[system_module::create_korg_nanokontrol2] : Rotary Knob " + i_str ) ) ;
         }
     }
 
@@ -204,12 +205,10 @@ so_device::midi_device_ptr_t korg::create_nanopad2( void_t )
 
             mdev.add_component( "led_" + i_str, logic,
                 so_device::so_component::binary_led_t::create(
-                    "[so_device::korg::create_nanopad2] : Binary Led " + i_str ) ) ;
+                    "[system_module::create_korg_nanokontrol2] : Binary Led " + i_str ) ) ;
         }
     }
 
     return so_device::midi_device_t::create( std::move( mdev ),
-        "[so_device::korg::create_nanopad2] : Midi Mix Midi Controller Device" ) ;
-#endif
-    return nullptr ;
+        "[system_module::create_korg_nanokontrol2] : KORG nanoKONTROL2" ) ;
 }

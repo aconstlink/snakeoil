@@ -4,8 +4,8 @@
 //------------------------------------------------------------
 #include "../device_system.h"
 
-#include "../../modules/win32/midi/midi_module.h"
-#include "../../modules/win32/xinput/xinput_module.h"
+#include "../../api/win32/midi/win32_midi_api.h"
+#include "../../api/win32/xinput/xinput_api.h"
 
 #include <snakeoil/log/log.h>
 
@@ -16,10 +16,10 @@ void_t device_system::create_default_system_modules( void_t )
 {
     // midi
     {
-        auto * midi_mod_ptr = so_device::so_win32::midi_module_t::create(
+        auto * midi_mod_ptr = so_device::so_win32::win32_midi_api_t::create(
             "[so_device::device_system::create_default_system_modules] : midi module" ) ;
 
-        auto res = this->register_module( "system", midi_mod_ptr ) ;
+        auto res = this->register_api( midi_mod_ptr ) ;
         so_log::log::error( so_device::no_success( res ),
             "[so_device::device_system::create_default_system_modules] : midi module" ) ;
 
@@ -32,7 +32,7 @@ void_t device_system::create_default_system_modules( void_t )
         auto * xinput_mod_ptr = so_device::so_win32::xinput_module_t::create(
             "[so_device::device_system::create_default_system_modules] : xinput module" ) ;
 
-        auto res = this->register_module( "system", xinput_mod_ptr ) ;
+        auto res = this->register_api( xinput_mod_ptr ) ;
         so_log::log::error( so_device::no_success( res ),
             "[so_device::device_system::create_default_system_modules] : midi module" ) ;
 

@@ -27,16 +27,27 @@ namespace so_device
         so_class_proto_typedefs( xbox_360 ) ;
     }
     
-    so_class_proto_typedefs( imidi_module ) ;
-    so_class_proto_typedefs( igamepad_module ) ;
+    so_class_proto_typedefs( imidi_api ) ;
+    so_class_proto_typedefs( igamepad_api ) ;
 
     so_class_proto_typedefs( idevice ) ;
     so_class_proto_typedefs( midi_device ) ;
     so_class_proto_typedefs( gamepad_device ) ;
+    so_class_proto_typedefs( keyboard_device ) ;
+    so_class_proto_typedefs( mouse_device ) ;
 
     so_class_proto_typedefs( idevice_system ) ;
 
     so_class_proto_typedefs( iuser_notify ) ;
+
+    so_class_proto_typedefs( module_registry ) ;
+    so_class_proto_typedefs( imodule ) ;
+    so_class_proto_typedefs( imidi_module ) ;
+    so_class_proto_typedefs( igamepad_module ) ;
+    so_class_proto_typedefs( imouse_module ) ;
+    so_class_proto_typedefs( ikeyboard_module ) ;
+
+    so_class_proto_typedefs( imidi_notify ) ;
 }
 
 #endif

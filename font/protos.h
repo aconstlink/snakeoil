@@ -23,7 +23,7 @@ namespace so_font
 
     so_class_proto_typedefs( face_config ) ;
 
-    so_class_proto_typedefs( glyph_atlas_2d ) ;
+    so_class_proto_typedefs( glyph_atlas ) ;
 
 }
 

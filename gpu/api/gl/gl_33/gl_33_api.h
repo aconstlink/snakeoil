@@ -54,6 +54,7 @@ namespace so_gpu
         public:
 
             gl_33_api( void_t ) ;
+            gl_33_api( this_cref_t ) = delete ;
             gl_33_api( this_rref_t rhv ) ;
             gl_33_api( gl_context_ptr_t ctx ) ;
             virtual ~gl_33_api( void_t ) ;

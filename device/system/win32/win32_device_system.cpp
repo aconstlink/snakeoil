@@ -29,7 +29,7 @@ void_t device_system::create_default_system_modules( void_t )
 
     // xinput
     {
-        auto * xinput_mod_ptr = so_device::so_win32::xinput_module_t::create(
+        auto * xinput_mod_ptr = so_device::so_win32::xinput_api_t::create(
             "[so_device::device_system::create_default_system_modules] : xinput module" ) ;
 
         auto res = this->register_api( xinput_mod_ptr ) ;

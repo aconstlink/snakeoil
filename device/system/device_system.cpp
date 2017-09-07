@@ -180,7 +180,7 @@ so_device::midi_device_ptr_t device_system::find_midi_device( so_std::string_cre
 }
 
 //****************************************************************************************
-so_device::midi_device_ptr_t device_system::find_any_midi_device( void_t )
+so_device::midi_device_ptr_t device_system::find_midi_device( void_t )
 {
     if( _midis.size() > 0 )
         return _midis[ 0 ]->find_any_midi_device() ;
@@ -191,8 +191,13 @@ so_device::midi_device_ptr_t device_system::find_any_midi_device( void_t )
 //****************************************************************************************
 so_device::gamepad_device_ptr_t device_system::find_gamepad_device( void_t )
 {
-    // return the first gamepad found
-
+    for( auto * api : _gamepads )
+    {
+        auto * dev = api->find_any_device() ;
+        if( so_core::is_not_nullptr( dev ) )
+            return dev ;
+    }
+    
     return nullptr ;
 }
 

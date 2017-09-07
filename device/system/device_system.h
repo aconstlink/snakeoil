@@ -52,7 +52,7 @@ namespace so_device
         virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
         virtual bool_t get_midi_device_names( so_std::vector< so_std::string_t > & names ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) ;
-        virtual so_device::midi_device_ptr_t find_any_midi_device( void_t ) ;
+        virtual so_device::midi_device_ptr_t find_midi_device( void_t ) ;
         virtual so_device::gamepad_device_ptr_t find_gamepad_device( void_t ) ;
         virtual so_device::keyboard_device_ptr_t find_keyboard_device( void_t ) ;
         virtual so_device::mouse_device_ptr_t find_mouse_device( void_t ) ;

@@ -19,9 +19,9 @@ namespace so_device
 {
     namespace so_win32
     {
-        class xinput_module : public igamepad_api
+        class xinput_api : public igamepad_api
         {
-            so_this_typedefs( xinput_module ) ;
+            so_this_typedefs( xinput_api ) ;
 
             so_typedefs( so_std::vector<so_device::so_vdev::ivdev_ptr_t>, vdevs ) ;
 
@@ -53,9 +53,9 @@ namespace so_device
 
         public:
 
-            xinput_module( void_t ) ;
-            xinput_module( this_rref_t ) ;
-            virtual ~xinput_module( void_t ) ;
+            xinput_api( void_t ) ;
+            xinput_api( this_rref_t ) ;
+            virtual ~xinput_api( void_t ) ;
 
         public:
 
@@ -97,7 +97,7 @@ namespace so_device
                 so_device::so_win32::xinput_device_cref_t xdev,
                 so_device::gamepad_device_ref_t ) ;
         };
-        so_typedef( xinput_module ) ;
+        so_typedef( xinput_api ) ;
     }
 }
 

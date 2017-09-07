@@ -25,7 +25,7 @@ using namespace so_device ;
 using namespace so_device::so_win32 ;
 
 //****************************************************************************************
-xinput_module::xinput_module( void_t ) 
+xinput_api::xinput_api( void_t ) 
 {
 #if defined( SNAKEOIL_OS_WIN8 )
     XInputEnable( true ) ;
@@ -35,14 +35,14 @@ xinput_module::xinput_module( void_t )
 }
 
 //****************************************************************************************
-xinput_module::xinput_module( this_rref_t rhv )
+xinput_api::xinput_api( this_rref_t rhv )
 {
     _devices = std::move( rhv._devices ) ;
     _xinput_mappings = std::move( rhv._xinput_mappings ) ;
 }
 
 //****************************************************************************************
-xinput_module::~xinput_module( void_t )
+xinput_api::~xinput_api( void_t )
 {
 #if defined( SNAKEOIL_OS_WIN8 )
     XInputEnable( false ) ;
@@ -56,32 +56,32 @@ xinput_module::~xinput_module( void_t )
 }
 
 //****************************************************************************************
-xinput_module::this_ptr_t xinput_module::create( so_memory::purpose_cref_t p )
+xinput_api::this_ptr_t xinput_api::create( so_memory::purpose_cref_t p )
 {
     return so_device::memory::alloc( this_t(), p ) ;
 }
 
 //****************************************************************************************
-void_t xinput_module::destroy( this_ptr_t ptr )
+void_t xinput_api::destroy( this_ptr_t ptr )
 {
     so_device::memory::dealloc( ptr ) ;
 }
 
 //****************************************************************************************
-so_device::result xinput_module::register_device( so_device::key_cref_t,
+so_device::result xinput_api::register_device( so_device::key_cref_t,
     so_device::gamepad_device_ptr_t )
 {
     return so_device::failed ;
 }
 
 //****************************************************************************************
-so_device::result xinput_module::unregister_device( so_device::key_cref_t )
+so_device::result xinput_api::unregister_device( so_device::key_cref_t )
 {
     return so_device::failed ;
 }
 
 //****************************************************************************************
-void_t xinput_module::update( void_t )
+void_t xinput_api::update( void_t )
 {
     // reset all virtual devices
     // @todo improve this!
@@ -173,13 +173,13 @@ void_t xinput_module::update( void_t )
 }
 
 //****************************************************************************************
-void_t xinput_module::destroy( void_t )
+void_t xinput_api::destroy( void_t )
 {
     this_t::destroy( this ) ;
 }
 
 //****************************************************************************************
-so_device::gamepad_device_ptr_t xinput_module::find_any_device( void_t ) 
+so_device::gamepad_device_ptr_t xinput_api::find_any_device( void_t ) 
 {
     if( _devices.size() == 0 )
         return nullptr ;
@@ -188,7 +188,7 @@ so_device::gamepad_device_ptr_t xinput_module::find_any_device( void_t )
 }
 
 //****************************************************************************************
-bool_t xinput_module::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivdev_ptr )
+bool_t xinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivdev_ptr )
 {
     if( so_core::is_nullptr( ivdev_ptr ) )
         return false ;
@@ -375,7 +375,7 @@ bool_t xinput_module::register_for_any_device( so_device::so_vdev::ivdev_ptr_t i
 }
 
 //****************************************************************************************
-bool_t xinput_module::unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t ptr )
+bool_t xinput_api::unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t ptr )
 {
     for( gamepad_data & d : _devices )
     {
@@ -391,7 +391,7 @@ bool_t xinput_module::unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t
 }
 
 //****************************************************************************************
-void_t xinput_module::init_gamepads( void_t ) 
+void_t xinput_api::init_gamepads( void_t ) 
 {
 #if defined( SNAKEOIL_OS_WIN8 )
     XInputEnable( true ) ;
@@ -436,7 +436,7 @@ void_t xinput_module::init_gamepads( void_t )
 }
 
 //****************************************************************************************
-so_device::gamepad_device_ptr_t xinput_module::create_gamepad( void_t ) 
+so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t ) 
 {
     auto * gamepad_ptr =  so_device::gamepad_device_t::create(
         "[xinput_module::create_gamepad] : gamepad_device" ) ;
@@ -670,7 +670,7 @@ so_device::gamepad_device_ptr_t xinput_module::create_gamepad( void_t )
 }
 
 //****************************************************************************************
-bool_t xinput_module::handle_button( XINPUT_STATE const & state, DWORD const button_flag,
+bool_t xinput_api::handle_button( XINPUT_STATE const & state, DWORD const button_flag,
     so_device::so_win32::xinput_device_cref_t xdev,
     so_device::gamepad_device_ref_t gamepad )
 {
@@ -714,7 +714,7 @@ bool_t xinput_module::handle_button( XINPUT_STATE const & state, DWORD const but
 }
 
 //****************************************************************************************
-bool_t xinput_module::handle_stick( this_t::which_stick ws, XINPUT_STATE const & state,
+bool_t xinput_api::handle_stick( this_t::which_stick ws, XINPUT_STATE const & state,
     so_device::so_win32::xinput_device_cref_t xdev,
     so_device::gamepad_device_ref_t gamepad ) 
 {
@@ -772,7 +772,7 @@ bool_t xinput_module::handle_stick( this_t::which_stick ws, XINPUT_STATE const &
 }
 
 //****************************************************************************************
-bool_t xinput_module::handle_trigger( this_t::which_trigger wt, XINPUT_STATE const & state,
+bool_t xinput_api::handle_trigger( this_t::which_trigger wt, XINPUT_STATE const & state,
     so_device::so_win32::xinput_device_cref_t xdev,
     so_device::gamepad_device_ref_t gamepad ) 
 {

@@ -26,8 +26,8 @@ namespace so_device
         /// finds a midi device with passed name
         virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) = 0 ;
         
-        /// finds any midi device
-        virtual so_device::midi_device_ptr_t find_any_midi_device( void_t ) = 0 ;
+        /// finds the first midi device
+        virtual so_device::midi_device_ptr_t find_midi_device( void_t ) = 0 ;
 
     public: // gamepad
 

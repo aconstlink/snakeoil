@@ -9,6 +9,11 @@
 
 #include "../modules/module_registry.h"
 
+#include "../modules/imidi_module.h"
+#include "../modules/igamepad_module.h"
+#include "../modules/ikeyboard_module.h"
+#include "../modules/imouse_module.h"
+
 #include <snakeoil/log/log.h>
 
 using namespace so_device ;
@@ -23,7 +28,7 @@ device_system::device_system( void_t )
 
     for( auto * mapi : _midis )
     {
-        mapi->create_devices( _mod_reg ) ;
+        _mod_reg->create_devices( mapi ) ;
     }
 }
 
@@ -138,6 +143,44 @@ so_device::result device_system::update( void_t )
 void_t device_system::destroy( void_t ) 
 {
     this_t::destroy( this ) ;
+}
+
+//****************************************************************************************
+so_device::result device_system::register_module( so_device::imodule_ptr_t mptr )
+{
+    if( so_core::is_nullptr( mptr ) )
+        return so_device::invalid_argument ;
+
+    {
+        auto const res = _mod_reg->register_module( mptr ) ;
+        if( res != so_device::ok )
+            return res ;
+    }
+
+    {
+        auto * dyn = dynamic_cast< so_device::imidi_module_ptr_t >( mptr ) ;
+        if( so_core::is_not_nullptr( dyn ) )
+        {
+            for( auto * aptr : _midis )
+            {
+                aptr->create_devices( dyn ) ;
+            }
+        }
+    }
+
+    {
+        auto * dyn = dynamic_cast< so_device::igamepad_module_ptr_t >( mptr ) ;
+        if( so_core::is_not_nullptr( dyn ) )
+        {
+            for( auto * aptr : _gamepads )
+            {
+                aptr->create_devices( dyn ) ;
+            }
+        }
+    }
+
+
+    return so_device::ok ;
 }
 
 //****************************************************************************************

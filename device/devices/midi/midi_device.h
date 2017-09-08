@@ -127,8 +127,13 @@ namespace so_device
     public:
 
         midi_device( device_info_cref_t ) ;
+        midi_device( this_cref_t ) = delete ;
         midi_device( this_rref_t ) ;
         virtual ~midi_device( void_t ) ;
+
+    public:
+
+        this_ref_t operator = ( this_rref_t ) ;
 
     public:
 
@@ -140,6 +145,10 @@ namespace so_device
 
         device_info_cref_t get_device_info( void_t ) const ;
         
+    public:
+
+        void_t clear( void_t ) ;
+
     public:
 
         /// allows to receive raw midi messages

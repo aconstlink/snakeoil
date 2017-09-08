@@ -16,6 +16,10 @@ namespace so_device
 {
     class SNAKEOIL_DEVICE_API idevice_system
     {
+    public:
+
+        virtual so_device::result register_module( so_device::imodule_ptr_t ) = 0 ;
+
     public: // midi
 
         virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) = 0 ;

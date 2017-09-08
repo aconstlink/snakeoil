@@ -7,6 +7,7 @@
 #include "imodule.h"
 #include "imidi_module.h"
 #include "igamepad_module.h"
+#include "../api/imidi_api.h"
 
 #include "system/system_module.h"
 
@@ -57,6 +58,12 @@ void_t module_registry::destroy( this_ptr_t ptr )
 //*****************************************************************************
 so_device::result module_registry::register_module( so_device::imodule_ptr_t mptr )
 {
+    if( so_core::is_nullptr( mptr ) )
+    {
+        so_log::log::warning( "[module_registry::register_module] : nullptr not allowed." ) ;
+        return so_device::invalid_argument ;
+    }
+
     {
         so_thread::lock_guard_t lk( _mtx_mods ) ;
         
@@ -75,7 +82,7 @@ so_device::result module_registry::register_module( so_device::imodule_ptr_t mpt
         auto * dyn = dynamic_cast< so_device::imidi_module_ptr_t >( mptr ) ;
         if( so_core::is_not_nullptr( dyn ) )
         {
-            _midis.push_back( dyn ) ;
+            _midis.insert( _midis.begin(), dyn ) ;
         }
     }
 
@@ -84,7 +91,7 @@ so_device::result module_registry::register_module( so_device::imodule_ptr_t mpt
         auto * dyn = dynamic_cast< so_device::igamepad_module_ptr_t >( mptr ) ;
         if( so_core::is_not_nullptr( dyn ) )
         {
-            _gamepads.push_back( dyn ) ;
+            _gamepads.insert( _gamepads.begin(), dyn ) ;
         }
     }
 
@@ -109,4 +116,20 @@ so_device::midi_device_ptr_t module_registry::create_midi_device( so_std::string
     }
 
     return ret ;
+}
+
+//*****************************************************************************
+void_t module_registry::create_devices( so_device::imidi_api_ptr_t aptr )
+{
+    if( so_core::is_nullptr( aptr ) )
+    {
+        so_log::log::warning( "[module_registry::create_devices] : nullptr api" ) ;
+        return ;
+    }
+
+    so_thread::lock_guard_t lk( _mtx_midi ) ;
+    for( auto * mptr : _midis )
+    {
+        aptr->create_devices( mptr ) ;
+    }
 }

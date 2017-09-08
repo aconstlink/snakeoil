@@ -18,6 +18,11 @@ namespace so_device
     {
     public:
 
+        /// create all pluged-in devices that are registered
+        virtual void_t create_devices( so_device::igamepad_module_ptr_t ) = 0 ;
+
+    public:
+
         virtual so_device::result register_device( so_device::key_cref_t,
             so_device::gamepad_device_ptr_t ) = 0 ;
         virtual so_device::result unregister_device( so_device::key_cref_t ) = 0 ;

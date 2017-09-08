@@ -7,7 +7,7 @@
 
 #include "../../midi_notify.h"
 
-#include "../../../modules/module_registry.h"
+#include "../../../modules/imidi_module.h" 
 
 #include <snakeoil/log/log.h>
 #include <snakeoil/core/macros/move.h>
@@ -158,15 +158,32 @@ void_t win32_midi_api::install_midi_notify( so_device::imidi_notify_ptr_t nptr )
 }
 
 //****************************************************************************************
-void_t win32_midi_api::create_devices( so_device::module_registry_ptr_t mreg_ptr )
+void_t win32_midi_api::create_devices( so_device::imidi_module_ptr_t mptr )
 {
     so_std::vector< so_std::string_t > names ;
     this_t::get_device_names( names ) ;
 
     for( auto const & name : names )
     {
-        auto * mdev = mreg_ptr->create_midi_device( name ) ;
-        if( so_core::is_not_nullptr( mdev ) )
+        auto * mdev = mptr->create_midi_device( name ) ;
+        if( so_core::is_nullptr( mdev ) ) continue ;
+
+        auto iter = std::find_if( _devices.begin(), _devices.end(), 
+            [&]( this_t::store_data_cref_t item ) 
+        { 
+            return item.key == name ;
+        } ) ;
+        
+        // if the device is already created, 
+        // only exchange the components
+        if( iter != _devices.end() )
+        {
+            auto * midi_ptr = iter->dev_ptr ;
+            ( *midi_ptr ) = std::move( *mdev ) ;
+            mdev->destroy() ;
+        }
+        // otherwise, create a new one.
+        else
         {
             this_t::store_data sd ;
             sd.key = name ;

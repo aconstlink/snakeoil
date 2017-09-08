@@ -139,8 +139,8 @@ namespace so_device
         public:
 
             virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
-
-            virtual void_t create_devices( so_device::module_registry_ptr_t ) ;
+            
+            virtual void_t create_devices( so_device::imidi_module_ptr_t ) ;
 
             virtual void_t get_device_names( so_std::vector< so_std::string_t > & ) const ;
 

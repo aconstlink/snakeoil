@@ -64,6 +64,8 @@ namespace so_device
 
         public:
 
+            virtual void_t create_devices( so_device::igamepad_module_ptr_t ) ;
+
             virtual so_device::result register_device( so_device::key_cref_t,
                 so_device::gamepad_device_ptr_t ) ;
             virtual so_device::result unregister_device( so_device::key_cref_t ) ;

@@ -22,7 +22,8 @@ namespace so_device
     public:
 
         /// create all pluged-in devices that are registered
-        virtual void_t create_devices( so_device::module_registry_ptr_t ) = 0 ;
+        virtual void_t create_devices( so_device::imidi_module_ptr_t ) = 0 ;
+
 
         virtual void_t get_device_names( so_std::vector< so_std::string_t > & ) const = 0 ;
         virtual so_device::midi_device_ptr_t find_midi_device( so_device::key_cref_t ) = 0 ;

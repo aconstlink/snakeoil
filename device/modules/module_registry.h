@@ -62,6 +62,10 @@ namespace so_device
 
         so_device::midi_device_ptr_t create_midi_device( so_std::string_cref_t ) ;
 
+    public:
+
+        void_t create_devices( so_device::imidi_api_ptr_t ) ;
+
     };
     so_typedef( module_registry ) ;
 }

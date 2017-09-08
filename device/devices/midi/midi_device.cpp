@@ -25,6 +25,8 @@ midi_device::midi_device( device_info_cref_t info ) : _di(info)
 //****************************************************************************************
 midi_device::midi_device( this_rref_t rhv )
 {
+    this_t::clear() ;
+
     _di = std::move( rhv._di ) ;
     _in_datas = std::move( rhv._in_datas ) ;
     _changed_comps = std::move( rhv._changed_comps ) ;
@@ -52,6 +54,20 @@ midi_device::~midi_device( void_t )
 }
 
 //****************************************************************************************
+midi_device::this_ref_t midi_device::operator = ( this_rref_t rhv )
+{
+    this_t::clear() ;
+
+    _di = std::move( rhv._di ) ;
+    _in_datas = std::move( rhv._in_datas ) ;
+    _changed_comps = std::move( rhv._changed_comps ) ;
+
+    _out_datas = std::move( rhv._out_datas ) ;
+
+    return *this ;
+}
+
+//****************************************************************************************
 midi_device::this_ptr_t midi_device::create( this_rref_t rhv, so_memory::purpose_cref_t p ) 
 {
     return so_device::memory::alloc( std::move(rhv), p ) ;
@@ -67,6 +83,27 @@ void_t midi_device::destroy( this_ptr_t ptr )
 midi_device::device_info_cref_t midi_device::get_device_info( void_t ) const 
 {
     return _di ;
+}
+
+//****************************************************************************************
+void_t midi_device::clear( void_t )
+{
+    _di = device_info_t() ;
+
+    for( auto & item : _in_datas )
+    {
+        item.cptr->destroy() ;
+    }
+
+    for( auto & item : _out_datas )
+    {
+        item.cptr->destroy() ;
+    }
+
+    for( auto * nptr : _notifys )
+    {
+        nptr->destroy() ;
+    }
 }
 
 //****************************************************************************************

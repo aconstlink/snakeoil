@@ -49,6 +49,7 @@ namespace so_device
 
     public: // interface
 
+        virtual so_device::result register_module( so_device::imodule_ptr_t ) ;
         virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
         virtual bool_t get_midi_device_names( so_std::vector< so_std::string_t > & names ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) ;

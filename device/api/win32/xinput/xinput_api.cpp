@@ -10,6 +10,8 @@
 #include "../../../component/sticks/value_stick.h"
 #include "../../../component/motors/value_motor.h"
 
+#include "../../../modules/igamepad_module.h"
+
 #include "../../../devices/notification/funk_notify.h"
 #include "../../../vdev/gamepad/xbox/xbox_360.h"
 // more vdevs here
@@ -65,6 +67,11 @@ xinput_api::this_ptr_t xinput_api::create( so_memory::purpose_cref_t p )
 void_t xinput_api::destroy( this_ptr_t ptr )
 {
     so_device::memory::dealloc( ptr ) ;
+}
+
+//****************************************************************************************
+void_t xinput_api::create_devices( so_device::igamepad_module_ptr_t )
+{
 }
 
 //****************************************************************************************

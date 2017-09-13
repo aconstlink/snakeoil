@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENT_IOUTPUT_COMPONENT_H_
-#define _SNAKEOIL_DEVICE_COMPONENT_IOUTPUT_COMPONENT_H_
+#pragma once
 
 #include "../typedefs.h"
 #include "../protos.h"
@@ -12,7 +11,7 @@
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_output
     {
         struct ioutput_component
         {
@@ -20,5 +19,3 @@ namespace so_device
         };
     }
 }
-
-#endif

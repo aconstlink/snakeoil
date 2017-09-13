@@ -138,6 +138,7 @@ namespace so_app
 
         so_app::result shutdown_update_thread( void_t ) ;
     };
+    so_typedef( window_application ) ;
 }
     
 #endif

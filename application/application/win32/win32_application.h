@@ -24,7 +24,7 @@ namespace so_app
             /// can be used for special escape key pattern
             size_t _escape_sequence = 0 ;
 
-            //so_device::so_module::so_win32::rawinput_ptr_t _rawinput_module_ptr = nullptr ;
+            so_device::so_win32::rawinput_api_ptr_t _rawinput_ptr = nullptr ;
 
         public:
 

@@ -266,7 +266,12 @@ bool_t render_system::register_window( so_std::string_cref_t name, so_gpx::iwind
             {
                 for( auto & sd : shared_ptr->read_buffer() )
                 {
-                    sd.tptr->part_01_render( wid, wnd->get_api() ) ;
+                    sd.tptr->part_01_render( wid, sd.si, wnd->get_api() ) ;
+                }
+
+                for( auto & sd : shared_ptr->read_buffer() )
+                {
+                    sd.tptr->part_01_render_end( wid, sd.si ) ;
                 }
             }
 
@@ -529,6 +534,11 @@ void_t render_system::update_gpu_techniques( void_t )
         for( auto & sd : w.shared_ptr->read_buffer() )
         {
             sd.tptr->part_01_update( window_id_t(wid) ) ;
+        }
+
+        for( auto & sd : w.shared_ptr->read_buffer() )
+        {
+            sd.tptr->part_01_update_end( window_id_t( wid ) ) ;
         }
         ++wid ;
     }

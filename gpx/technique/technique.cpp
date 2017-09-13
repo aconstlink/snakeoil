@@ -338,7 +338,8 @@ so_gpx::technique_transition_result technique::check_part_00_finished(
 }
 
 //***************************************************************
-void_t technique::part_01_render( so_gpx::window_id_t wid, so_gpu::iapi_ptr_t api_ptr )
+void_t technique::part_01_render( so_gpx::window_id_t wid, 
+    so_gpx::schedule_instance_cref_t si, so_gpu::iapi_ptr_t api_ptr )
 {
     plug_data_ptr_t pd = _plugs[ wid ] ;
     if( so_core::is_nullptr( pd ) ) return ;
@@ -348,11 +349,20 @@ void_t technique::part_01_render( so_gpx::window_id_t wid, so_gpu::iapi_ptr_t ap
 
     {
         so_gpx::iplug_t::execute_info ei ;
-        ei.rnd_id = 0 ;
+        ei.rnd_id = si.render_id ;
 
         pd->plug_ptr->on_execute( ei ) ;
     }
+}
 
+//***************************************************************
+void_t technique::part_01_render_end( so_gpx::window_id_t wid, so_gpx::schedule_instance_cref_t )
+{
+    plug_data_ptr_t pd = _plugs[ wid ] ;
+    if( so_core::is_nullptr( pd ) ) return ;
+
+
+    if( pd->ts != so_gpx::technique_transition_state::executing ) return ;
     pd->ts = so_gpx::technique_transition_state::none ;
 }
 
@@ -377,6 +387,8 @@ so_gpx::result technique::part_01_update( so_gpx::window_id_t wid )
         return so_gpx::failed ;
     }
 
+    if( pd->updated ) return so_gpx::ok ;
+
     if( pd->rs != so_gpx::technique_rest_state::online ) return so_gpx::ok ;
 
     if( pd->ts != so_gpx::technique_transition_state::none &&
@@ -387,6 +399,23 @@ so_gpx::result technique::part_01_update( so_gpx::window_id_t wid )
     {
         pd->transfer_triggered = true ;
     }
+
+    pd->updated = true ;
+
+    return so_gpx::ok ;
+}
+
+//***************************************************************
+so_gpx::result technique::part_01_update_end( so_gpx::window_id_t wid )
+{
+    plug_data_ptr_t pd = _plugs[ wid ] ;
+
+    if( so_core::is_nullptr( pd ) )
+    {
+        return so_gpx::failed ;
+    }
+
+    pd->updated = false ;
 
     return so_gpx::ok ;
 }

@@ -25,6 +25,13 @@ node_input_policy::node_input_policy( this_rref_t rhv )
 //***********************************************************************
 node_input_policy::this_ref_t node_input_policy::operator = ( this_rref_t rhv )
 {
+    for( auto & item : _inputs )
+    {
+        so_log::log::warning( item.second.touched != 0,
+            "[so_flow::node_input_policy::~node_input_policy] : slot is touched but will be deleted" ) ;
+        item.second.is_ptr->destroy() ;
+    }
+
     _inputs = std::move( rhv._inputs ) ;
     return *this ;
 }

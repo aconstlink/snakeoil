@@ -2,14 +2,13 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_KNOBS_ROTARY_KNOB_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_KNOBS_ROTARY_KNOB_H_
+#pragma once
 
 #include "../input_component.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         struct rotary_knob : public input_component<rotary_knob>
         {
@@ -22,5 +21,3 @@ namespace so_device
         so_typedef( rotary_knob ) ;
     }
 }
-
-#endif

@@ -16,18 +16,19 @@ namespace so_gfx
     {
         so_font::glyph_atlas_ptr_t ga ;
 
+        so_math::vec2f_t dim_scale ;
 
         // we need
         // 1. map for layer to render call instance
         // 2. vector containing all the glyph data
 
-        struct per_layer_info
+        struct per_group_info
         {
-            size_t layer_id ;
+            size_t group_id ;
             size_t num_glyphs ;
         };
-        so_typedef( per_layer_info ) ;
-        so_typedefs( so_std::vector< per_layer_info_t >, per_layer_infos ) ;
+        so_typedef( per_group_info ) ;
+        so_typedefs( so_std::vector< per_group_info_t >, per_group_infos ) ;
         
         struct glyph_info
         {
@@ -40,8 +41,8 @@ namespace so_gfx
 
     public:
 
-        /// knowns number of glyphs per layer
-        per_layer_infos_t per_layer_infos ;
+        /// known number of glyphs per layer
+        per_group_infos_t per_group_infos ;
 
         /// all glyph to be rendered in a linear buffer
         glyph_infos_t glyph_infos ;

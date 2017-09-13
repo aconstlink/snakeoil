@@ -9,6 +9,7 @@
 #include "technique_state.h"
 #include "../window/window_id.h"
 
+#include "../system/render_system_structs.h"
 #include <snakeoil/thread/mutex.h>
 
 namespace so_gpx
@@ -42,6 +43,8 @@ namespace so_gpx
                 rhv.rnd_id = size_t(0) ;
                 rnd_max = rhv.rnd_max ;
                 rhv.rnd_max = size_t(-1) ;
+                updated = rhv.updated ;
+                rhv.updated = false ;
 
             }
             ~plug_data( void_t ) {}
@@ -61,6 +64,8 @@ namespace so_gpx
 
             so_thread::mutex_t mtx_s ;
             bool_t scheduled = false ;
+
+            bool_t updated = false ;
 
         public: // 
 
@@ -103,12 +108,15 @@ namespace so_gpx
         so_gpx::technique_transition_result check_part_00_finished( technique_schedule_goal target, 
             so_gpx::window_id_t ) ;
 
-        void_t part_01_render( so_gpx::window_id_t,
+        void_t part_01_render( so_gpx::window_id_t, so_gpx::schedule_instance_cref_t,
             so_gpu::iapi_ptr_t ) ;
+        void_t part_01_render_end( so_gpx::window_id_t, so_gpx::schedule_instance_cref_t ) ;
+
 
         void_t part_01_render_pseudo( so_gpx::window_id_t ) ;
 
         so_gpx::result part_01_update( so_gpx::window_id_t ) ;
+        so_gpx::result part_01_update_end( so_gpx::window_id_t ) ;
         
     };
     so_typedef( technique ) ;

@@ -2,14 +2,13 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENT_INPUT_COMPONENT_H_
-#define _SNAKEOIL_DEVICE_COMPONENT_INPUT_COMPONENT_H_
+#pragma once
 
 #include "iinput_component.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         template< typename T >
         struct input_component : public iinput_component
@@ -39,5 +38,3 @@ namespace so_device
         };
     }
 }
-
-#endif

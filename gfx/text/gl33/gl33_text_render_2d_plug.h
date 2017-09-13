@@ -70,6 +70,9 @@ namespace so_gfx
             data_buffer_ptr_t _glyph_info_ptr = nullptr ;
             data_buffer_ptr_t _text_info_ptr = nullptr ;
 
+            /// the number of glyph to be rendered.
+            size_t _num_text_glyphs = 0 ;
+
         public:
 
             gl33_text_render_2d_plug( so_gfx::text_render_2d_shared_data_ptr_t, 

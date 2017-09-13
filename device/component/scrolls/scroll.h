@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_SCROLL_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_SCROLL_H_
+#pragma once
 
 #if 0
 
@@ -33,4 +32,3 @@ namespace so_device
 
 #endif
 
-#endif

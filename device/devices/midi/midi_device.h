@@ -24,7 +24,7 @@ namespace so_device
 
     public: // input components typedefs
 
-        typedef so_device::so_component::iinput_component_ptr_t in_comp_ptr_t ;
+        typedef so_device::so_input::iinput_component_ptr_t in_comp_ptr_t ;
         typedef std::function< bool_t ( in_comp_ptr_t, midi_message_cref_t ) > midi_message_handle_funk_t ;
         typedef std::function< bool_t ( in_comp_ptr_t ) > follow_up_funk_t ;
         typedef std::function< void_t ( so_std::string_cref_t, in_comp_ptr_t ) > check_state_funk_t ;
@@ -38,7 +38,7 @@ namespace so_device
 
     public: // output components typedefs
 
-        typedef so_device::so_component::ioutput_component_ptr_t out_comp_ptr_t ;
+        typedef so_device::so_output::ioutput_component_ptr_t out_comp_ptr_t ;
         typedef std::function< midi_output_result( out_comp_ptr_t, midi_message_ref_t ) > midi_out_message_handle_funk_t ;
        
         struct output_component_logic
@@ -47,7 +47,7 @@ namespace so_device
         };
         so_typedef( output_component_logic ) ;
 
-        typedef std::function< bool_t ( so_device::so_component::ioutput_component_ptr_t ) > 
+        typedef std::function< bool_t ( so_device::so_output::ioutput_component_ptr_t ) > 
             trigger_funk_t ;
 
         struct trigger_data
@@ -166,10 +166,10 @@ namespace so_device
     public:
 
         so_device::result add_component( so_device::key_cref_t, input_component_logic_cref_t, 
-            so_device::so_component::iinput_component_ptr_t ) ;
+            so_device::so_input::iinput_component_ptr_t ) ;
 
         so_device::result add_component( so_device::key_cref_t, output_component_logic_cref_t,
-            so_device::so_component::ioutput_component_ptr_t ) ;
+            so_device::so_output::ioutput_component_ptr_t ) ;
 
         so_device::result register_notification( iuser_notify_ptr_t ) ;
 

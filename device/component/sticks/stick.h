@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_STICKS_STICK_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_STICKS_STICK_H_
+#pragma once
 
 #include "../input_component.h"
 #include "stick_state.h"
@@ -12,7 +11,7 @@
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         struct stick : input_component<stick>
         {
@@ -28,5 +27,3 @@ namespace so_device
         so_typedef(stick) ;
     }
 }
-
-#endif

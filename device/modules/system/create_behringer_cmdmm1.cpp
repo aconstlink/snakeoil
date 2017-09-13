@@ -30,47 +30,47 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             so_std::string_t i_str = std::to_string( i ) ;
 
             auto logic = so_device::midi_device::input_component_logic_t() ;
-            logic.follow_up_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr )
+            logic.follow_up_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr )
             {
-                auto & b = *reinterpret_cast< so_device::so_component::binary_button_ptr_t >( cptr ) ;
-                if( b.state == so_device::so_component::button_state::pressed )
+                auto & b = *reinterpret_cast< so_device::so_input::binary_button_ptr_t >( cptr ) ;
+                if( b.state == so_device::button_state::pressed )
                 {
-                    b.state = so_device::so_component::button_state::pressing ;
+                    b.state = so_device::button_state::pressing ;
                     return true ;
                 }
-                else if( b.state == so_device::so_component::button_state::pressing )
+                else if( b.state == so_device::button_state::pressing )
                 {
                     return true ;
                 }
-                else if( b.state == so_device::so_component::button_state::released )
+                else if( b.state == so_device::button_state::released )
                 {
-                    b.state = so_device::so_component::button_state::none ;
+                    b.state = so_device::button_state::none ;
                 }
                 return false ;
             } ;
 
-            logic.midi_message_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr,
+            logic.midi_message_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr,
                 so_device::midi_message_cref_t msg )
             {
-                auto & b = *reinterpret_cast< so_device::so_component::binary_button_ptr_t >( cptr ) ;
+                auto & b = *reinterpret_cast< so_device::so_input::binary_button_ptr_t >( cptr ) ;
 
                 // press
                 if( msg == so_device::midi_message_t( 148, byte_t( i ), 127, 0 ) )
                 {
-                    b.state = so_device::so_component::button_state::pressed ;
+                    b.state = so_device::button_state::pressed ;
                     return true ;
                 }
                 // release
                 else if( msg == so_device::midi_message_t( 132, byte_t( i ), 0, 0 ) )
                 {
-                    b.state = so_device::so_component::button_state::released ;
+                    b.state = so_device::button_state::released ;
                     return true ;
                 }
                 return false ;
             } ;
 
             mdev.add_component( "b_" + i_str, logic,
-                so_device::so_component::binary_button_t::create(
+                so_device::so_input::binary_button_t::create(
                     "[system_module::create_behringer_cmdmm1] : b_" + i_str ) ) ;
         }
     }
@@ -83,15 +83,15 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             so_std::string_t i_str = std::to_string( i ) ;
 
             auto logic = so_device::midi_device::input_component_logic_t() ;
-            logic.follow_up_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr )
+            logic.follow_up_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr )
             {
                 return false ;
             } ;
 
-            logic.midi_message_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr,
+            logic.midi_message_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr,
                 so_device::midi_message_cref_t msg )
             {
-                auto & c = *reinterpret_cast< so_device::so_component::slider_ptr_t >( cptr ) ;
+                auto & c = *reinterpret_cast< so_device::so_input::slider_ptr_t >( cptr ) ;
 
                 if( msg.compare_s_b1( 180, byte_t( i ) ) )
                 {
@@ -103,7 +103,7 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             } ;
 
             mdev.add_component( "s_" + i_str, logic,
-                so_device::so_component::slider_t::create(
+                so_device::so_input::slider_t::create(
                     "[system_module::create_behringer_cmdmm1] : Slider " + i_str ) ) ;
         }
     }
@@ -118,15 +118,15 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             so_std::string_t i_str = std::to_string( i ) ;
 
             auto logic = so_device::midi_device::input_component_logic_t() ;
-            logic.follow_up_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr )
+            logic.follow_up_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr )
             {
                 return false ;
             } ;
 
-            logic.midi_message_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr,
+            logic.midi_message_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr,
                 so_device::midi_message_cref_t msg )
             {
-                auto & c = *reinterpret_cast< so_device::so_component::rotary_knob_ptr_t >( cptr ) ;
+                auto & c = *reinterpret_cast< so_device::so_input::rotary_knob_ptr_t >( cptr ) ;
 
                 if( msg.compare_s_b1( 180, byte_t( i ) ) )
                 {
@@ -138,7 +138,7 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             } ;
 
             mdev.add_component( "k_" + i_str, logic,
-                so_device::so_component::rotary_knob_t::create(
+                so_device::so_input::rotary_knob_t::create(
                     "[system_module::create_behringer_cmdmm1] : Rotary Knob " + i_str ) ) ;
         }
     }
@@ -154,23 +154,23 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
 
             auto logic = so_device::midi_device::output_component_logic_t() ;
 
-            logic.handle_funk = [=] ( so_device::so_component::ioutput_component_ptr_t cptr,
+            logic.handle_funk = [=] ( so_device::so_output::ioutput_component_ptr_t cptr,
                 so_device::midi_message_ref_t msg )
             {
-                so_device::so_component::light_bar_ref_t led =
-                    *reinterpret_cast< so_device::so_component::light_bar_ptr_t >( cptr ) ;
+                so_device::so_output::light_bar_ref_t led =
+                    *reinterpret_cast< so_device::so_output::light_bar_ptr_t >( cptr ) ;
 
-                so_device::so_component::light_state ls ;
+                so_device::light_state ls ;
                 if( led.acquire_and_reset_changed_state( ls ) )
                 {
-                    if( ls == so_device::so_component::light_state::on )
+                    if( ls == so_device::light_state::on )
                     {
                         byte_t const v = byte_t( 48 + led.value * ( 63 - 48 ) ) ;
 
                         msg = so_device::midi_message_t( 180, byte_t( i ), v, 0 ) ;
                         return so_device::midi_output_result::transmit_and_queue ;
                     }
-                    else if( ls == so_device::so_component::light_state::off )
+                    else if( ls == so_device::light_state::off )
                     {
                         msg = so_device::midi_message_t( 180, byte_t( i ), 0, 0 ) ;
                         return so_device::midi_output_result::transmit_and_dismiss ;
@@ -186,7 +186,7 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             } ;
 
             mdev.add_component( "led_" + i_str, logic,
-                so_device::so_component::light_bar_t::create(
+                so_device::so_output::light_bar_t::create(
                     "[system_module::create_behringer_cmdmm1] : Light bar " + i_str ) ) ;
         }
     }
@@ -203,16 +203,16 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
 
             auto logic = so_device::midi_device::output_component_logic_t() ;
 
-            logic.handle_funk = [=] ( so_device::so_component::ioutput_component_ptr_t cptr,
+            logic.handle_funk = [=] ( so_device::so_output::ioutput_component_ptr_t cptr,
                 so_device::midi_message_ref_t msg )
             {
-                so_device::so_component::binary_led_ref_t led =
-                    *reinterpret_cast< so_device::so_component::binary_led_ptr_t >( cptr ) ;
+                so_device::so_output::binary_led_ref_t led =
+                    *reinterpret_cast< so_device::so_output::binary_led_ptr_t >( cptr ) ;
 
-                so_device::so_component::led_state ls ;
+                so_device::led_state ls ;
                 if( led.acquire_and_reset_changed_state( ls ) )
                 {
-                    if( ls == so_device::so_component::led_state::on )
+                    if( ls == so_device::led_state::on )
                     {
                         led.tp = iclock_t::now() ;
                         led.value = true ;
@@ -220,7 +220,7 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
                         msg = so_device::midi_message_t( 144, byte_t( i ), 127, 0 ) ;
                         return so_device::midi_output_result::transmit_and_queue ;
                     }
-                    else if( ls == so_device::so_component::led_state::off )
+                    else if( ls == so_device::led_state::off )
                     {
                         msg = so_device::midi_message_t( 144, byte_t( i ), 0, 0 ) ;
                         return so_device::midi_output_result::transmit_and_dismiss ;
@@ -248,7 +248,7 @@ so_device::midi_device_ptr_t system_module::create_behringer_cmdmm1( void_t )
             } ;
 
             mdev.add_component( "led_" + i_str, logic,
-                so_device::so_component::binary_led_t::create(
+                so_device::so_output::binary_led_t::create(
                     "[system_module::create_behringer_cmdmm1] : Binary Led " + i_str ) ) ;
         }
     }

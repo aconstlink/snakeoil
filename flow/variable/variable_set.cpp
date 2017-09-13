@@ -23,6 +23,11 @@ variable_set::variable_set( this_rref_t rhv )
 //*************************************************************************************
 variable_set::this_ref_t variable_set::operator = ( this_rref_t rhv )
 {
+    for( auto & item : _variables )
+    {
+        item.var_ptr->destroy() ;
+    }
+
     _variables = std::move( rhv._variables ) ;
     return *this ;
 }

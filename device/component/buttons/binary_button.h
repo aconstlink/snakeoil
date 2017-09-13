@@ -10,7 +10,7 @@
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         struct binary_button : public input_component< binary_button >
         {

@@ -30,7 +30,7 @@ void_t funk_notify::destroy( this_ptr_t ptr )
 
 //****************************************************************************************
 void_t funk_notify::on_change( so_device::idevice_ptr_t dev_ptr, so_std::string_cref_t name,
-    so_device::so_component::iinput_component_ptr_t comp_ptr )
+    so_device::so_input::iinput_component_ptr_t comp_ptr )
 {
     _funk( dev_ptr, name, comp_ptr ) ;
 }

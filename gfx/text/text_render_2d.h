@@ -54,6 +54,10 @@ namespace so_gfx
 
         so_gpx::render_system_ptr_t _gpxr = nullptr ;
 
+        size_t _point_size = 20 ;
+
+        so_math::vec2f_t _glyph_atlas_size = so_math::vec2f_t( 1024.0f, 1024.0f ) ;
+
     private:
 
         struct glyph_info
@@ -64,50 +68,50 @@ namespace so_gfx
         };
         so_typedef( glyph_info ) ;
 
-        struct layer_info
+        struct group_info
         {
-            so_this_typedefs( layer_info ) ;
+            so_this_typedefs( group_info ) ;
 
             so_thread::mutex_t mtx ;
             so_std::vector< glyph_info > glyph_infos ;
 
-            size_t layer_id = 0 ;
+            size_t group_id = 0 ;
 
-            layer_info( void_t ){}
-            layer_info( this_cref_t rhv ){
+            group_info( void_t ){}
+            group_info( this_cref_t rhv ){
                 glyph_infos = rhv.glyph_infos ;
-                layer_id = rhv.layer_id ;
+                group_id = rhv.group_id ;
             }
-            layer_info( this_rref_t rhv ) {
+            group_info( this_rref_t rhv ) {
                 glyph_infos = std::move( rhv.glyph_infos ) ;
-                layer_id = rhv.layer_id ;
+                group_id = rhv.group_id ;
             }
-            ~layer_info( void_t ) {}
+            ~group_info( void_t ) {}
 
             this_ref_t operator = ( this_cref_t rhv ) {
                 glyph_infos = rhv.glyph_infos ;
-                layer_id = rhv.layer_id ;
+                group_id = rhv.group_id ;
                 return *this ;
             }
             this_ref_t operator = ( this_rref_t rhv ) {
                 glyph_infos = std::move( rhv.glyph_infos ) ;
-                layer_id = rhv.layer_id ;
+                group_id = rhv.group_id ;
                 return *this ;
             }
 
             bool_t operator == ( this_cref_t rhv ) const{
-                return layer_id == layer_id ;
+                return group_id == group_id ;
             }
         };
-        so_typedef( layer_info ) ;
-        so_typedefs( so_std::vector< layer_info >, layer_infos ) ;
+        so_typedef( group_info ) ;
+        so_typedefs( so_std::vector< group_info >, group_infos ) ;
 
         so_thread::mutex_t _mtx_lis ;
-        layer_infos_t _lis ;
+        group_infos_t _gis ;
 
     public:
 
-        text_render_2d( canvas_info_cref_t, so_gpx::render_system_ptr_t ) ;
+        text_render_2d( so_gpx::render_system_ptr_t ) ;
         text_render_2d( this_cref_t ) = delete ;
         text_render_2d( this_rref_t ) ;
         ~text_render_2d( void_t ) ;
@@ -119,12 +123,17 @@ namespace so_gfx
 
     public:
 
-        void_t init_fonts( std::vector< so_io::path_t > const & ) ;
-
+        void_t set_canvas_info( canvas_info_cref_t ) ;
+        void_t init_fonts( size_t const, std::vector< so_io::path_t > const & ) ;
+        
         so_gfx::result draw_text( size_t const layer, size_t const font_id, size_t const point_size,
-            so_math::vec2ui_cref_t pos, so_std::string_cref_t ) ;
+            so_math::vec2f_cref_t pos, so_math::vec3f_cref_t color, so_std::string_cref_t ) ;
 
-        so_gfx::result render( void_t ) ;
+        so_gfx::result draw_begin( void_t ) ;
+        so_gfx::result draw_end( void_t ) ;
+        so_gfx::result render( size_t const ) ;
+
+        so_gfx::result release( void_t ) ;
     };
     so_typedef( text_render_2d ) ;
 }

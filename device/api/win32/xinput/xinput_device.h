@@ -59,24 +59,24 @@ namespace so_device
             bool_t is_released( XINPUT_STATE const & new_state, DWORD button ) const ;
 
             /// check the state of the left trigger
-            so_component::button_state check_left_trigger( 
+            button_state check_left_trigger( 
                 XINPUT_STATE const & new_state, uint16_t & intensity_out ) const ;
 
             /// check the state of the right trigger
-            so_component::button_state check_right_trigger( 
+            button_state check_right_trigger( 
                 XINPUT_STATE const & new_state, uint16_t & intensity_out ) const ;
 
 
-            so_component::stick_state check_left_stick( 
+            stick_state check_left_stick( 
                 XINPUT_STATE const & new_state, so_math::vec2f_t & nnc_out ) const ;
 
-            so_component::stick_state check_left_stick(
+            stick_state check_left_stick(
                 XINPUT_STATE const & new_state, so_math::vector2<int16_t> & val_out ) const ;
 
-            so_component::stick_state check_right_stick( 
+            stick_state check_right_stick( 
                 XINPUT_STATE const & new_state, so_math::vec2f_t & nnc_out ) const ;
 
-            so_component::stick_state check_right_stick(
+            stick_state check_right_stick(
                 XINPUT_STATE const & new_state, so_math::vector2<int16_t> & val_out ) const ;
 
             /// exchange the old xinput state with the new one.

@@ -39,44 +39,44 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
             so_std::string_t i_str = std::to_string( i ) ;
 
             auto logic = so_device::midi_device::input_component_logic_t() ;
-            logic.follow_up_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr )
+            logic.follow_up_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr )
             {
-                auto & b = *reinterpret_cast< so_device::so_component::value_button_ptr_t >( cptr ) ;
+                auto & b = *reinterpret_cast< so_device::so_input::value_button_ptr_t >( cptr ) ;
 
-                if( b.state == so_device::so_component::button_state::pressed )
+                if( b.state == so_device::button_state::pressed )
                 {
-                    b.state = so_device::so_component::button_state::pressing ;
+                    b.state = so_device::button_state::pressing ;
                     return true ;
                 }
-                else if( b.state == so_device::so_component::button_state::pressing )
+                else if( b.state == so_device::button_state::pressing )
                 {
                     return true ;
                 }
-                else if( b.state == so_device::so_component::button_state::released )
+                else if( b.state == so_device::button_state::released )
                 {
-                    b.state = so_device::so_component::button_state::none ;
+                    b.state = so_device::button_state::none ;
                 }
                 return false ;
             } ;
 
-            logic.midi_message_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr,
+            logic.midi_message_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr,
                 so_device::midi_message_cref_t msg )
             {
-                auto & b = *reinterpret_cast< so_device::so_component::value_button_ptr_t >( cptr ) ;
+                auto & b = *reinterpret_cast< so_device::so_input::value_button_ptr_t >( cptr ) ;
                 
                 byte_t const value = msg.byte2 ;
 
                 // press
                 if( msg.compare_s_b1( 144, byte_t( i ) ) )
                 {
-                    b.state = so_device::so_component::button_state::pressed ;
+                    b.state = so_device::button_state::pressed ;
                     b.value = float_t(value) / 127.0f ;
                     return true ;
                 }
                 // release
                 else if( msg == so_device::midi_message_t( 128, byte_t( i ), 64, 0 ) )
                 {
-                    b.state = so_device::so_component::button_state::released ;
+                    b.state = so_device::button_state::released ;
                     b.value = 0 ;
                     return true ;
                 }
@@ -84,7 +84,7 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
             } ;
 
             mdev.add_component( "b_" + i_str, logic,
-                so_device::so_component::value_button_t::create(
+                so_device::so_input::value_button_t::create(
                     "[system_module::create_korg_nanopad2] : b_" + i_str ) ) ;
         }
     }
@@ -92,38 +92,38 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
     // pad
     {
         auto logic = so_device::midi_device::input_component_logic_t() ;
-        logic.follow_up_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr )
+        logic.follow_up_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr )
         {
-            auto & b = *reinterpret_cast< so_device::so_component::single_touch_ptr_t >( cptr ) ;
+            auto & b = *reinterpret_cast< so_device::so_input::single_touch_ptr_t >( cptr ) ;
 
-            if( b.state == so_device::so_component::touch_state::touched)
+            if( b.state == so_device::touch_state::touched)
             {
-                b.state = so_device::so_component::touch_state::touching ;
+                b.state = so_device::touch_state::touching ;
                 return true ;
             }
-            else if( b.state == so_device::so_component::touch_state::touching )
+            else if( b.state == so_device::touch_state::touching )
             {
                 return true ;
             }
-            else if( b.state == so_device::so_component::touch_state::released )
+            else if( b.state == so_device::touch_state::released )
             {
-                b.state = so_device::so_component::touch_state::none ;
+                b.state = so_device::touch_state::none ;
             }
             return false ;
         } ;
 
-        logic.midi_message_funk = [=] ( so_device::so_component::iinput_component_ptr_t cptr,
+        logic.midi_message_funk = [=] ( so_device::so_input::iinput_component_ptr_t cptr,
             so_device::midi_message_cref_t msg )
         {
-            auto & b = *reinterpret_cast< so_device::so_component::single_touch_ptr_t >( cptr ) ;
+            auto & b = *reinterpret_cast< so_device::so_input::single_touch_ptr_t >( cptr ) ;
 
             byte_t const value = msg.byte2 ;
 
             // x direction
             if( msg.compare_s_b1( 176, 1 ) )
             {
-                if( b.state != so_device::so_component::touch_state::touching )
-                    b.state = so_device::so_component::touch_state::touched ;
+                if( b.state != so_device::touch_state::touching )
+                    b.state = so_device::touch_state::touched ;
 
                 b.npc.x() = float_t(value) / 127.0f ;
                 b.ncc.x() = b.npc.x() * 2.0f - 1.0f ;
@@ -131,8 +131,8 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
             }
             else if( msg.compare_s_b1( 176, 2 ) )
             {
-                if( b.state != so_device::so_component::touch_state::touching )
-                    b.state = so_device::so_component::touch_state::touched ;
+                if( b.state != so_device::touch_state::touching )
+                    b.state = so_device::touch_state::touched ;
 
                 b.npc.y() = float_t( value ) / 127.0f ;
                 b.ncc.y() = b.npc.y() * 2.0f - 1.0f ;
@@ -142,7 +142,7 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
             // release
             else if( msg == so_device::midi_message_t( 176, 16, 0, 0 ) )
             {
-                b.state = so_device::so_component::touch_state::released ;
+                b.state = so_device::touch_state::released ;
                 b.npc = so_math::vec2f_t() ;
                 b.ncc = so_math::vec2f_t() ;
                 return true ;
@@ -151,7 +151,7 @@ so_device::midi_device_ptr_t system_module::create_korg_nanopad2( void_t )
         } ;
 
         mdev.add_component( "touch", logic,
-            so_device::so_component::single_touch_t::create(
+            so_device::so_input::single_touch_t::create(
                 "[system_module::create_korg_nanopad2] : touch" ) ) ;
         
     }

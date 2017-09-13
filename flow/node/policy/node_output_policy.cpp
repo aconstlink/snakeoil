@@ -24,6 +24,14 @@ node_output_policy::node_output_policy( this_rref_t rhv )
 //***********************************************************************
 node_output_policy::this_ref_t node_output_policy::operator = ( this_rref_t rhv )
 {
+    for( auto & item : _outputs )
+    {
+        so_log::log::warning( item.second.touched != 0,
+            "[so_flow::node_output_policy::~node_output_policy] : slot is touched but will be deleted" ) ;
+
+        item.second.sptr->destroy() ;
+    }
+
     _outputs = std::move( rhv._outputs ) ;
     return *this ;
 }

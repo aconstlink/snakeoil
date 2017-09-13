@@ -6,9 +6,11 @@
 
 #include "../../system.h"
 
-//#include <snakeoil/device/device.h>
-//#include <snakeoil/device/system/isystem.h>
-//#include <snakeoil/device/module/win32/rawinput/rawinput_module.h>
+#include <snakeoil/device/global.h>
+#include <snakeoil/device/system/idevice_system.h>
+#include <snakeoil/device/api/win32/rawinput/rawinput_api.h>
+
+
 
 #include <snakeoil/log/log.h>
 
@@ -20,26 +22,17 @@ using namespace so_app::so_win32 ;
 //***********************************************************************
 win32_application::win32_application( void_t ) 
 {
-#if 0
-    _rawinput_module_ptr = so_device::so_module::so_win32::rawinput::
-        create_and_initialize( NULL ) ;
+    _rawinput_ptr = so_device::so_win32::rawinput_api::create(
+        "[win32_application::win32_application] : rawinput_api" ) ;
 
-    so_log::log::warning( so_device::device::has_no_system(), 
-        "[win32_window::win32_window] : No device system initialized. Can not add raw input module" ) ;
-
-    if( so_device::device::has_system() )
-    {
-        // enable auto deletion!
-        so_device::device::get()->add_module( _rawinput_module_ptr ) ;
-    }
-#endif
+    so_device::global::device_system()->register_api( 
+        reinterpret_cast<so_device::iapi_ptr_t>(_rawinput_ptr) ) ;
 }
 
 //***********************************************************************
 win32_application::win32_application( this_rref_t rhv ) : base_t( std::move( rhv ) )
 {
-    //_rawinput_module_ptr = rhv._rawinput_module_ptr ;
-    //rhv._rawinput_module_ptr = nullptr ;
+    so_move_member_ptr( _rawinput_ptr, rhv ) ;
 }
 
 //***********************************************************************
@@ -88,11 +81,8 @@ so_app::result win32_application::exec_derived( void_t )
             break ;
         }
 
-#if 0
-        _rawinput_module_ptr->handle_input_event( msg.hwnd, msg.message, 
-            msg.wParam, msg.lParam ) ;        
-#endif
-        
+        _rawinput_ptr->handle_input_event( msg.hwnd, msg.message,
+            msg.wParam, msg.lParam ) ;
     } 
 
     return ok ;

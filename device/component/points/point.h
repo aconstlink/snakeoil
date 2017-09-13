@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_POINT_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_POINT_H_
+#pragma once
 
 #if 0
 
@@ -27,7 +26,5 @@ namespace so_device
         so_typedef( point ) ;
     }
 }
-
-#endif
 
 #endif

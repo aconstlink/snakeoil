@@ -294,7 +294,7 @@ so_device::result win32_midi_api::unregister_device( store_data_ref_t item )
 }
 
 //****************************************************************************************
-void_t win32_midi_api::update( void_t ) 
+void_t win32_midi_api::update_midi( void_t )
 {
     // time interval
     // check periodically, so devices can be 

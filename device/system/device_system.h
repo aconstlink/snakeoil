@@ -19,6 +19,9 @@ namespace so_device
         
         so_typedefs( so_std::vector<so_device::imidi_api_ptr_t>, midi_apis ) ;
         so_typedefs( so_std::vector<so_device::igamepad_api_ptr_t>, gamepad_apis ) ;
+        so_typedefs( so_std::vector<so_device::imouse_api_ptr_t>, mouse_apis ) ;
+        so_typedefs( so_std::vector<so_device::ikeyboard_api_ptr_t>, keyboard_apis ) ;
+        so_typedefs( so_std::vector<so_device::iapi_ptr_t>, apis ) ;
 
     private:
 
@@ -27,6 +30,15 @@ namespace so_device
 
         so_thread::mutex_t _gamepad_mtx ;
         gamepad_apis_t _gamepads ;
+
+        so_thread::mutex_t _mouse_mtx ;
+        mouse_apis_t _mouses ;
+
+        so_thread::mutex_t _keyboard_mtx ;
+        keyboard_apis_t _keyboards ;
+
+        so_thread::mutex_t _api_mtx ;
+        apis_t _apis ;
 
         module_registry_ptr_t _mod_reg ;
 
@@ -42,21 +54,18 @@ namespace so_device
         static this_ptr_t create( this_rref_t, so_memory::purpose_cref_t ) ;
         static void_t destroy( this_ptr_t ) ;
 
-    public:
-
-        so_device::result register_api( so_device::imidi_api_ptr_t ) ;
-        so_device::result register_api( so_device::igamepad_api_ptr_t ) ;
-
     public: // interface
 
+        virtual so_device::result register_api( so_device::iapi_ptr_t ) ;
         virtual so_device::result register_module( so_device::imodule_ptr_t ) ;
+
         virtual void_t install_midi_notify( so_device::imidi_notify_ptr_t ) ;
         virtual bool_t get_midi_device_names( so_std::vector< so_std::string_t > & names ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( void_t ) ;
         virtual so_device::gamepad_device_ptr_t find_gamepad_device( void_t ) ;
-        virtual so_device::keyboard_device_ptr_t find_keyboard_device( void_t ) ;
-        virtual so_device::mouse_device_ptr_t find_mouse_device( void_t ) ;
+        virtual so_device::ascii_keyboard_ptr_t find_ascii_keyboard( void_t ) ;
+        virtual so_device::three_button_mouse_ptr_t find_three_button_mouse( void_t ) ;
 
         virtual so_device::result update( void_t ) ;
 

@@ -321,14 +321,31 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_initialize( so_gpx::iplug_t::in
 
     {
         _vars_text->bind_texture( "u_smp_glyph", _tx ) ;
+        _vars_text->bind_data<so_math::vec2f_t>( "u_scale", &(_sd->dim_scale) ) ;
     }
 
-    // test data here
+    //
+    // memory allocation
+    //
     {
-        _text_info_ptr->add_element( so_math::vec4f_t( 0.0f, 0.0f, 0.0f, 0.0f ) ) ;
-        _text_info_ptr->add_element( so_math::vec4f_t( 0.0f, 0.0f, 0.0f, 0.0f ) ) ;
+        auto const res = this_t::api()->alloc_buffer_memory( _vb_text,
+            so_gpu::memory_alloc_info( true ) ) ;
+    }
+    {
+        auto const res = this_t::api()->alloc_buffer_memory( _ib_text,
+            so_gpu::memory_alloc_info( true ) ) ;
     }
 
+    // glyph image and glyph info buffer do not change if the 
+    // atlas is not recreated.
+    {
+        auto const res = this_t::api()->alloc_image_memory( _gpu_img_ptr,
+            so_gpu::image_alloc_info( true ) ) ;
+    }
+    {
+        auto const res = this_t::api()->alloc_buffer_memory( _glyph_info_ptr,
+            so_gpu::memory_alloc_info_t( true ) ) ;
+    }
 
     return so_gpx::plug_result::ok ;
 }
@@ -356,22 +373,6 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_release( void_t )
 so_gpx::plug_result gl33_text_render_2d_plug::on_transfer( void_t )
 {
     {
-        auto const res = this_t::api()->alloc_buffer_memory( _vb_text,
-            so_gpu::memory_alloc_info( true ) ) ;
-    }
-    {
-        auto const res = this_t::api()->alloc_buffer_memory( _ib_text,
-            so_gpu::memory_alloc_info( true ) ) ;
-    }
-    {
-        auto const res = this_t::api()->alloc_image_memory( _gpu_img_ptr,
-            so_gpu::image_alloc_info( true ) ) ;
-    }
-    {
-        auto const res = this_t::api()->alloc_buffer_memory( _glyph_info_ptr,
-            so_gpu::memory_alloc_info_t( true ) ) ;
-    }
-    {
         auto const res = this_t::api()->alloc_buffer_memory( _text_info_ptr,
             so_gpu::memory_alloc_info_t( true ) ) ;
     }
@@ -380,8 +381,11 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_transfer( void_t )
 }
 
 //*********************************************************************
-so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execute_info_cref_t )
+so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execute_info_cref_t ri )
 {
+    if( _num_text_glyphs == 0 )
+        return so_gpx::plug_result::ok ;
+
     // @todo save state
 
     this_t::api()->enable( so_gpu::render_state::blend ) ;
@@ -389,7 +393,7 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execu
     {
         this_t::api()->load_variable( _vars_text ) ;
         this_t::api()->execute( so_gpu::render_config_info( _config_text, 0,
-            _text_info_ptr->get_num_elements() * 6 ) ) ;
+            _num_text_glyphs * 6 ) ) ;
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;
 
@@ -401,75 +405,20 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execu
 //*********************************************************************
 so_gpx::plug_result gl33_text_render_2d_plug::on_update( void_t )
 {
-
-    // copy from tmp buffer to gpu buffer
-
-#if 0
-    size_t num_elements = 0 ;
-    for( auto const & col : _ud_ptr->columns )
+    _text_info_ptr->resize( 0 ) ;
     {
-        for( auto const & trail : col.trails )
+        for( auto const & gi : _sd->glyph_infos )
         {
-            num_elements += trail.glyphs.size() ;
+            float_t const offset = float_t(gi.offset) ;
+            so_math::vec3f_t const color = gi.color ;
+            so_math::vec2f_t const pos = gi.pos ;
+
+            _text_info_ptr->add_element( so_math::vec4f_t( offset, pos.x(), pos.y(), 0.0f ) ) ;
+            _text_info_ptr->add_element( so_math::vec4f_t( color, 0.0f ) ) ;
         }
+
+        _num_text_glyphs = _sd->glyph_infos.size() ;
     }
 
-    size_t const required_elements = num_elements << 1 ;
-    if( required_elements > _text_info_ptr->get_num_elements() )
-    {
-        _text_info_ptr->resize( required_elements ) ;
-    }
-
-    {
-        size_t const font_id = 0 ;
-
-        size_t buffer_offset = 0 ;
-        so_font::glyph_atlas_t::glyph_info_t gi ;
-
-        so_math::vec2f_t start_pos( -1.0f, 0.0f ) ;
-
-        size_t i = 0 ;
-
-        {
-            for( size_t c = 0; c < _ud_ptr->columns.size(); ++c )
-            {
-                matrix_column_ref_t col = _ud_ptr->columns[ c ] ;
-                for( size_t t = 0; t < col.trails.size(); ++t )
-                {
-                    matrix_trail_ref_t trail = col.trails[ t ] ;
-
-                    start_pos.y() = trail.pos_y ;
-
-                    float_t adv_x = 0.0f ;
-
-                    for( auto const & g : trail.glyphs )
-                    {
-                        auto const res = _ga_ptr->find_glyph( font_id, g.glyph,
-                            buffer_offset, gi ) ;
-
-                        so_math::vec2f_t const cur_pos = start_pos ;
-
-                        size_t const index = i << 1 ;
-
-                        auto const v0 = so_math::vec4f_t( float_t( buffer_offset ),
-                            cur_pos.x(), cur_pos.y(), 0.0f ) ;
-
-                        auto const v1 = so_math::vec4f_t(
-                            g.color, 0.0f ) ;
-
-                        _text_info_ptr->set_element( index + 0, v0 ) ;
-                        _text_info_ptr->set_element( index + 1, v1 ) ;
-
-                        start_pos.y() += 0.01f ; // gi.adv.y();
-                        adv_x = 0.01f ;
-                        ++i ;
-                    }
-                    start_pos.x() += adv_x ;
-                }
-                start_pos.y() = -1.0f ;
-            }
-        } ;
-    }
-#endif
     return so_gpx::plug_result::need_transfer ;
 }

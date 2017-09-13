@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_BINARY_LED_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_BINARY_LED_H_
+#pragma once
 
 #include "../output_component.h"
 #include "led_state.h"
@@ -12,7 +11,7 @@
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_output
     {
         /// a led in active state can be on or off
         /// an inactive led can not be on.
@@ -80,5 +79,3 @@ namespace so_device
         so_typedef( binary_led ) ;
     }
 }
-
-#endif

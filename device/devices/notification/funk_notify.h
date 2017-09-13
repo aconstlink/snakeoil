@@ -16,7 +16,7 @@ namespace so_device
     public:
 
         typedef std::function< void_t( so_device::idevice_ptr_t, so_std::string_cref_t name,
-            so_device::so_component::iinput_component_ptr_t comp_ptr ) > user_funk_t ;
+            so_device::so_input::iinput_component_ptr_t comp_ptr ) > user_funk_t ;
     
     private:
 
@@ -35,7 +35,7 @@ namespace so_device
     public:
 
         virtual void_t on_change( so_device::idevice_ptr_t, so_std::string_cref_t name,
-            so_device::so_component::iinput_component_ptr_t comp_ptr ) ;
+            so_device::so_input::iinput_component_ptr_t comp_ptr ) ;
 
         virtual void_t destroy( void_t ) ;
     };

@@ -15,9 +15,8 @@
 using namespace so_gfx ;
 
 //************************************************************************************
-text_render_2d::text_render_2d( canvas_info_cref_t ci, so_gpx::render_system_ptr_t rsptr )
+text_render_2d::text_render_2d( so_gpx::render_system_ptr_t rsptr )
 {
-    _ci = ci ;
     _gpxr = rsptr ;
 
     _sd_ptr = so_gfx::memory::alloc( so_gfx::text_render_2d_shared_data_t(), 
@@ -33,6 +32,7 @@ text_render_2d::text_render_2d( canvas_info_cref_t ci, so_gpx::render_system_ptr
 text_render_2d::text_render_2d( this_rref_t rhv )
 {
     _ci = rhv._ci ;
+    _point_size = rhv._point_size ;
     
     so_move_member_ptr( _gaptr, rhv ) ;
     so_move_member_ptr( _gpxr, rhv ) ;
@@ -47,8 +47,6 @@ text_render_2d::~text_render_2d( void_t )
     {
         _gpxr->unregister_technique( _t_rnd ) ;
     }
-
-    so_gfx::text_render_2d_plug_factory_t::destroy( _fac_ptr ) ;
 
     if( so_core::is_not_nullptr( _sd_ptr ) )
         so_gfx::memory::dealloc( _sd_ptr ) ;
@@ -69,7 +67,13 @@ void_t text_render_2d::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-void_t text_render_2d::init_fonts( std::vector< so_io::path_t > const & paths )
+void_t text_render_2d::set_canvas_info( canvas_info_cref_t ci )
+{
+    _ci = ci ;
+}
+
+//************************************************************************************
+void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::path_t > const & paths )
 {
     so_font::so_stb::glyph_atlas_creator_t::face_infos_t fis ;
     {
@@ -93,10 +97,10 @@ void_t text_render_2d::init_fonts( std::vector< so_io::path_t > const & paths )
         cps.push_back( so_font::utf32_t( ch ) ) ;
     }
 
-    size_t const atlas_width = 1024 ;
-    size_t const atlas_height = 1024 ;
+    size_t const atlas_width = size_t(_glyph_atlas_size.x()) ;
+    size_t const atlas_height = size_t( _glyph_atlas_size.y() );
 
-    _gaptr = so_font::so_stb::glyph_atlas_creator_t::create_glyph_atlas( fis, 20,
+    _gaptr = so_font::so_stb::glyph_atlas_creator_t::create_glyph_atlas( fis, point_size,
         cps, atlas_width, atlas_height ) ;
 
     _t_rnd = _gpxr->register_technique( _fac_ptr ) ;
@@ -106,100 +110,125 @@ void_t text_render_2d::init_fonts( std::vector< so_io::path_t > const & paths )
 
 //************************************************************************************
 so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_id, size_t const point_size,
-    so_math::vec2ui_cref_t spos, so_std::string_cref_t text )
+    so_math::vec2f_cref_t spos, so_math::vec3f_cref_t color, so_std::string_cref_t text )
 {
     // 1. transform text to glyphs
     // 2. add text to buffer
 
-    layer_infos_t::iterator cur_layer_iter ;
+    group_infos_t::iterator cur_group_iter ;
     {
         so_thread::lock_guard_t lk( _mtx_lis ) ;
-        auto iter = std::find_if( _lis.begin(), _lis.end(), [&]( this_t::layer_info_cref_t li )
+        auto iter = std::find_if( _gis.begin(), _gis.end(), [&]( this_t::group_info_cref_t li )
         { 
-            return  li.layer_id == layer ;
+            return  li.group_id == layer ;
         } ) ;
-        cur_layer_iter = iter ;
+        cur_group_iter = iter ;
 
-        if( iter == _lis.end() )
+        if( iter == _gis.end() )
         {
-            layer_info_t li ;
-            li.layer_id = layer ;
+            group_info_t li ;
+            li.group_id = layer ;
             
-            auto const lower_iter = std::lower_bound( _lis.begin(), _lis.end(), layer,
-                [&]( this_t::layer_info_cref_t li, size_t const val  )
+            auto const lower_iter = std::lower_bound( _gis.begin(), _gis.end(), layer,
+                [&]( this_t::group_info_cref_t li, size_t const val  )
             { 
-                return li.layer_id < val;
+                return li.group_id < val;
             } ) ;
-            cur_layer_iter = _lis.insert( lower_iter, li ) ;
+            cur_group_iter = _gis.insert( lower_iter, li ) ;
         }
     }
 
-    so_math::vec2f_t start_pos( -0.8f, -0.8f ) ;
+    so_math::vec2f_t const vp( _ci.vp.get_width<float_t>(), _ci.vp.get_height<float_t>() ) ;
+    so_math::vec2f_t const scale = _glyph_atlas_size / vp ;
+
+    so_math::vec2f_t start_pos = spos ;
 
     so_std::vector< glyph_info_t > gis ;
     for( char const & c : text )
     {
-        so_font::glyph_atlas_t::glyph_info_t gi ;
         size_t buffer_offset = 0 ;
+        so_math::vec2f_t adv ;
+
+        bool_t const do_search = c != ' ' ;
 
         // 1. find glyph
-        auto const res = _gaptr->find_glyph( font_id, so_font::utf32_t(c),
-            buffer_offset, gi ) ;
-
-        // 1.1 find alternative glyph
-        if( so_core::is_not( res ) )
+        if( do_search )
         {
-            so_log::log::warning( "[text_render_2d::draw_text] : glyph not found for : " + c ) ;
-            
-            auto const ires = _gaptr->find_glyph( font_id, so_font::utf32_t( '?' ),
+            so_font::glyph_atlas_t::glyph_info_t gi ;
+
+            auto const res = _gaptr->find_glyph( font_id, so_font::utf32_t( c ),
                 buffer_offset, gi ) ;
 
-            so_log::log::error_and_exit( so_core::is_not( ires), 
-                "[text_render_2d::draw_text] : glyph ? must be included" ) ;
+            // 1.1 find alternative glyph
+            if( so_core::is_not( res ) )
+            {
+                auto const ires = _gaptr->find_glyph( font_id, so_font::utf32_t( '?' ),
+                    buffer_offset, gi ) ;
+
+                so_log::log::error( so_core::is_not( ires ),
+                    "[text_render_2d::draw_text] : glyph ? must be included" ) ;
+            }
+            //adv = ( gi.dims * _glyph_atlas_size ) / 
+              //  so_math::vec2f_t( ci.vp.get_width<float_t>(),ci.vp.get_height<float_t>() ) ;
+            adv = gi.dims * scale ;
+        }
+        else
+        {
+            adv = so_math::vec2f_t(
+                float_t(_point_size) / _ci.vp.get_width<float_t>(),
+                float_t( _point_size ) / _ci.vp.get_height<float_t>() ) ;
         }
 
         // 2. compute position
-        so_math::vec2f_t const pos = start_pos + so_math::vec2f_t( 0.1f, 0.1f ) ;
+        so_math::vec2f_t const pos = start_pos  ;
         
         // 3. store
         this_t::glyph_info_t this_gi ;
         this_gi.pos = pos ;
         this_gi.offset = buffer_offset ;
-        this_gi.color = so_math::vec3f_t( 1.0f ) ;
-        gis.push_back( this_gi ) ;
+        this_gi.color = color ;
 
-        start_pos = pos ;
+        if( do_search )
+            gis.push_back( this_gi ) ;
+
+        start_pos = pos + so_math::vec2f_t( adv.x(), 0.0f ) ;
     }
 
     {
-        layer_info_ref_t li = *cur_layer_iter ;
+        group_info_ref_t li = *cur_group_iter ;
 
         so_thread::lock_guard_t lk( li.mtx ) ;
         
 
-        for( auto const & gi : gis )
-            li.glyph_infos.push_back( gi ) ;
+        for( auto const & igi : gis )
+            li.glyph_infos.push_back( igi ) ;
     }
 
     return so_gfx::ok ;
 }
 
 //************************************************************************************
-so_gfx::result text_render_2d::render( void_t )
+so_gfx::result text_render_2d::draw_begin( void_t )
+{
+    return so_gfx::ok ;
+}
+
+//************************************************************************************
+so_gfx::result text_render_2d::draw_end( void_t )
 {
     // 1. clear out the shared data
     {
         _sd_ptr->glyph_infos.resize( 0 ) ;
-        _sd_ptr->per_layer_infos.resize( 0 ) ;
+        _sd_ptr->per_group_infos.resize( 0 ) ;
     }
 
     // 2. refill glyph shared data buffers
-    // 3. clear the layer's glyph draw buffers
+    // 3. clear the group's glyph draw buffers
     {
-        size_t lid = 0 ;
-        for( auto & p : _lis )
+        size_t gid = 0 ;
+        for( auto & p : _gis )
         {
-            layer_info_ref_t li = p ;
+            group_info_ref_t li = p ;
 
             so_thread::lock_guard_t lk( li.mtx ) ;
 
@@ -212,30 +241,41 @@ so_gfx::result text_render_2d::render( void_t )
                 igi.pos = gi.pos ;
                 _sd_ptr->glyph_infos.push_back( igi ) ;
             }
-            
-            // do per layer info
+
+            // do per group info
             {
-                text_render_2d_shared_data_t::per_layer_info_t pli ;
-                pli.layer_id = lid++ ;
+                text_render_2d_shared_data_t::per_group_info_t pli ;
+                pli.group_id = gid++ ;
                 pli.num_glyphs = li.glyph_infos.size() ;
 
-                _sd_ptr->per_layer_infos.push_back( pli ) ;
+                _sd_ptr->per_group_infos.push_back( pli ) ;
             }
 
             li.glyph_infos.resize( 0 ) ;
         }
     }
 
-    // 4. schedule techniques
     {
-        _gpxr->schedule( _t_rnd ) ;
+        so_math::vec2f_t const vp( _ci.vp.get_width<float_t>(), _ci.vp.get_height<float_t>() ) ;
+        _sd_ptr->dim_scale = _glyph_atlas_size / vp ;
     }
-
-    // 1. transform glyph infos and store in gpu buffer
-    // 2. schedule technique for layer
-    // 3. empty local glyph buffers
 
     return so_gfx::ok ;
 }
 
 //************************************************************************************
+so_gfx::result text_render_2d::render( size_t const gid )
+{
+    so_gpx::schedule_instance_t si ;
+    si.render_id = gid ;
+    _gpxr->schedule( _t_rnd, 0, si ) ;
+
+    return so_gfx::ok ;
+}
+
+//************************************************************************************
+so_gfx::result text_render_2d::release( void_t )
+{
+    _gpxr->schedule_for_release( _t_rnd ) ;
+    return so_gfx::ok ;
+}

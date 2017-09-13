@@ -5,16 +5,13 @@
 #ifndef _SNAKEOIL_DEVICE_API_IGAMEPAD_API_H_
 #define _SNAKEOIL_DEVICE_API_IGAMEPAD_API_H_
 
-#include "../typedefs.h"
-#include "../protos.h"
-#include "../result.h"
-#include "../api.h"
+#include "iapi.h"
 
 #include "../devices/gamepad/gamepad_message.h"
 
 namespace so_device
 {
-    class igamepad_api
+    class SNAKEOIL_DEVICE_API igamepad_api : public iapi
     {
     public:
 
@@ -37,8 +34,7 @@ namespace so_device
 
     public:
 
-        virtual void_t update( void_t ) = 0 ;
-        virtual void_t destroy( void_t ) = 0 ;
+        virtual void_t update_gamepad( void_t ) = 0 ;
     };
 }
 

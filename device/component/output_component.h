@@ -2,14 +2,13 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENT_OUTPUT_COMPONENT_H_
-#define _SNAKEOIL_DEVICE_COMPONENT_OUTPUT_COMPONENT_H_
+#pragma once
 
 #include "ioutput_component.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_output
     {
         template< typename T >
         struct output_component : public ioutput_component
@@ -39,5 +38,3 @@ namespace so_device
         };
     }
 }
-
-#endif

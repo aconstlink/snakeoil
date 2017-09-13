@@ -64,13 +64,13 @@ so_gpx::iplug_ptr_t text_render_2d_plug_factory::create_plug( so_gpu::api_type c
 }
 
 //************************************************************************************
-void_t text_render_2d_plug_factory::destroy_plug( so_gpx::iplug_ptr_t )
+void_t text_render_2d_plug_factory::destroy_plug( so_gpx::iplug_ptr_t ptr )
 {
-
+    ptr->destroy() ;
 }
 
 //************************************************************************************
 void_t text_render_2d_plug_factory::destroy( void_t )
 {
-
+    this_t::destroy( this ) ;
 }

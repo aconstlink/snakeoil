@@ -148,7 +148,7 @@ namespace so_device
             virtual so_device::midi_device_ptr_t find_any_midi_device( void_t ) ;
             
 
-            virtual void_t update( void_t ) ;
+            virtual void_t update_midi( void_t ) ;
 
         public:
 

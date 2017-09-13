@@ -75,7 +75,7 @@ bool_t xinput_device::is_released( XINPUT_STATE const & new_state, DWORD button 
 }
 
 //****************************************************************************************
-so_component::button_state xinput_device::check_left_trigger(
+button_state xinput_device::check_left_trigger(
     XINPUT_STATE const & new_state, uint16_t & intensity_out ) const
 {
     bool_t const old_press = bool_t( _state.Gamepad.bLeftTrigger != 0 ) ;
@@ -83,14 +83,14 @@ so_component::button_state xinput_device::check_left_trigger(
 
     intensity_out = uint16_t( new_state.Gamepad.bLeftTrigger ) ;
 
-    if( new_press ) return so_device::so_component::button_state::pressed ;
-    if( old_press && !new_press ) return so_device::so_component::button_state::released ;
+    if( new_press ) return so_device::button_state::pressed ;
+    if( old_press && !new_press ) return so_device::button_state::released ;
 
-    return so_device::so_component::button_state::none ;
+    return so_device::button_state::none ;
 }
 
 //****************************************************************************************
-so_component::button_state xinput_device::check_right_trigger(
+button_state xinput_device::check_right_trigger(
     XINPUT_STATE const & new_state, uint16_t & intensity_out ) const
 {
     bool_t const old_press = bool_t( _state.Gamepad.bRightTrigger != 0 ) ;
@@ -98,13 +98,13 @@ so_component::button_state xinput_device::check_right_trigger(
 
     intensity_out = uint16_t( new_state.Gamepad.bRightTrigger ) ;
 
-    if( new_press ) return so_device::so_component::button_state::pressed ;
-    if( old_press && !new_press ) return so_device::so_component::button_state::released ;
-    return so_device::so_component::button_state::none ;
+    if( new_press ) return so_device::button_state::pressed ;
+    if( old_press && !new_press ) return so_device::button_state::released ;
+    return so_device::button_state::none ;
 }
 
 //****************************************************************************************
-so_component::stick_state xinput_device::check_left_stick(
+stick_state xinput_device::check_left_stick(
     XINPUT_STATE const & new_state, so_math::vec2f_t & nnc_out ) const
 {
     so_math::vec2b_t const old_tilt = so_math::vec2b_t(
@@ -134,15 +134,15 @@ so_component::stick_state xinput_device::check_left_stick(
 
     nnc_out = so_math::vec2f_t( float_t( X ), float_t( Y ) ) * inv_width ;
 
-    if( !old_tilt.any() && new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && !new_tilt.any() ) return so_device::so_component::stick_state::untilted ;
+    if( !old_tilt.any() && new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && !new_tilt.any() ) return so_device::stick_state::untilted ;
 
-    return so_device::so_component::stick_state::none ;
+    return so_device::stick_state::none ;
 }
 
 //****************************************************************************************
-so_component::stick_state xinput_device::check_left_stick(
+stick_state xinput_device::check_left_stick(
     XINPUT_STATE const & new_state, so_math::vector2<int16_t> & val_out ) const 
 {
     so_math::vector2<int16_t> old_xy(
@@ -165,14 +165,14 @@ so_component::stick_state xinput_device::check_left_stick(
     so_math::vec2b_t const old_tilt = old_xy.absed().greater_than( so_math::vec2i16_t( 0 ) ) ;
     so_math::vec2b_t const new_tilt = new_xy.absed().greater_than( so_math::vec2i16_t( 0 ) ) ;
 
-    if( new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && !new_tilt.any() ) return so_device::so_component::stick_state::untilted ;
+    if( new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && !new_tilt.any() ) return so_device::stick_state::untilted ;
 
-    return so_device::so_component::stick_state::none ;
+    return so_device::stick_state::none ;
 }
 
 //****************************************************************************************
-so_component::stick_state xinput_device::check_right_stick(
+stick_state xinput_device::check_right_stick(
     XINPUT_STATE const & new_state, so_math::vec2f_t & nnc_out ) const
 {
     so_math::vec2b_t const old_tilt = so_math::vec2b_t(
@@ -201,14 +201,14 @@ so_component::stick_state xinput_device::check_right_stick(
 
     nnc_out = so_math::vec2f_t( float_t( X ), float_t( Y ) ) * inv_width ;
 
-    if( !old_tilt.any() && new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && !new_tilt.any() ) return so_device::so_component::stick_state::untilted ;
-    return so_device::so_component::stick_state::none ;
+    if( !old_tilt.any() && new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && !new_tilt.any() ) return so_device::stick_state::untilted ;
+    return so_device::stick_state::none ;
 }
 
 //****************************************************************************************
-so_component::stick_state xinput_device::check_right_stick(
+stick_state xinput_device::check_right_stick(
     XINPUT_STATE const & new_state, so_math::vector2<int16_t> & val_out ) const 
 {
     so_math::vector2<int16_t> old_xy(
@@ -231,10 +231,10 @@ so_component::stick_state xinput_device::check_right_stick(
     so_math::vec2b_t const old_tilt = old_xy.absed().greater_than( so_math::vec2i16_t( 0 ) ) ;
     so_math::vec2b_t const new_tilt = new_xy.absed().greater_than( so_math::vec2i16_t( 0 ) ) ;
 
-    if( new_tilt.any() ) return so_device::so_component::stick_state::tilted ;
-    if( old_tilt.any() && !new_tilt.any() ) return so_device::so_component::stick_state::untilted ;
+    if( new_tilt.any() ) return so_device::stick_state::tilted ;
+    if( old_tilt.any() && !new_tilt.any() ) return so_device::stick_state::untilted ;
 
-    return so_device::so_component::stick_state::none ;
+    return so_device::stick_state::none ;
 }
 
 //****************************************************************************************

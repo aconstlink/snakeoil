@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_TOUCH_SINGLE_TOUCH_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_TOUCH_SINGLE_TOUCH_H_
+#pragma once
 
 #include "../input_component.h"
 #include "touch_state.h"
@@ -12,7 +11,7 @@
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         struct single_touch: public input_component< single_touch >
         {
@@ -34,5 +33,3 @@ namespace so_device
         so_typedef( single_touch ) ;
     }
 }
-
-#endif

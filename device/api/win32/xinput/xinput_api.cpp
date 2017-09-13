@@ -88,7 +88,7 @@ so_device::result xinput_api::unregister_device( so_device::key_cref_t )
 }
 
 //****************************************************************************************
-void_t xinput_api::update( void_t )
+void_t xinput_api::update_gamepad( void_t )
 {
     // reset all virtual devices
     // @todo improve this!
@@ -215,28 +215,28 @@ bool_t xinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivde
 
         so_device::funk_notify_ptr_t gamepad_notify = so_device::funk_notify_t::create(
             [=]( so_device::idevice_ptr_t, so_std::string_cref_t name,
-            so_device::so_component::iinput_component_ptr_t comp_ptr )
+            so_device::so_input::iinput_component_ptr_t comp_ptr )
         {
 
             // sticks
             if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_component::value_stick_ptr_t >( comp_ptr ) ) )
+                dynamic_cast< so_device::so_input::value_stick_ptr_t >( comp_ptr ) ) )
             {
                 auto * stick_ptr = reinterpret_cast<
-                    so_device::so_component::value_stick_ptr_t >( comp_ptr ) ;
+                    so_device::so_input::value_stick_ptr_t >( comp_ptr ) ;
 
                 so_device::so_vgamepad::xbox_stick_state xbbs =
                     so_device::so_vgamepad::xbox_stick_state::invalid ;
 
-                if( stick_ptr->state_is( so_device::so_component::stick_state::tilted ) )
+                if( stick_ptr->state_is( so_device::stick_state::tilted ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_stick_state::tilt ;
                 }
-                else if( stick_ptr->state_is( so_device::so_component::stick_state::tilting ) )
+                else if( stick_ptr->state_is( so_device::stick_state::tilting ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_stick_state::tilting ;
                 }
-                else if( stick_ptr->state_is( so_device::so_component::stick_state::untilted ) )
+                else if( stick_ptr->state_is( so_device::stick_state::untilted ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_stick_state::untilt ;
                 }
@@ -255,23 +255,23 @@ bool_t xinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivde
 
             // value buttons
             if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_component::value_button_ptr_t >( comp_ptr ) ) )
+                dynamic_cast< so_device::so_input::value_button_ptr_t >( comp_ptr ) ) )
             {
                 auto * b_ptr = reinterpret_cast<
-                    so_device::so_component::value_button_ptr_t >( comp_ptr ) ;
+                    so_device::so_input::value_button_ptr_t >( comp_ptr ) ;
 
                 so_device::so_vgamepad::xbox_button_state xbbs =
                     so_device::so_vgamepad::xbox_button_state::invalid ;
 
-                if( b_ptr->state_is( so_device::so_component::button_state::pressed ) )
+                if( b_ptr->state_is( so_device::button_state::pressed ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
                 }
-                else if( b_ptr->state_is( so_device::so_component::button_state::pressing ) )
+                else if( b_ptr->state_is( so_device::button_state::pressing ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
                 }
-                else if( b_ptr->state_is( so_device::so_component::button_state::released ) )
+                else if( b_ptr->state_is( so_device::button_state::released ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::released ;
                 }
@@ -290,23 +290,23 @@ bool_t xinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivde
 
             // binary buttons
             if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_component::binary_button_ptr_t >( comp_ptr ) ) )
+                dynamic_cast< so_device::so_input::binary_button_ptr_t >( comp_ptr ) ) )
             {
                 auto * b_ptr = reinterpret_cast<
-                    so_device::so_component::binary_button_ptr_t >( comp_ptr ) ;
+                    so_device::so_input::binary_button_ptr_t >( comp_ptr ) ;
 
                 so_device::so_vgamepad::xbox_button_state xbbs = 
                     so_device::so_vgamepad::xbox_button_state::invalid ;
 
-                if( b_ptr->state_is( so_device::so_component::button_state::pressed ) )
+                if( b_ptr->state_is( so_device::button_state::pressed ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
                 }
-                else if( b_ptr->state_is( so_device::so_component::button_state::pressing ) )
+                else if( b_ptr->state_is( so_device::button_state::pressing ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
                 }
-                else if( b_ptr->state_is( so_device::so_component::button_state::released ) )
+                else if( b_ptr->state_is( so_device::button_state::released ) )
                 {
                     xbbs = so_device::so_vgamepad::xbox_button_state::released ;
                 }
@@ -458,47 +458,47 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         so_std::string_t i_str = std::to_string( i ) ;
 
         auto logic = so_device::gamepad_device::input_component_logic_t() ;
-        logic.follow_up_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr )
+        logic.follow_up_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr )
         {
-            auto & b = *reinterpret_cast<so_device::so_component::binary_button_ptr_t>( cptr ) ;
-            if( b.state == so_device::so_component::button_state::pressed )
+            auto & b = *reinterpret_cast<so_device::so_input::binary_button_ptr_t>( cptr ) ;
+            if( b.state == so_device::button_state::pressed )
             {
-                b.state = so_device::so_component::button_state::pressing ;
+                b.state = so_device::button_state::pressing ;
                 return true ;
             }
-            else if( b.state == so_device::so_component::button_state::pressing )
+            else if( b.state == so_device::button_state::pressing )
             {
                 return true ;
             }
-            else if( b.state == so_device::so_component::button_state::released )
+            else if( b.state == so_device::button_state::released )
             {
-                b.state = so_device::so_component::button_state::none ;
+                b.state = so_device::button_state::none ;
             }
             return false ;
         } ;
 
-        logic.handle_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr,
+        logic.handle_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr,
             so_device::gamepad_message_cref_t msg )
         {
-            auto & b = *reinterpret_cast<so_device::so_component::binary_button_ptr_t>( cptr ) ;
+            auto & b = *reinterpret_cast<so_device::so_input::binary_button_ptr_t>( cptr ) ;
 
             // press
             if( msg == so_device::gamepad_message_t( uint8_t( i ), uint8_t( 1 ), 0 ) )
             {
-                b.state = so_device::so_component::button_state::pressed ;
+                b.state = so_device::button_state::pressed ;
                 return true ;
             }
             // release
             else if( msg == so_device::gamepad_message_t( uint8_t( i ), uint8_t( 0 ), 0 ) )
             {
-                b.state = so_device::so_component::button_state::released ;
+                b.state = so_device::button_state::released ;
                 return true ;
             }
             return false ;
         } ;
 
         gamepad_ptr->add_component( mapping.name, logic,
-            so_device::so_component::binary_button_t::create(
+            so_device::so_input::binary_button_t::create(
             "[so_device::xinput_module::create_gamepad] : b_" + i_str ) ) ;
     } ) ;
 
@@ -508,35 +508,35 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         uint8_t const i = uint8_t(mapping.id) ;
 
         auto logic = so_device::gamepad_device::input_component_logic_t() ;
-        logic.follow_up_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr )
+        logic.follow_up_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr )
         {
-            auto & comp = *reinterpret_cast<so_device::so_component::value_button_ptr_t>( cptr ) ;
-            if( comp.state == so_device::so_component::button_state::released )
+            auto & comp = *reinterpret_cast<so_device::so_input::value_button_ptr_t>( cptr ) ;
+            if( comp.state == so_device::button_state::released )
             {
-                comp.state = so_device::so_component::button_state::none ;
+                comp.state = so_device::button_state::none ;
             }
-            else if( comp.state == so_device::so_component::button_state::pressed )
+            else if( comp.state == so_device::button_state::pressed )
             {
-                comp.state = so_device::so_component::button_state::pressing ;
+                comp.state = so_device::button_state::pressing ;
             }
 
             return false ;
         } ;
 
-        logic.handle_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr,
+        logic.handle_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr,
             so_device::gamepad_message_cref_t msg )
         {
-            auto & comp = *reinterpret_cast<so_device::so_component::value_button_ptr_t>( cptr ) ;
+            auto & comp = *reinterpret_cast<so_device::so_input::value_button_ptr_t>( cptr ) ;
 
             if( msg.compare_id_info(so_device::gamepad_message_t( uint8_t( i ), uint8_t( 0 ), 0 )) )
             {
                 if( msg.value == 0 )
                 {
-                    comp.state = so_device::so_component::button_state::released ;
+                    comp.state = so_device::button_state::released ;
                 }
-                else if( comp.state != so_device::so_component::button_state::pressing )
+                else if( comp.state != so_device::button_state::pressing )
                 {
-                    comp.state = so_device::so_component::button_state::pressed ;
+                    comp.state = so_device::button_state::pressed ;
                 }
                 
                 comp.value = float_t( msg.value ) / 255.0f ;
@@ -546,7 +546,7 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         } ;
 
         gamepad_ptr->add_component( mapping.name, logic,
-            so_device::so_component::value_button_t::create( 
+            so_device::so_input::value_button_t::create(
             "[so_device::xinput_module::create_gamepad] : value_button : "+ mapping.name) ) ;
     } ) ;
 
@@ -556,46 +556,46 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         uint8_t const id = uint8_t(mapping.id) ;
 
         auto logic = so_device::gamepad_device::input_component_logic_t() ;
-        logic.follow_up_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr )
+        logic.follow_up_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr )
         {
-            auto & comp = *reinterpret_cast<so_device::so_component::value_stick_ptr_t>( cptr ) ;
+            auto & comp = *reinterpret_cast<so_device::so_input::value_stick_ptr_t>( cptr ) ;
 
-            if( comp.state_x == so_device::so_component::stick_state::untilted )
+            if( comp.state_x == so_device::stick_state::untilted )
             {
-                comp.state_x = so_device::so_component::stick_state::none ;
+                comp.state_x = so_device::stick_state::none ;
             }
-            else if( comp.state_x == so_device::so_component::stick_state::tilted )
+            else if( comp.state_x == so_device::stick_state::tilted )
             {
-                comp.state_x = so_device::so_component::stick_state::tilting ;
+                comp.state_x = so_device::stick_state::tilting ;
             }
 
-            if( comp.state_y == so_device::so_component::stick_state::untilted )
+            if( comp.state_y == so_device::stick_state::untilted )
             {
-                comp.state_y = so_device::so_component::stick_state::none ;
+                comp.state_y = so_device::stick_state::none ;
             }
-            else if( comp.state_y == so_device::so_component::stick_state::tilted )
+            else if( comp.state_y == so_device::stick_state::tilted )
             {
-                comp.state_y = so_device::so_component::stick_state::tilting ;
+                comp.state_y = so_device::stick_state::tilting ;
             }
 
             return false ;
         } ;
 
-        logic.handle_funk = [=]( so_device::so_component::iinput_component_ptr_t cptr,
+        logic.handle_funk = [=]( so_device::so_input::iinput_component_ptr_t cptr,
             so_device::gamepad_message_cref_t msg )
         {
-            auto & comp = *reinterpret_cast<so_device::so_component::value_stick_ptr_t>( cptr ) ;
+            auto & comp = *reinterpret_cast<so_device::so_input::value_stick_ptr_t>( cptr ) ;
 
             //  x-axis
             if( msg.compare_id_info( so_device::gamepad_message_t(id, 0, 0 ) ) )
             {
                 if( msg.value == 0 )
                 {
-                    comp.state_x = so_device::so_component::stick_state::untilted ;
+                    comp.state_x = so_device::stick_state::untilted ;
                 }                
-                else if( comp.state_x != so_device::so_component::stick_state::tilting )
+                else if( comp.state_x != so_device::stick_state::tilting )
                 {
-                    comp.state_x = so_device::so_component::stick_state::tilted ;
+                    comp.state_x = so_device::stick_state::tilted ;
                 }
                 
                 comp.value.x() = msg.value ;
@@ -606,11 +606,11 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
             {
                 if( msg.value == 0 )
                 {
-                    comp.state_y = so_device::so_component::stick_state::untilted ;
+                    comp.state_y = so_device::stick_state::untilted ;
                 }                
-                else if( comp.state_y != so_device::so_component::stick_state::tilting )
+                else if( comp.state_y != so_device::stick_state::tilting )
                 {
-                    comp.state_y = so_device::so_component::stick_state::tilted ;
+                    comp.state_y = so_device::stick_state::tilted ;
                 }
 
                 comp.value.y() = msg.value ;
@@ -622,12 +622,12 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         uint16_t deadzone = 0 ;
         _xinput_mappings.deadzone_for_stick(mapping.input_enum, deadzone ) ;
 
-        so_device::so_component::value_stick vs ;
+        so_device::so_input::value_stick vs ;
         vs.max_value = so_math::vec2i16_t( 
             int16_t((1<<15)-1)-int16_t(deadzone) ) ;
 
         gamepad_ptr->add_component( mapping.name, logic,
-            so_device::so_component::value_stick::create( std::move(vs),
+            so_device::so_input::value_stick::create( std::move(vs),
             "[so_device::xinput_module::create_gamepad] : stick : " + mapping.name ) ) ;
     } ) ;
 
@@ -638,21 +638,21 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
 
         auto logic = so_device::gamepad_device::output_component_logic_t() ;
         
-        logic.handle_funk = [=]( so_device::so_component::ioutput_component_ptr_t cptr,
+        logic.handle_funk = [=]( so_device::so_output::ioutput_component_ptr_t cptr,
             so_device::gamepad_message_ref_t msg )
         {
-            so_device::so_component::value_motor_ref_t comp = 
-                *reinterpret_cast<so_device::so_component::value_motor_ptr_t>( cptr ) ;
+            so_device::so_output::value_motor_ref_t comp = 
+                *reinterpret_cast<so_device::so_output::value_motor_ptr_t>( cptr ) ;
 
-            so_device::so_component::motor_state ms ;
+            so_device::motor_state ms ;
             if( comp.acquire_and_reset_changed_state(ms) )
             {
-                if( ms == so_device::so_component::motor_state::on )
+                if( ms == so_device::motor_state::on )
                 {
                     msg = so_device::gamepad_message_t( id, 1, comp.value ) ;
                     return so_device::gamepad_output_result::transmit_and_queue ;
                 }
-                else if( ms == so_device::so_component::motor_state::off )
+                else if( ms == so_device::motor_state::off )
                 {
                     msg = so_device::gamepad_message_t( id, 0, 0 ) ;
                     return so_device::gamepad_output_result::transmit_and_dismiss ;
@@ -669,7 +669,7 @@ so_device::gamepad_device_ptr_t xinput_api::create_gamepad( void_t )
         } ;
 
         gamepad_ptr->add_component( mapping.name, logic,
-            so_device::so_component::value_motor::create( 
+            so_device::so_output::value_motor::create( 
             "[so_device::xinput_module::create_gamepad] : stick : " + mapping.name ) ) ;
     } ) ;
 
@@ -732,7 +732,7 @@ bool_t xinput_api::handle_stick( this_t::which_stick ws, XINPUT_STATE const & st
     {
         so_math::vector2< int16_t > change ;
         auto ss = xdev.check_left_stick( state, change ) ;
-        if( ss == so_device::so_component::stick_state::none ) 
+        if( ss == so_device::stick_state::none ) 
             return false ;
 
         size_t id ;
@@ -755,7 +755,7 @@ bool_t xinput_api::handle_stick( this_t::which_stick ws, XINPUT_STATE const & st
     {
         so_math::vector2< int16_t > change ;
         auto ss = xdev.check_right_stick( state, change ) ;
-        if( ss == so_device::so_component::stick_state::none )
+        if( ss == so_device::stick_state::none )
             return false ;
 
         size_t id ;
@@ -789,7 +789,7 @@ bool_t xinput_api::handle_trigger( this_t::which_trigger wt, XINPUT_STATE const 
     {
         uint16_t change ;
         auto ss = xdev.check_left_trigger( state, change ) ;
-        if( ss == so_device::so_component::button_state::none )
+        if( ss == so_device::button_state::none )
             return false ;
 
         size_t id ;
@@ -808,7 +808,7 @@ bool_t xinput_api::handle_trigger( this_t::which_trigger wt, XINPUT_STATE const 
     {
         uint16_t change ;
         auto ss = xdev.check_right_trigger( state, change ) ;
-        if( ss == so_device::so_component::button_state::none )
+        if( ss == so_device::button_state::none )
             return false ;
 
         size_t id ;

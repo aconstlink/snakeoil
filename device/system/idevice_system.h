@@ -18,6 +18,7 @@ namespace so_device
     {
     public:
 
+        virtual so_device::result register_api( so_device::iapi_ptr_t ) = 0 ;
         virtual so_device::result register_module( so_device::imodule_ptr_t ) = 0 ;
 
     public: // midi
@@ -32,6 +33,7 @@ namespace so_device
         
         /// finds the first midi device
         virtual so_device::midi_device_ptr_t find_midi_device( void_t ) = 0 ;
+        
 
     public: // gamepad
 
@@ -41,12 +43,12 @@ namespace so_device
     public: // keyboard
 
         /// finds the first keyboard device
-        virtual so_device::keyboard_device_ptr_t find_keyboard_device( void_t ) = 0 ;
+        virtual so_device::ascii_keyboard_ptr_t find_ascii_keyboard( void_t ) = 0 ;
 
     public: // mouse
 
         /// finds the first mouse device
-        virtual so_device::mouse_device_ptr_t find_mouse_device( void_t ) = 0 ;
+        virtual so_device::three_button_mouse_ptr_t find_three_button_mouse( void_t ) = 0 ;
 
     public:
 

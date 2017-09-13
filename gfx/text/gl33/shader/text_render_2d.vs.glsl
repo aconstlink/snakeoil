@@ -11,6 +11,12 @@ uniform samplerBuffer u_glyph_info ;
 // layout: vec4( red, gree, blue, reserved )
 uniform samplerBuffer u_text_info ;
 
+// must be glyph_atlas_dim / viewport_dim
+// this scaling is required to keep the glyphs dim 
+// constant for different viewport sizes.
+// this computation is constant for every glyph.
+uniform vec2 u_scale ;
+
 out vertex_data
 {
     vec2 txc ;
@@ -47,6 +53,6 @@ void main( )
     // Calcualte the glyph dimensions for the quad
     //
     vec3 pos = sign(in_pos) * 0.5 + 0.5 ; 
-    pos = pos * vec3( smp_dims.xy, 1.0 ) + vec3( text_data_00.yz+vec2(0.0, bearing), 0.0 ) ;
+    pos = pos * vec3( smp_dims.xy*u_scale, 1.0 ) + vec3( text_data_00.yz+vec2(0.0, bearing), 0.0 ) ;
     gl_Position = vec4( pos, 1.0 ) ;
 }

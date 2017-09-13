@@ -2,20 +2,14 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_LIGHTS_LIGHT_STATE_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_LIGHTS_LIGHT_STATE_H_
+#pragma once
 
 namespace so_device
 {
-    namespace so_component
+    enum class light_state
     {
-        enum class light_state
-        {
-            undefined,
-            on,
-            off
-        };
-    }
+        undefined,
+        on,
+        off
+    };
 }
-
-#endif

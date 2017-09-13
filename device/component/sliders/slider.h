@@ -2,15 +2,14 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_SLIDER_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_SLIDER_H_
+#pragma once
 
 #include "../input_component.h"
 #include "slider_state.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
         /// we define a slide component as something
         /// that can slide left/right or up/down
@@ -28,5 +27,3 @@ namespace so_device
         so_typedef( slider ) ;
     }
 }
-
-#endif

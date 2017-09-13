@@ -34,6 +34,7 @@ namespace so_flow
         virtual void_t walk( so_flow::inode::nodes_rref_t ) ;
         virtual void_t destroy( void_t ) ;
     };
+    so_typedef( serial_node_walker ) ;
 }
 
 #endif

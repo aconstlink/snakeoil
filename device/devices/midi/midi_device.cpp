@@ -299,7 +299,7 @@ void_t midi_device::update( midi_messages_ref_t msgs_out )
 
 //****************************************************************************************
 so_device::result midi_device::add_component( so_device::key_cref_t name, input_component_logic_cref_t logic,
-    so_device::so_component::iinput_component_ptr_t cptr ) 
+    so_device::so_input::iinput_component_ptr_t cptr ) 
 {
     so_thread::lock_guard_t lk(_mtx_in) ;
 
@@ -326,7 +326,7 @@ so_device::result midi_device::add_component( so_device::key_cref_t name, input_
 
 //****************************************************************************************
 so_device::result midi_device::add_component( so_device::key_cref_t name, 
-    output_component_logic_cref_t logic, so_device::so_component::ioutput_component_ptr_t cptr ) 
+    output_component_logic_cref_t logic, so_device::so_output::ioutput_component_ptr_t cptr ) 
 {
     so_thread::lock_guard_t lk(_mtx_out) ;
 

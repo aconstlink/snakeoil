@@ -72,7 +72,7 @@ namespace so_device
 
         public:
 
-            virtual void_t update( void_t ) ;
+            virtual void_t update_gamepad( void_t ) ;
             virtual void_t destroy( void_t ) ;
 
             virtual so_device::gamepad_device_ptr_t find_any_device( void_t ) ;

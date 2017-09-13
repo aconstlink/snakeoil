@@ -12,39 +12,49 @@ include_directories(
 #
 
 set( COMPONENT_SOURCES
-    component/iinput_component.h
-    component/ioutput_component.h
-    component/input_component.h
-    component/output_component.h
+  component/input_component_type.h
+  component/output_component_type.h
+  component/iinput_component.h
+  component/ioutput_component.h
+  component/input_component.h
+  component/output_component.h
 
-    component/buttons/button_state.h
-    component/buttons/binary_button.h
-    component/buttons/value_button.h
+  component/buttons/button_id.h
+  component/buttons/button_state.h
+  component/buttons/binary_button.h
+  component/buttons/value_button.h
+  component/buttons/three_button.h
+  component/buttons/three_button_mapping.h
 
-    component/keys/key.h
-    component/points/point.h
+  component/keys/binary_key.h
+  component/keys/key_state.h
+  component/keys/key_id.h
+  component/keys/ascii_key.h
+  component/keys/ascii_key_mapping.h
 
-    component/leds/led_state.h
-    component/leds/binary_led.h
-    component/leds/multi_led.h
+  component/points/point.h
+  
+  component/leds/led_state.h
+  component/leds/binary_led.h
+  component/leds/multi_led.h
 
-    component/motors/motor_state.h
-    component/motors/value_motor.h
+  component/motors/motor_state.h
+  component/motors/value_motor.h
 
-    component/scrolls/scroll.h
-    component/sliders/slider_state.h
-    component/sliders/slider.h
-    component/knobs/rotary_knob.h
+  component/scrolls/scroll.h
+  component/sliders/slider_state.h
+  component/sliders/slider.h
+  component/knobs/rotary_knob.h
 
-    component/sticks/stick_state.h
-    component/sticks/stick.h
-    component/sticks/value_stick.h
+  component/sticks/stick_state.h
+  component/sticks/stick.h
+  component/sticks/value_stick.h
 
-    component/touch/single_touch.h
-    component/touch/touch_state.h
+  component/touch/single_touch.h
+  component/touch/touch_state.h
 
-    component/lights/light_state.h
-    component/lights/light_bar.h
+  component/lights/light_state.h
+  component/lights/light_bar.h
 )
 
 #
@@ -57,6 +67,18 @@ set( MIDI_SOURCES
     devices/midi/midi_device.cpp
     devices/midi/midi_enums.h
     devices/midi/midi_device_desc.h
+)
+
+set( KEYBOARD_SOURCES 
+  devices/keyboard/ikeyboard_device.h
+  devices/keyboard/ascii_keyboard.h
+  devices/keyboard/ascii_keyboard.cpp
+)
+
+set( MOUSE_SOURCES 
+  devices/mouse/imouse_device.h
+  devices/mouse/three_button_mouse.h
+  devices/mouse/three_button_mouse.cpp  
 )
 
 #
@@ -78,6 +100,8 @@ set( DEVICE_SOURCES
     devices/notification/iuser_notify.h
     devices/notification/funk_notify.h
     devices/notification/funk_notify.cpp
+    ${MOUSE_SOURCES}
+    ${KEYBOARD_SOURCES}
     ${MIDI_SOURCES}
     ${VDEV_SOURCES}
 )
@@ -108,10 +132,14 @@ set( MODULES_SOURCES
 # apis
 #
 set( API_SOURCES
+  api/iapi.h
   api/midi_notify.h
-    api/imidi_api.h
-    api/igamepad_api.h
+  api/imidi_api.h
+  api/igamepad_api.h
+  api/imouse_api.h
+  api/ikeyboard_api.h    
 )
+
 set( WIN32_API_SOURCES
     api/win32/midi/win32_midi_api.h
     api/win32/midi/win32_midi_api.cpp
@@ -122,6 +150,10 @@ set( WIN32_API_SOURCES
     api/win32/xinput/xinput_enums.h
     api/win32/xinput/xinput_mappings.h
     api/win32/xinput/xinput_mappings.cpp
+    api/win32/rawinput/rawinput_api.h
+    api/win32/rawinput/rawinput_api.cpp
+    api/win32/rawinput/rawinput_button_mapping.h
+    api/win32/map_virtual_key_to_ascii_key.h
 )
 
 set( WIN32_SYSTEM_SOURCES
@@ -164,6 +196,8 @@ set( SOURCES
     result.h
     typedefs.h
     protos.h
+    global.h
+    global.cpp
     ${COMPONENT_SOURCES}
     ${DEVICE_SOURCES}
     ${SYSTEM_SOURCES}

@@ -7,6 +7,9 @@
 #include "../window/iwindow.h"
 #include "../window/window_message_receiver.h"
 
+#include <snakeoil/device/global.h>
+#include <snakeoil/device/system/idevice_system.h>
+
 #include <snakeoil/io/io.h>
 #include <snakeoil/thread/scheduler.h>
 #include <snakeoil/log/log.h>
@@ -65,7 +68,15 @@ so_app::result window_application::register_window( so_app::iwindow_ptr_t wptr )
 //***********************************************************************
 so_app::result window_application::exec( void_t ) 
 {
-    return this_t::exec( [=]( application_state_ptr_t as ){ as->update_finised() ;  } ) ;
+    return this_t::exec( [=]( application_state_ptr_t as )
+    { 
+        while( as->is_running() )
+        {
+            so_device::global::device_system()->update() ;
+            std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) ) ;
+        }        
+        as->update_finised() ;  
+    } ) ;
 }
 
 //***********************************************************************

@@ -6,6 +6,8 @@
 
 #include "../api/imidi_api.h"
 #include "../api/igamepad_api.h"
+#include "../api/ikeyboard_api.h"
+#include "../api/imouse_api.h"
 
 #include "../modules/module_registry.h"
 
@@ -37,22 +39,27 @@ device_system::device_system( this_rref_t rhv )
 {
     _midis = std::move( rhv._midis ) ;
     _gamepads = std::move( rhv._gamepads ) ;
+    _keyboards = std::move( rhv._keyboards ) ;
+    _mouses = std::move( rhv._mouses ) ;
+    _apis = std::move( rhv._apis ) ;
+
+    so_move_member_ptr( _mod_reg, rhv ) ;
 }
 
 //****************************************************************************************
 device_system::~device_system( void_t )
 {
-    for( auto * item : _midis )
-    {
-        item->destroy() ;
-    }
-
-    for( auto * item : _gamepads )
-    {
-        item->destroy() ;
-    }
-
     so_device::module_registry_t::destroy( _mod_reg ) ;
+
+    for( auto * item : _apis )
+    {
+        item->destroy() ;
+    }
+
+    _midis.clear() ;
+    _gamepads.clear() ;
+    _mouses.clear() ;
+    _keyboards.clear() ;
 }
 
 //****************************************************************************************
@@ -74,51 +81,62 @@ void_t device_system::destroy( this_ptr_t ptr )
 }
 
 //****************************************************************************************
-so_device::result device_system::register_api( so_device::imidi_api_ptr_t mptr )
+so_device::result device_system::register_api( so_device::iapi_ptr_t api_ptr ) 
 {
-    if( so_core::is_nullptr(mptr) )
+    if( so_core::is_nullptr( api_ptr ) )
     {
-        so_log::log::error("[so_device::device_system::register_module] : "
-                            "nullptr module not allowed") ;
+        so_log::log::error("[so_device::device_system::register_api] : "
+                            "nullptr api not allowed") ;
         return so_device::invalid_argument ;
     }
 
-    so_thread::lock_guard_t lk(_midi_mtx) ;
+    // 1. check if api is already registered
+    // 2. add to apis if not
+    {
+        so_thread::lock_guard_t lk( _api_mtx ) ;
+
+        auto const iter = std::find( _apis.begin(), _apis.end(), api_ptr ) ;
+        if( iter != _apis.end() )
+            return so_device::ok ;
+
+        _apis.push_back( api_ptr ) ;
+    }
+
+    // midi
+    if( so_core::is_not_nullptr( dynamic_cast<so_device::imidi_api_ptr_t>( api_ptr ) ) )
+    {
+        auto * ap = dynamic_cast< so_device::imidi_api_ptr_t >( api_ptr ) ;
+
+        so_thread::lock_guard_t lk( _midi_mtx ) ;
+        _midis.push_back( ap ) ;
+    }
+
+    // gamepad
+    if( so_core::is_not_nullptr( dynamic_cast< so_device::igamepad_api_ptr_t >( api_ptr ) ) )
+    {
+        auto * ap = dynamic_cast< so_device::igamepad_api_ptr_t >( api_ptr ) ;
+
+        so_thread::lock_guard_t lk( _gamepad_mtx ) ;
+        _gamepads.push_back( ap ) ;
+    }
     
-    auto const iter = std::find( _midis.begin(), _midis.end(), mptr ) ;
-    if( iter != _midis.end() )
+    // keyboard
+    if( so_core::is_not_nullptr( dynamic_cast< so_device::ikeyboard_api_ptr_t >( api_ptr ) ) )
     {
-        so_log::log::warning( "[so_device::device_system::register_module] : "
-                                "MIDI module already registered"  ) ;
-        return so_device::ok ;
+        auto * ap = dynamic_cast< so_device::ikeyboard_api_ptr_t >( api_ptr ) ;
+
+        so_thread::lock_guard_t lk( _keyboard_mtx ) ;
+        _keyboards.push_back( ap ) ;
     }
 
-    _midis.push_back( mptr ) ;
-
-    return so_device::ok ;
-}
-
-//****************************************************************************************
-so_device::result device_system::register_api( so_device::igamepad_api_ptr_t mptr) 
-{
-    if( so_core::is_nullptr( mptr ) )
+    // mouse
+    if( so_core::is_not_nullptr( dynamic_cast< so_device::imouse_api_ptr_t >( api_ptr ) ) )
     {
-        so_log::log::error( "[so_device::device_system::register_module] : "
-                                "nullptr gamepad module not allowed" ) ;
-        return so_device::invalid_argument ;
+        auto * ap = dynamic_cast< so_device::imouse_api_ptr_t >( api_ptr ) ;
+
+        so_thread::lock_guard_t lk( _mouse_mtx ) ;
+        _mouses.push_back( ap ) ;
     }
-
-    so_thread::lock_guard_t lk( _gamepad_mtx ) ;
-
-    auto const iter = std::find( _gamepads.begin(), _gamepads.end(), mptr ) ;
-    if( iter != _gamepads.end() )
-    {
-        so_log::log::warning( "[so_device::device_system::register_module] : "
-                                "gamepad module already registered") ;
-        return so_device::ok ;
-    }
-
-    _gamepads.push_back( mptr ) ;
 
     return so_device::ok ;
 }
@@ -128,12 +146,22 @@ so_device::result device_system::update( void_t )
 {
     for( auto * item : _midis )
     {
-        item->update() ;
+        item->update_midi() ;
     }
 
     for( auto * item : _gamepads )
     {
-        item->update() ;
+        item->update_gamepad() ;
+    }
+
+    for( auto * item : _keyboards )
+    {
+        item->update_keyboard() ;
+    }
+
+    for( auto * item : _mouses )
+    {
+        item->update_mouse() ;
     }
 
     return so_device::ok ;
@@ -178,7 +206,6 @@ so_device::result device_system::register_module( so_device::imodule_ptr_t mptr 
             }
         }
     }
-
 
     return so_device::ok ;
 }
@@ -245,14 +272,28 @@ so_device::gamepad_device_ptr_t device_system::find_gamepad_device( void_t )
 }
 
 //****************************************************************************************
-so_device::keyboard_device_ptr_t device_system::find_keyboard_device( void_t )
+so_device::ascii_keyboard_ptr_t device_system::find_ascii_keyboard( void_t )
 {
+    for( auto * api : _keyboards )
+    {
+        auto * dev = api->find_ascii_keyboard() ;
+        if( so_core::is_not_nullptr( dev ) )
+            return dev ;
+    }
+
     return nullptr ;
 }
 
 //****************************************************************************************
-so_device::mouse_device_ptr_t device_system::find_mouse_device( void_t )
+so_device::three_button_mouse_ptr_t device_system::find_three_button_mouse( void_t )
 {
+    for( auto * api : _mouses )
+    {
+        auto * dev = api->find_three_button_mouse() ;
+        if( so_core::is_not_nullptr( dev ) )
+            return dev ;
+    }
+
     return nullptr ;
 }
 

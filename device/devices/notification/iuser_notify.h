@@ -16,7 +16,7 @@ namespace so_device
     public:
 
         virtual void_t on_change( so_device::idevice_ptr_t, so_std::string_cref_t name, 
-            so_device::so_component::iinput_component_ptr_t ) = 0 ;
+            so_device::so_input::iinput_component_ptr_t ) = 0 ;
 
         virtual void_t destroy( void_t ) = 0 ;
     };

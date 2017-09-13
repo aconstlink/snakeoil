@@ -2,15 +2,14 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_DEVICE_COMPONENTS_MOTORS_VALUE_MOTOR_H_
-#define _SNAKEOIL_DEVICE_COMPONENTS_MOTORS_VALUE_MOTOR_H_
+#pragma once
 
 #include "../output_component.h"
 #include "motor_state.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_output
     {
         struct value_motor : public output_component<value_motor>
         {
@@ -68,5 +67,3 @@ namespace so_device
         so_typedef( value_motor ) ;
     }
 }
-
-#endif

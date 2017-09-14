@@ -8,7 +8,7 @@
 #include "memory.h"
 #include "macros/handle.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 #include <mutex>
@@ -37,30 +37,30 @@ namespace so_memory
 
         handle( void_t )
         {
-            _sd = so_memory::memory::alloc( shared_data_t(), 
+            _sd = so_memory::global::alloc( shared_data_t(), 
                 "[so_memory::handle] : shared_data" ) ;
         }
 
         handle( type_rref_t v )
         {
-            _sd = so_memory::memory::alloc( shared_data_t(),
+            _sd = so_memory::global::alloc( shared_data_t(),
                 "[so_memory::handle] : shared_data" ) ;
 
-            _ptr = so_memory::memory::alloc( std::move( v ), 
+            _ptr = so_memory::global::alloc( std::move( v ), 
                 "[so_memory::handle::handle] : allocated via handle" ) ;
         }
 
         handle( type_rref_t v, so_memory::purpose_cref_t p )
         {
-            _sd = so_memory::memory::alloc( shared_data_t(),
+            _sd = so_memory::global::alloc( shared_data_t(),
                 "[so_memory::handle] : shared_data" ) ;
 
-            _ptr = so_memory::memory::alloc( std::move( v ), p ) ;
+            _ptr = so_memory::global::alloc( std::move( v ), p ) ;
         }
 
         handle( type_ptr_t ptr ) : _ptr( ptr ) 
         {
-            _sd = so_memory::memory::alloc( shared_data_t(),
+            _sd = so_memory::global::alloc( shared_data_t(),
                 "[so_memory::handle] : shared_data" ) ;
         }
 
@@ -159,8 +159,8 @@ namespace so_memory
         {
             if( so_core::is_not_nullptr(_sd) && _sd->decrement() == 0 )
             {
-                so_memory::memory::dealloc( _sd ) ;
-                so_memory::memory::dealloc( _ptr ) ;
+                so_memory::global::dealloc( _sd ) ;
+                so_memory::global::dealloc( _ptr ) ;
 
                 _sd = nullptr ;
                 _ptr = nullptr ;
@@ -240,7 +240,7 @@ namespace so_memory
 
         ~shared_data( void_t )
         {
-            so_log::log::error_and_exit( _ref_count != 0,
+            so_log::global::error_and_exit( _ref_count != 0,
                 "[so_memory::handle::~shared_data] : ref_count != 0" ) ;
         }
 
@@ -267,7 +267,7 @@ namespace so_memory
         size_t decrement( void_t )
         {
             std::lock_guard<std::mutex> lk( _mtx ) ;
-            so_log::log::error_and_exit( _ref_count == 0,
+            so_log::global::error_and_exit( _ref_count == 0,
                 "[so_memory::handle::shared_data::decrement] : ref_count == 0" ) ;
             return --_ref_count ;
         }

@@ -12,6 +12,8 @@
 #include <snakeoil/std/container/vector.hpp>
 #include <snakeoil/std/string/string.hpp>
 
+#include <functional>
+
 namespace so_shade
 {
     class SNAKEOIL_SHADE_API slot_group : public so_shade::islot, public connector_registry

@@ -13,7 +13,7 @@
 #include <snakeoil/math/matrix/matrix3.hpp>
 #include <snakeoil/math/matrix/matrix4.hpp>
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/core/assert.h>
@@ -27,7 +27,7 @@
 namespace so_gli
 {
     using namespace so_core::so_types ;
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 
     template< typename T >
     using allocator = so_memory::allocator< T, so_gli::memory > ;

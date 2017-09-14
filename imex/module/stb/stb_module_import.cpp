@@ -8,13 +8,13 @@
 #include "../../image/deduce_image_format.h"
 #include "../../manager/image_manager.h"
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
 #include <snakeoil/io/system/system.h>
 
 #include <snakeoil/memory/guards/malloc_guard.hpp>
 #include <snakeoil/thread/task/tasks.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -33,14 +33,14 @@ so_thread::task_graph_t stb_module::import_image( import_params_cref_t params_in
         
         // the result
         {
-            so_io::load_handle_t lh = so_io::io::load( params_in.path_to_file ) ;
+            so_io::load_handle_t lh = so_io::global::load( params_in.path_to_file ) ;
             auto res = lh.wait_for_operation( [&]( char_cptr_t din, size_t sib, so_io::result ires )
             {
                 if( so_io::no_success( ires ) ) return ;
                 data_buffer = so_memory::malloc_guard<char_t>( din, sib ) ;
             } ) ;
 
-            if( so_log::log::error( so_io::no_success( res ),
+            if( so_log::global::error( so_io::no_success( res ),
                 "[so_imex::stb_module::import_image] : load image via stb with : " +
                 so_io::to_string( res ) ) )
             {
@@ -62,11 +62,11 @@ so_thread::task_graph_t stb_module::import_image( import_params_cref_t params_in
             uchar_ptr_t stb_data_ptr = stbi_load_from_memory( uchar_cptr_t(data_buffer.get()), 
                 int_t(data_buffer.size()), &width, &height, &comp, 0 ) ;
         
-            if( so_log::log::error(stb_data_ptr == nullptr, 
+            if( so_log::global::error(stb_data_ptr == nullptr, 
                 "[so_imex::stb_module::import_image] : stbi_load_from_memory" ) )
             {
                 char_cptr_t stbi_err_msg = stbi_failure_reason() ;
-                so_log::log::error( "[so_imex::stb_module::import_image] : stb_image says : " 
+                so_log::global::error( "[so_imex::stb_module::import_image] : stb_image says : " 
                     + std::string(stbi_err_msg) ) ;
 
                 return so_imex::sync_object::set_and_signal( params_in.sync_ptr, so_imex::failed ) ;
@@ -123,7 +123,7 @@ so_thread::task_graph_t stb_module::import_image( import_params_cref_t params_in
                 if( res == so_imex::found || res == so_imex::reserved )
                 {
                     auto const res2 = params_in.img_mgr_ptr->exchange( params_in.key, sr ) ;
-                    if( so_log::log::error( so_imex::no_success( res2 ),
+                    if( so_log::global::error( so_imex::no_success( res2 ),
                         "[so_imex::stb_module::import_image] : manageing image" ) )
                     {
                         so_imex::image::destroy( imex_image_ptr ) ;

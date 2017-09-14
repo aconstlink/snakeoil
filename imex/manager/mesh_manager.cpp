@@ -5,7 +5,7 @@
 #include "mesh_manager.h"
 
 #include <snakeoil/geometry/mesh/imesh.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 

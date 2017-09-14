@@ -8,7 +8,7 @@
 #include "../../manager/manager_registry.h"
 #include "../../manager/mesh_manager.h"
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
 
 #include <snakeoil/std/filesystem/filesystem.hpp>
 
@@ -16,7 +16,7 @@
 #include <snakeoil/thread/task/task_graph.h>
 #include <snakeoil/thread/task/tasks.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/core/cast.hpp>
 
@@ -103,7 +103,7 @@ struct obj_export_helper
                 }
             }
 
-            so_log::log::warning( mesh_ptr->texcoords.size() > 1, "[obj_module::export] : "
+            so_log::global::warning( mesh_ptr->texcoords.size() > 1, "[obj_module::export] : "
                 "obj format only supports one set of texture coordinates for mesh " + name ) ;
         }
         
@@ -265,7 +265,7 @@ so_thread::task_graph_t obj_module::export_scene( export_params_cref_t params_in
             }*/
             else
             {
-                so_log::log::warning( "[obj_module::export] : mesh type currently not supported" ) ;
+                so_log::global::warning( "[obj_module::export] : mesh type currently not supported" ) ;
             }
 
             // @note at the moment, only one mesh
@@ -292,13 +292,13 @@ so_thread::task_graph_t obj_module::export_scene( export_params_cref_t params_in
         {
             so_io::path_t const path = params_in.path_to_file ;
 
-            so_io::store_handle_t hnd = so_io::io::store( 
+            so_io::store_handle_t hnd = so_io::global::store( 
                 path, s.c_str(), s.size() * sizeof( char_t ) ) ;
 
             auto const res = hnd.wait_for_operation() ;
             if( so_io::no_success( res ) )
             {
-                so_log::log::error( "[obj_module::export] : unable to write obj document to : " 
+                so_log::global::error( "[obj_module::export] : unable to write obj document to : " 
                     + path.string() ) ;
             }
         }

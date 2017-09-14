@@ -14,7 +14,7 @@
 
 #include <snakeoil/thread/task/tasks.h>
 #include <snakeoil/memory/guards/malloc_guard.hpp>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb/stb_image_write.h>
@@ -24,7 +24,7 @@ using namespace so_imex ;
 //*************************************************************************************
 so_thread::task_graph_t stb_module::export_image( export_params_cref_t params_in ) 
 {
-    if( so_log::log::error( so_core::is_nullptr(params_in.img_mgr_ptr), 
+    if( so_log::global::error( so_core::is_nullptr(params_in.img_mgr_ptr), 
         "[so_imex::stb_module::export_image] : invalid manager pointer" ) )
     {
         so_imex::sync_object::set_not_signal( params_in.sync_ptr, so_imex::invalid_argument ) ;
@@ -38,7 +38,7 @@ so_thread::task_graph_t stb_module::export_image( export_params_cref_t params_in
         if(iff == so_imex::image_file_format::undefined)
             iff = so_imex::deduce_image_format::from_path( params_in.path_to_file ) ;
 
-        if(so_log::log::error( iff == so_imex::image_file_format::undefined,
+        if(so_log::global::error( iff == so_imex::image_file_format::undefined,
             "[so_imex::stb_module::export_image] : undefined image file format" ))
         {
             return so_imex::sync_object::set_and_signal( params_in.sync_ptr, 
@@ -52,7 +52,7 @@ so_thread::task_graph_t stb_module::export_image( export_params_cref_t params_in
 
             if( so_core::is_not(res) )
             {
-                return so_log::log::error("[so_imex::stb_module::export_image] : \
+                return so_log::global::error("[so_imex::stb_module::export_image] : \
                                            image does not exist : " + params_in.image_key ) ;
             }
         }
@@ -60,14 +60,14 @@ so_thread::task_graph_t stb_module::export_image( export_params_cref_t params_in
         so_imex::iimage_ptr_t iimg_ptr = hnd->data_ptr ;
 
         so_imex::image_ptr_t img_ptr = dynamic_cast<so_imex::image_ptr_t>(iimg_ptr) ;
-        if( so_log::log::error( so_core::is_nullptr(img_ptr), 
+        if( so_log::global::error( so_core::is_nullptr(img_ptr), 
             "[so_imex::stb_module::export_image] : can not cast image" ) )
         {
             return so_imex::sync_object::set_and_signal( params_in.sync_ptr, 
                 so_imex::invalid_cast ) ;
         }
 
-        if( so_log::log::error( so_core::is_nullptr(img_ptr->data_ptr),
+        if( so_log::global::error( so_core::is_nullptr(img_ptr->data_ptr),
             "[so_imex::stb_module::export_image] : can not cast image" ) )
         {
             return so_imex::sync_object::set_and_signal( params_in.sync_ptr,
@@ -122,13 +122,13 @@ so_thread::task_graph_t stb_module::export_image( export_params_cref_t params_in
             break ;
 
             default:
-            so_log::log::error( "[stb_module::export_image] : file format type not supported or missing." ) ;
+            so_log::global::error( "[stb_module::export_image] : file format type not supported or missing." ) ;
             so_imex::sync_object::set_and_signal( params_in.sync_ptr,
                 so_imex::extension_not_supported ) ;
             return ;
         }
 
-        if( so_log::log::error( write_res == 0, 
+        if( so_log::global::error( write_res == 0, 
             "[so_imex::stb_module::export_image] : stb write failed" ) )
         {
             return so_imex::sync_object::set_and_signal( params_in.sync_ptr,

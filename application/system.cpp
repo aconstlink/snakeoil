@@ -3,7 +3,7 @@
 // Distributed under the MIT license
 //------------------------------------------------------------
 #include "system.h"
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_app ;
 
@@ -12,7 +12,7 @@ so_app::system_ptr_t system::_system_ptr = nullptr ;
 //***********************************************************************
 so_app::result system::init( void_t )
 {
-    if( so_log::log::warning( _system_ptr != nullptr, 
+    if( so_log::global::warning( _system_ptr != nullptr, 
         "[so_app::system::init] : system singleton already initialized." ) ) 
         return so_app::ok ;
 

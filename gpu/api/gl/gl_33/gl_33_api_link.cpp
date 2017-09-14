@@ -36,11 +36,11 @@ using gl_log = so_gpu::so_gl::log ;
 //**********************************************************************************************
 so_gpu::result gl_33_api::prepare_vertex_shader( GLuint program_id, so_gpu::program_ptr_t program_ptr ) 
 {
-    if( so_log::log::error( program_ptr->has_no_vertex_shader(), "[gl_33_api::prepare_vertex_shader] : vertex shader required." ) ) 
+    if( so_log::global::error( program_ptr->has_no_vertex_shader(), "[gl_33_api::prepare_vertex_shader] : vertex shader required." ) ) 
         return so_gpu::failed ;
 
     auto * shd_ptr = program_ptr->get_vertex_shader() ;
-    if( so_log::log::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_vertex_shader] : no driver object in shader" ) ) 
+    if( so_log::global::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_vertex_shader] : no driver object in shader" ) ) 
         return so_gpu::failed ;
 
     so_gli::gl::glAttachShader( program_id, api_object_helper_t::get_cast_api_object<drv::vertex_shader>(shd_ptr)->id ) ;
@@ -57,7 +57,7 @@ so_gpu::result gl_33_api::prepare_geometry_shader( GLuint program_id, so_gpu::pr
         return so_gpu::ok ;
     
     auto * shd_ptr = program_ptr->get_geometry_shader() ;
-    if( so_log::log::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_geometry_shader] : no driver object in shader" ) ) 
+    if( so_log::global::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_geometry_shader] : no driver object in shader" ) ) 
         return so_gpu::failed ;
 
     // check max output vertices
@@ -70,7 +70,7 @@ so_gpu::result gl_33_api::prepare_geometry_shader( GLuint program_id, so_gpu::pr
         if( max_out < GLint(shd_ptr->get_num_output_vertices()) )
         {
             shd_ptr->set_num_output_vertices( size_t(max_out) ) ;
-            so_log::log::warning( "[gl_33_api::prepare_geometry_shader] : Max output vertices invalid.") ;
+            so_log::global::warning( "[gl_33_api::prepare_geometry_shader] : Max output vertices invalid.") ;
         }
     }
     
@@ -101,7 +101,7 @@ so_gpu::result gl_33_api::prepare_pixel_shader( GLuint program_id, so_gpu::progr
         return so_gpu::ok ;
 
     auto * shd_ptr = program_ptr->get_pixel_shader() ;
-    if( so_log::log::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_pixel_shader] : no driver object in shader" ) ) 
+    if( so_log::global::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_pixel_shader] : no driver object in shader" ) ) 
         return so_gpu::failed ;
 
     so_gli::gl::glAttachShader( program_id, api_object_helper_t::get_cast_api_object<drv::pixel_shader>(shd_ptr)->id ) ;
@@ -205,7 +205,7 @@ so_gpu::result gl_33_api::post_link_uniforms( GLuint program_id, so_gpu::program
         GLuint location_id = so_gli::gl::glGetUniformLocation( program_id, buffer ) ;
         if( gl_log::error("[glGetUniformLocation]") ) continue ;
 
-        if( so_log::log::error( location_id == GLuint(-1), "invalid uniform location id." ) ) continue ;
+        if( so_log::global::error( location_id == GLuint(-1), "invalid uniform location id." ) ) continue ;
         
         std::string variable_name = std::string(char_cptr_t(buffer)) ;
 
@@ -223,7 +223,7 @@ shader_variable_ptr_t gl_33_api::create_shader_variable( GLuint location, GLenum
 {
     shader_variable_type type = so_gpu::so_gl::convert_uniform_type( gltype ) ;
     
-    if( so_log::log::error( type == shader_variable_type::undefined, "unsupported shader variable type") )
+    if( so_log::global::error( type == shader_variable_type::undefined, "unsupported shader variable type") )
         return nullptr ;
 
     auto * var_ptr = so_gpu::memory::alloc( so_gpu::shader_variable( name, type ),
@@ -311,7 +311,7 @@ so_gpu::result gl_33_api::check_link( GLuint program_id )
     so_gli::gl::glGetProgramiv( program_id, GL_INFO_LOG_LENGTH, &length ) ;
 
     if( ret == GL_TRUE && length <= 1 ) return so_gpu::ok ;
-    if( so_log::log::error( length == 0, "[gl_33_api::check_link] : unknown") ) 
+    if( so_log::global::error( length == 0, "[gl_33_api::check_link] : unknown") ) 
         return so_gpu::failed_gl_api ;
     
     so_memory::malloc_guard<char> info_log(length) ;
@@ -328,7 +328,7 @@ so_gpu::result gl_33_api::check_link( GLuint program_id )
 
         for( auto token : tokens )
         {
-            so_log::log::error( token ) ;
+            so_log::global::error( token ) ;
         }
     }
 

@@ -20,7 +20,7 @@
 
 #include <snakeoil/font/glyph_atlas/glyph_atlas.h>
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
 
 #include <snakeoil/math/vector/vector4.hpp>
 
@@ -128,14 +128,14 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_load( void_t )
         so_std::string_t const vs_path = base + so_std::string( "/text_render_2d.vs.glsl" ) ;
         so_std::string_t const ps_path = base + so_std::string( "/text_render_2d.ps.glsl" ) ;
 
-        so_io::load_handle_t vsh = so_io::io::load( so_io::path_t( vs_path ) ) ;
-        so_io::load_handle_t psh = so_io::io::load( so_io::path_t( ps_path ) ) ;
+        so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
+        so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;
 
         {
             so_std::string_t vs ;
             vsh.wait_for_operation( [&] ( char_cptr_t din, size_t sib, so_io::result res )
             {
-                so_log::log::error_and_exit( so_io::no_success( res ),
+                so_log::global::error_and_exit( so_io::no_success( res ),
                     "[gl33_text_render_2d_plug::on_load] : Vertex shader not found : " + vs_path ) ;
 
                 vs = so_std::string_t( din, sib ) ;
@@ -147,7 +147,7 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_load( void_t )
             so_std::string_t ps ;
             psh.wait_for_operation( [&] ( char_cptr_t din, size_t sib, so_io::result res )
             {
-                so_log::log::error_and_exit( so_io::no_success( res ),
+                so_log::global::error_and_exit( so_io::no_success( res ),
                     "[gl33_text_render_2d_plug::on_load] : Pixel shader not found : " + ps_path ) ;
 
                 ps = so_std::string_t( din, sib ) ;

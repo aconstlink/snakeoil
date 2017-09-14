@@ -5,7 +5,7 @@
 #include "camera_manager.h"
 #include "../camera/icamera.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 

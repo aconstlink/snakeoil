@@ -5,7 +5,7 @@
 #include "task_graph.h"
 #include "tasks.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/assert.h>
 
 using namespace so_thread ;
@@ -35,7 +35,7 @@ task_graph::task_graph( this_rref_t rhv )
     so_move_member_ptr( _begin, rhv ) ;
     so_move_member_ptr( _end, rhv ) ;
 
-    so_log::log::error_and_exit( so_core::is_nullptr(_begin) || so_core::is_nullptr(_end),
+    so_log::global::error_and_exit( so_core::is_nullptr(_begin) || so_core::is_nullptr(_end),
         "[so_thread::task_graph::task_graph] : moved pointer must not be nullptr." ) ;
 }
 
@@ -252,7 +252,7 @@ task_graph_dyn::this_ref_t task_graph_dyn::in_between( this_ref_t other )
 //*************************************************************************************
 void_t task_graph_dyn::ensure_not_nullptr_and_connect( void_t )
 {
-    so_log::log::error_and_exit( so_core::is_nullptr( _begin ),
+    so_log::global::error_and_exit( so_core::is_nullptr( _begin ),
         "[so_thread::task_graph_dyn::ensure_not_nullptr_and_connect] : nullptr not allowed" ) ;
 
     if(so_core::is_nullptr( _end ) || (_begin == _end))

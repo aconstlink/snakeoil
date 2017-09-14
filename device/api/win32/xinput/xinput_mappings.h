@@ -12,6 +12,8 @@
 #include <snakeoil/std/container/vector.hpp>
 #include <snakeoil/std/string/string.hpp>
 
+#include <functional>
+
 #include <windows.h>
 
 namespace so_device

@@ -101,7 +101,7 @@ void_t null_window::render_thread_end( void_t )
 //***********************************************************************
 void_t null_window::end_frame( void_t )
 {
-    //so_log::log::status( "[null_window::end_frame] : end_frame" ) ;
+    //so_log::global::status( "[null_window::end_frame] : end_frame" ) ;
     std::this_thread::sleep_for( std::chrono::milliseconds(100) ) ;
 }
 

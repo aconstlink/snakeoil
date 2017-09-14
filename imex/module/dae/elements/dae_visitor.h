@@ -7,7 +7,7 @@
 
 #include "dae_protos.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 namespace so_imex
 {

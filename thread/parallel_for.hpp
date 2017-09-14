@@ -9,6 +9,7 @@
 #include "job/job_funk.h"
 #include "job/job.h"
 
+#include "global.h"
 #include "scheduler.h"
 
 #include <snakeoil/memory/arena/exp_arena.hpp>
@@ -54,7 +55,7 @@ namespace so_thread
 
                 job_ptr_t jptr = local_arena.alloc( job_t( lr, f ) ) ;
 
-                so_thread::scheduler::js()->schedule( jptr, [&]( so_thread::ijob_ptr_t j )
+                so_thread::global::job_scheduler()->schedule( jptr, [&]( so_thread::ijob_ptr_t j )
                 {
                     {
                         so_thread::lock_guard_t lk( mtx ) ;
@@ -79,7 +80,7 @@ namespace so_thread
 
                 job_ptr_t jptr = local_arena.alloc( job_t( lr, f ) ) ;
 
-                so_thread::scheduler::js()->schedule( jptr, [&]( so_thread::ijob_ptr_t j )
+                so_thread::global::job_scheduler()->schedule( jptr, [&]( so_thread::ijob_ptr_t j )
                 {
                     {
                         so_thread::lock_t lk( mtx ) ;

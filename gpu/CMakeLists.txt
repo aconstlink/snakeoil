@@ -79,6 +79,7 @@ set( SOURCES
 
     buffer/buffer.h
     buffer/buffer.cpp
+    buffer/buffer_layout.h
     buffer/vertex_buffer.hpp
     buffer/index_buffer.hpp
     buffer/pixel_buffer.hpp

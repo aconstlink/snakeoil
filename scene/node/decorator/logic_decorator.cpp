@@ -5,7 +5,7 @@
 #include "logic_decorator.h"
 #include "../../visitor/ivisitor.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -54,7 +54,7 @@ void_t logic_decorator::set_decorated( so_scene::so_node::node_ptr_t nptr )
 so_scene::result logic_decorator::apply( so_scene::so_visitor::ivisitor_ptr_t vptr ) 
 {
     auto res = vptr->visit( this ) ;
-    so_log::log::error(so_scene::no_success(res),
+    so_log::global::error(so_scene::no_success(res),
         "[so_scene::logic_decorator::apply] : visit") ;
 
     base_t::traverse_decorated( vptr ) ;

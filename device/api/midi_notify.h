@@ -10,7 +10,7 @@
 
 #include "../devices/midi/midi_message.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 namespace so_device
 {
@@ -48,7 +48,7 @@ namespace so_device
         
         virtual void_t on_message( so_std::string_cref_t dname, so_device::midi_message_cref_t msg )
         {
-            so_log::log::status( "[" + dname + "] : " +
+            so_log::global::status( "[" + dname + "] : " +
                 std::to_string( msg.status ) + "; " +
                 std::to_string( msg.byte1 ) + "; " +
                 std::to_string( msg.byte2 ) + "; " +

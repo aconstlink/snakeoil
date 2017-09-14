@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "gl.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #if defined( SNAKEOIL_TARGET_OS_WIN )
 #include <GL/wglext.h>
@@ -24,7 +24,7 @@ using namespace so_gli ;
 /////////////////////////////////////////////////////////////////////////
 
 #define CHECK_AND_LOAD_COND( fn, name ) \
-    !so_log::log::error( \
+    !so_log::global::error( \
     (fn = (fn == NULL ? (decltype(fn))(this_t::load_gl_function( name )) : fn)) == NULL, \
     "[CHECK_AND_LOAD_COND] : Failed to load: "  name  )
 
@@ -35,7 +35,7 @@ using namespace so_gli ;
         fn = (decltype(fn))(this_t::load_gl_function( name ) ) ; \
     } \
     \
-    so_log::log::error( fn == NULL, "[CHECK_AND_LOAD] : Failed to load: "  name  ) ; \
+    so_log::global::error( fn == NULL, "[CHECK_AND_LOAD] : Failed to load: "  name  ) ; \
 }
 
 

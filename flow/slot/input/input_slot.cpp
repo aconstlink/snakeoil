@@ -6,7 +6,7 @@
 #include "../ioutput_slot.h"
 
 #include <snakeoil/thread/semaphore_guard.hpp>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_flow ;
 
@@ -17,7 +17,7 @@ input_slot::input_slot( void_t )
 //***********************************************************************
 input_slot::input_slot( this_rref_t rhv )
 {
-    so_log::log::error_and_exit( so_core::is_not_nullptr( _os_ptr ),
+    so_log::global::error_and_exit( so_core::is_not_nullptr( _os_ptr ),
         "[input_slot] : can not move if output slot set" ) ;
 
     _in_connect = std::move( rhv._in_connect ) ;
@@ -42,7 +42,7 @@ so_flow::result input_slot::connect( so_flow::ioutput_slot_ptr_t os_ptr )
     so_thread::semaphore_guard_t d( &_in_connect ) ;
     if( _in_connect == 2 )
     {
-        so_log::log::warning( "[so_flow::input_slot::connect] : \
+        so_log::global::warning( "[so_flow::input_slot::connect] : \
                                can not enter input slot connect more than once" ) ;
         return so_flow::busy_operation ;
     }   
@@ -50,7 +50,7 @@ so_flow::result input_slot::connect( so_flow::ioutput_slot_ptr_t os_ptr )
     // disconnect from old
     {
         auto const res = this->disconnect() ;
-        if( so_log::log::error(so_flow::no_success( res ),
+        if( so_log::global::error(so_flow::no_success( res ),
             "[so_flow::input_slot::connect] : can not disconnect from output slot") )
             return res ;
     }
@@ -58,7 +58,7 @@ so_flow::result input_slot::connect( so_flow::ioutput_slot_ptr_t os_ptr )
     // check compatibility
     {
         auto const res = this->is_compatible( os_ptr ) ;
-        if( so_log::log::error( so_core::is_not(res),
+        if( so_log::global::error( so_core::is_not(res),
             "[so_flow::input_slot::connect] : connection failed" ) )
         {
             return so_flow::failed ;
@@ -75,7 +75,7 @@ so_flow::result input_slot::connect( so_flow::ioutput_slot_ptr_t os_ptr )
         auto const res = _os_ptr->connect( this ) ;
         if( so_flow::no_success(res) )
         {
-            so_log::log::error( "[so_flow::input_slot::connect] : connection failed" ) ;
+            so_log::global::error( "[so_flow::input_slot::connect] : connection failed" ) ;
             return res ;
         }
     }
@@ -108,7 +108,7 @@ so_flow::result input_slot::disconnect( so_flow::ioutput_slot_ptr_t os_ptr_in )
 
     {
         auto const res = os_ptr->disconnect( this ) ;
-        if( so_log::log::error( so_flow::no_success( res ),
+        if( so_log::global::error( so_flow::no_success( res ),
             "[so_flow::input_slot::disconnect] : disconnection failed" ) )
             return res ;
     }

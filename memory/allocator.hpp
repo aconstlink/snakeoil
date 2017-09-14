@@ -5,11 +5,11 @@
 #ifndef _SNAKEOIL_MEMORY_ALLOCATOR_HPP_
 #define _SNAKEOIL_MEMORY_ALLOCATOR_HPP_
 
-#include "memory.h"
+#include "global.h"
 
 namespace so_memory
 {
-    template< typename T, typename mem_t = so_memory::memory >
+    template< typename T, typename mem_t = so_memory::global >
     class allocator
     {
     public:

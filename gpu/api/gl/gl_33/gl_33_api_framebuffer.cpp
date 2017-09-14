@@ -95,7 +95,7 @@ so_gpu::result gl_33_api::validate( so_gpu::framebuffer_2d_ptr_t ptr )
         size_t attachment = 0 ;
         for( auto * iter : ptr->get_color_targets() )
         {
-            if( so_log::log::warning( api_object_helper_t::has_no_driver_object(iter->get_image()), 
+            if( so_log::global::warning( api_object_helper_t::has_no_driver_object(iter->get_image()), 
                 "[gl_33_api::validate] : no valid color image.") )
                 continue ;
 

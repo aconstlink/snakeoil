@@ -9,7 +9,7 @@
 #include "../properties/single_choice_property.h"
 #include "../properties/generic_property.hpp"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_property ;
 
@@ -94,7 +94,7 @@ void_t std_out_visitor::print_property_name( so_property::iproperty_ptr_t pptr,
     so_std::utf8_cref_t clss_name ) const
 {
     so_std::utf8_t const string = this_t::level_to_string() + pptr->get_name() + " ["+ clss_name+"]" ;
-    so_log::log::status( string ) ;
+    so_log::global::status( string ) ;
 }
 
 //*************************************************************************************

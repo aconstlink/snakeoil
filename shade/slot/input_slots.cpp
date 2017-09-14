@@ -8,7 +8,7 @@
 #include "../slot/input_slot.h"
 #include "../slot/output_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <algorithm>
 
@@ -137,7 +137,7 @@ bool_t input_slots::try_connect_to_input_by_name( so_std::string_cref_t name,
     if( to_ptr->get_name() == name )
     {
         auto const res = to_ptr->connect( incoming_ptr ) ;
-        if( so_log::log::error( so_shade::no_success(res), 
+        if( so_log::global::error( so_shade::no_success(res), 
             "[so_shade::input_slots::try_connect_to_input_by_name] : " + name ) )
         {
             return false ;

@@ -5,7 +5,7 @@
 #include "render_state.h"
 #include "../../visitor/ivisitor.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -70,7 +70,7 @@ so_scene::result render_state::apply( so_scene::so_visitor::ivisitor_ptr_t ptr )
     auto res = ptr->visit( this ) ;
     if( so_scene::no_success( res ) )
     {
-        so_log::log::error( "[so_scene::render_config::apply] : visit" ) ;
+        so_log::global::error( "[so_scene::render_config::apply] : visit" ) ;
     }
 
     base_t::traverse_decorated( ptr ) ;

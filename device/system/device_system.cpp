@@ -16,7 +16,7 @@
 #include "../modules/ikeyboard_module.h"
 #include "../modules/imouse_module.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_device ;
 
@@ -85,7 +85,7 @@ so_device::result device_system::register_api( so_device::iapi_ptr_t api_ptr )
 {
     if( so_core::is_nullptr( api_ptr ) )
     {
-        so_log::log::error("[so_device::device_system::register_api] : "
+        so_log::global::error("[so_device::device_system::register_api] : "
                             "nullptr api not allowed") ;
         return so_device::invalid_argument ;
     }

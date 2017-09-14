@@ -5,7 +5,7 @@
 #include "logic_leaf.h"
 #include "../../visitor/ivisitor.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -48,7 +48,7 @@ void_t logic_leaf::destroy( this_ptr_t ptr )
 so_scene::result logic_leaf::apply( so_scene::so_visitor::ivisitor_ptr_t vptr ) 
 {
     auto res = vptr->visit( this ) ;
-    so_log::log::warning( so_scene::no_success(res), 
+    so_log::global::warning( so_scene::no_success(res), 
         "[so_scene::logic_leaf::apply] : visit" ) ;
     return vptr->post_visit( this ) ;
 }

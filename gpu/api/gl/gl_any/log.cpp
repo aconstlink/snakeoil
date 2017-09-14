@@ -3,7 +3,7 @@
 // Distributed under the MIT license
 //------------------------------------------------------------
 #include "log.h"
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gpu ;
 using namespace so_gpu::so_gl ;
@@ -15,7 +15,7 @@ bool_t so_gl::log::error( const char * msg )
     if( __so__err == GL_NO_ERROR ) return false ;
 
     const std::string __glstring = std::to_string(__so__err) ; 
-    so_log::log::error( std::string(msg) + " " + __glstring ) ;
+    so_log::global::error( std::string(msg) + " " + __glstring ) ;
     return true ;            
 }
 
@@ -31,7 +31,7 @@ bool_t so_gl::log::error( bool_t condition, GLenum gle, const char * msg )
     if( condition )
     {
         const std::string __glstring = std::to_string(gle) ; 
-        so_log::log::error( std::string(msg) + " " + __glstring ) ; 
+        so_log::global::error( std::string(msg) + " " + __glstring ) ; 
     }
     return condition ;
 }

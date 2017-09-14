@@ -42,7 +42,6 @@ namespace so_appx
     public:
 
         so_appx::iappx_context_ptr_t ctx( void_t ) ;
-        so_device::idevice_system_ptr_t dev( void_t ) ;
         so_imex::isystem_ptr_t imexsys( void_t ) ;
         so_gpx::render_system_ptr_t rsys( void_t ) ;
 

@@ -9,7 +9,7 @@
 
 #include <snakeoil/gpu/manager/gpu_manager.h>
 #include <snakeoil/thread/mutex.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <thread>
 

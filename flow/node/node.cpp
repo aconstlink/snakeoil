@@ -7,7 +7,7 @@
 #include "../slot/iinput_slot.h"
 #include "../slot/ioutput_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <algorithm>
 
@@ -65,7 +65,7 @@ so_flow::result node::create_input_slot( so_std::string_cref_t name, so_flow::iv
     auto const res = inputs_t::add_slot( name, is_ptr ) ;
     if( so_flow::no_success( res ) )
     {
-        so_log::log::error( "[so_flow::node::create_input_slot] : can not create slot." ) ;
+        so_log::global::error( "[so_flow::node::create_input_slot] : can not create slot." ) ;
         is_ptr->destroy() ;
         return res ;
     }
@@ -86,7 +86,7 @@ so_flow::result node::create_output_slot( so_std::string_cref_t name, so_flow::i
     auto const res = outputs_t::add_slot( name, s_ptr ) ;
     if( so_flow::no_success( res ) )
     {
-        so_log::log::error( "[so_flow::node::create_output_slot] : can not create slot." ) ;
+        so_log::global::error( "[so_flow::node::create_output_slot] : can not create slot." ) ;
         s_ptr->destroy() ;
         return res ;
     }
@@ -102,13 +102,13 @@ so_flow::result node::connect( so_flow::key_cref_t key, so_flow::ioutput_slot_pt
     inputs_t::handle_t is_hnd ;
     {        
         auto res = inputs_t::find_and_touch( key, is_hnd ) ;
-        if( so_log::log::error( so_core::is_not( res ),
+        if( so_log::global::error( so_core::is_not( res ),
             "[so_flow::node::connect] : can not find input slot : " + key ) )
             return so_flow::invalid_argument ;
     }
     
     auto const res = is_hnd->connect( os_ptr ) ;
-    if( so_log::log::error( so_flow::no_success( res ),
+    if( so_log::global::error( so_flow::no_success( res ),
         "[so_flow::node::connect] : slot connect" ) )
         return res ;
     
@@ -123,7 +123,7 @@ so_flow::result node::connect( so_flow::key_cref_t key, so_flow::iinput_slot_ptr
         auto const res = outputs_t::find_and_touch( key, shnd ) ;
         if( so_core::is_not(res) )
         {
-            so_log::log::error( 
+            so_log::global::error( 
                 "[so_flow::node::connect] : can not find output slot : " + key ) ;
 
             return so_flow::invalid_argument ;
@@ -131,7 +131,7 @@ so_flow::result node::connect( so_flow::key_cref_t key, so_flow::iinput_slot_ptr
     }
 
     auto const res = shnd->connect( is_ptr ) ;
-    if( so_log::log::error( so_flow::no_success( res ),
+    if( so_log::global::error( so_flow::no_success( res ),
         "[so_flow::node::connect] : slot connect" ) )
         return res ;
 
@@ -150,7 +150,7 @@ so_flow::result node::connect_this_output_to_that_input( so_flow::key_cref_t on_
         auto const res = outputs_t::find_and_touch( on_os, shnd ) ;
         if( so_core::is_not( res ) )
         {
-            so_log::log::error(
+            so_log::global::error(
                 "[so_flow::node::connect] : can not find output slot : " + on_os ) ;
 
             return so_flow::invalid_argument ;

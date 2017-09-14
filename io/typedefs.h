@@ -7,7 +7,7 @@
 
 #include "result.h"
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 
 #include <snakeoil/std/string/string.hpp>
 #include <snakeoil/std/string/utf8.hpp>
@@ -17,11 +17,13 @@
 #include <snakeoil/core/macros/typedef.h>
 #include <snakeoil/core/assert.h>
 
+#include <functional>
+
 namespace so_io
 {
     using namespace so_core::so_types ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
     so_typedefs( so_std::filesystem::path, path ) ;
 
     typedef std::function< void_t( char_cptr_t, size_t, so_io::result ) > load_completion_funk_t ;

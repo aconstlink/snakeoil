@@ -8,7 +8,7 @@
 #include "buffer_layout_element.h"
 
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/assert.h>
 
 #include <algorithm>
@@ -73,7 +73,7 @@ namespace so_gpu
 
         this_ref_t remove_element( size_t index ) 
         {
-            so_log::log::error_and_exit( _elements.size() > index, "Out of range." ) ;
+            so_log::global::error_and_exit( _elements.size() > index, "Out of range." ) ;
             return this_t::remove_element(_elements[index]) ;
         }
 

@@ -19,7 +19,7 @@
 #include <windows.h>
 #include <Xinput.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/core/cast.hpp>
 
@@ -107,7 +107,7 @@ void_t xinput_api::update_gamepad( void_t )
 
         XINPUT_STATE state ;
         DWORD res = XInputGetState( item.xinput_ptr->get_id(), &state ) ;
-        if( so_log::log::warning(res != ERROR_SUCCESS, 
+        if( so_log::global::warning(res != ERROR_SUCCESS, 
             "[so_device::so_win32::xinput_module::update] : XInputGetState" ) ) 
             continue ;
 
@@ -146,7 +146,7 @@ void_t xinput_api::update_gamepad( void_t )
                 xinput_outputs output_comp_enum ;
                 if( so_core::is_not( _xinput_mappings.enum_for_id( msg.id, output_comp_enum ) ) )
                 {
-                    so_log::log::error("[so_device::so_win32::xinput_module::update] : \
+                    so_log::global::error("[so_device::so_win32::xinput_module::update] : \
                                         output component enum for id not found. Check output message.") ;
                     continue ;
                 }
@@ -413,15 +413,15 @@ void_t xinput_api::init_gamepads( void_t )
 
             if( res == ERROR_DEVICE_NOT_CONNECTED ) continue ;
 
-            if( so_log::log::error( res != ERROR_SUCCESS,
+            if( so_log::global::error( res != ERROR_SUCCESS,
                 "[xinput_module::init_gamepads] : Error query controller caps." ) )
                 continue ;
 
-            if( so_log::log::error( caps.Type != XINPUT_DEVTYPE_GAMEPAD,
+            if( so_log::global::error( caps.Type != XINPUT_DEVTYPE_GAMEPAD,
                 "[xinput_module::init_gamepads] : xinput device is not a gamepad." ) )
                 continue ;
 
-            so_log::log::status( "[xinput_module::init_gamepads] : Device " + 
+            so_log::global::status( "[xinput_module::init_gamepads] : Device " + 
                 std::to_string(i) + ": Gamepad found" ) ;
         }
 

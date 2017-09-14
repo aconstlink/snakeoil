@@ -7,7 +7,7 @@
 
 #include "../../../typedefs.h"
 #include <snakeoil/gli/gl/gl.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 namespace so_gpu
 {

@@ -5,7 +5,7 @@
 #include "output_slot.h"
 #include "../iinput_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_flow ;
 
@@ -16,7 +16,7 @@ output_slot::output_slot( void_t )
 //***********************************************************************
 output_slot::output_slot( this_rref_t rhv )
 {
-    so_log::log::error_and_exit( _inputs.size() != 0,
+    so_log::global::error_and_exit( _inputs.size() != 0,
         "[output_slot] : can not move when inputs connected" ) ;
     
     so_move_member_ptr( _owner_ptr, rhv ) ;
@@ -51,7 +51,7 @@ so_flow::result output_slot::connect( so_flow::iinput_slot_ptr_t is_ptr )
 
     {
         auto const res = is_ptr->connect( this ) ;
-        if( so_log::log::error( so_flow::no_success(res), 
+        if( so_log::global::error( so_flow::no_success(res), 
             "[so_flow::output_slot::connect] : can not connect to input slot" ) )
         {
             so_thread::lock_guard_t lk( _mtx ) ;
@@ -81,7 +81,7 @@ so_flow::result output_slot::disconnect( so_flow::iinput_slot_ptr_t is_ptr )
 
     {
         auto const res = is_ptr->disconnect( this ) ;
-        if( so_log::log::error( so_flow::no_success(res), 
+        if( so_log::global::error( so_flow::no_success(res), 
             "[so_flow::output_slot::disconnect] : disconnection failed" ) )
             return res ;
     }

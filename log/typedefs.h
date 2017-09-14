@@ -8,6 +8,9 @@
 #include <snakeoil/core/types.hpp>
 #include <snakeoil/core/assert.h>
 #include <snakeoil/core/macros/typedef.h>
+#include <snakeoil/core/macros/move.h>
+#include <snakeoil/core/checks.h>
+#include <snakeoil/core/break_if.hpp>
 
 #include <string>
 

@@ -7,7 +7,7 @@
 
 #include "../variable/shader_variable.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 #include <algorithm>
@@ -182,7 +182,7 @@ void_t program::add_input_variable( shader_variable_ptr_t var_ptr )
             return int_var->is_name( var_ptr ) ;
         } ) ;
 
-    if( so_log::log::warning(iter != _input_variables.end(),
+    if( so_log::global::warning(iter != _input_variables.end(),
         "[so_gpu::program::add_input_variable] : input variable name already exists.") ) 
         return ;
 
@@ -199,7 +199,7 @@ void_t program::add_shader_variable( shader_variable_ptr_t var_ptr )
             return int_var->is_name( var_ptr ) ;
         } ) ;
     
-    if( so_log::log::warning(iter != _shader_variables.end(), 
+    if( so_log::global::warning(iter != _shader_variables.end(), 
         "[so_gpu::program::add_shader_variable] : shader variable name already exists.") ) 
         return ;
     

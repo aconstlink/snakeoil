@@ -6,7 +6,7 @@
 
 #include "../image/image.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 

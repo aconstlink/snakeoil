@@ -10,17 +10,17 @@ set( SOURCES ${SOURCES}
     
     handle.hpp
     allocator.hpp
-    
+    global.h
+    global.cpp
+
     macros/handle.h
     
     utility/uint8_split_merge.h
     utility/uint8_msb_stream.h
 
-    memory.h
-    memory.cpp
+    manager/imanager.h
     manager/manager.h
-    manager/default_manager.h
-    manager/default_manager.cpp
+    manager/manager.cpp
     
     guards/malloc_guard.hpp
     

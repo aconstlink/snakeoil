@@ -7,7 +7,10 @@
 
 #include "../../../api_object.h"
 #include "../../../../protos.h"
+
 #include <snakeoil/gli/gl/gl.h>
+
+#include <functional>
 
 namespace so_gpu
 {

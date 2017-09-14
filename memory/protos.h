@@ -5,10 +5,11 @@
 #ifndef _SNAKEOIL_MEMORY_PROTOS_H_
 #define _SNAKEOIL_MEMORY_PROTOS_H_
 
+#include "typedefs.h"
+
 namespace so_memory
 {
-    class manager ;
-    typedef manager * manager_ptr_t ;
+    so_class_proto_typedefs( imanager ) ;
 }
     
 #endif

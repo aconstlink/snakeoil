@@ -8,9 +8,9 @@ set( SOURCES
     "result.h"
     "protos.h"
     "typedefs.h"
-
-    "log.h"
-    "log.cpp"
+    
+    "global.h"
+    "global.cpp"
     "log_level.h"
 
     "system/isystem.h"

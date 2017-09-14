@@ -19,7 +19,7 @@
 #include <snakeoil/math/matrix/matrix3.hpp>
 #include <snakeoil/math/matrix/matrix4.hpp>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_flow ;
 
@@ -142,7 +142,7 @@ so_flow::result variable_node::create_output_connections( so_flow::variable_set_
     var_set.for_each( [&]( so_flow::key_cref_t key_in, so_flow::ivariable_ptr_t var_ptr )
     {
         auto res = this->create_output_connection( key_in, var_ptr ) ;
-        so_log::log::warning( so_flow::no_success( res ),
+        so_log::global::warning( so_flow::no_success( res ),
             "[so_flow::variable_node::create_output_connections] : a varialbe couldn't be connected : " +
             key_in ) ;
     } ) ;
@@ -165,7 +165,7 @@ so_flow::result variable_node::create_input_connections( so_flow::variable_set_c
     var_set.for_each( [&]( so_flow::key_cref_t key_in, so_flow::ivariable_ptr_t var_ptr )
     {
         auto res = this->create_input_connection( key_in, var_ptr ) ;
-        so_log::log::warning( so_flow::no_success(res), 
+        so_log::global::warning( so_flow::no_success(res), 
             "[so_flow::variable_node::create_input_connections] : a varialbe couldn't be connected : " + 
             key_in ) ;
     } ) ;

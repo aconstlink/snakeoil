@@ -5,7 +5,7 @@
 #ifndef _SNAKEOIL_SCRIPT_TYPEDEFS_H_
 #define _SNAKEOIL_SCRIPT_TYPEDEFS_H_
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/log/typedefs.h>
@@ -20,7 +20,7 @@ namespace so_script
 {
     using namespace so_core::so_types ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 
     template< typename T >
     using allocator = so_memory::allocator< T, so_script::memory > ;

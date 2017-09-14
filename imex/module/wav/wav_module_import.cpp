@@ -8,13 +8,13 @@
 #include "../../manager/manager_registry.h"
 #include "../../manager/audio_manager.h"
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
 #include <snakeoil/io/system/system.h>
 
 #include <snakeoil/memory/guards/malloc_guard.hpp>
 #include <snakeoil/thread/task/tasks.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 
@@ -89,14 +89,14 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
         // 1. load the file into a buffer
         {
-            so_io::load_handle_t lh = so_io::io::load( params_in.path_to_file ) ;
+            so_io::load_handle_t lh = so_io::global::load( params_in.path_to_file ) ;
             auto res = lh.wait_for_operation( [&]( char_cptr_t din, size_t sib, so_io::result ires )
             {
                 if( so_io::no_success( ires ) ) return ;
                 data_buffer = so_memory::malloc_guard<char_t>( din, sib ) ;
             } ) ;
 
-            if( so_log::log::error( so_io::no_success( res ),
+            if( so_log::global::error( so_io::no_success( res ),
                 "[so_imex::wav_module::import_audio] : loading wav file : " +
                 so_io::to_string( res ) ) )
             {
@@ -122,14 +122,14 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
             if( fmt_buffer[0] != 'R' || fmt_buffer[ 1 ] != 'I' || fmt_buffer[ 2 ] != 'F' )
             { 
-                so_log::log::error("[so_imex::wav_module::import_audio] : unsupported format") ;
+                so_log::global::error("[so_imex::wav_module::import_audio] : unsupported format") ;
                 return so_imex::sync_object::set_and_signal(
                     params_in.sync_ptr, so_imex::failed ) ;
             }
 
             if( ft_buffer[ 0 ] != 'W' || ft_buffer[ 1 ] != 'A' || ft_buffer[ 2 ] != 'V' )
             {
-                so_log::log::error( "[so_imex::wav_module::import_audio] : unsupported format" ) ;
+                so_log::global::error( "[so_imex::wav_module::import_audio] : unsupported format" ) ;
                 return so_imex::sync_object::set_and_signal(
                     params_in.sync_ptr, so_imex::failed ) ;
             }
@@ -256,7 +256,7 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
                                 if( res != so_imex::ok )
                                 {
-                                    so_log::log::error( "[wav_module::import_audio] : pcm_audio " +
+                                    so_log::global::error( "[wav_module::import_audio] : pcm_audio " +
                                         params_in.key ) ;
 
                                     mp.data_ptr->destroy() ;
@@ -298,7 +298,7 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
                                 if( res != so_imex::ok )
                                 {
-                                    so_log::log::error( "[wav_module::import_audio] : pcm_audio " +
+                                    so_log::global::error( "[wav_module::import_audio] : pcm_audio " +
                                         params_in.key ) ;
 
                                     mp.data_ptr->destroy() ;
@@ -340,7 +340,7 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
                                 if( res != so_imex::ok )
                                 {
-                                    so_log::log::error( "[wav_module::import_audio] : pcm_audio " + 
+                                    so_log::global::error( "[wav_module::import_audio] : pcm_audio " + 
                                         params_in.key ) ;
 
                                     mp.data_ptr->destroy() ;
@@ -349,7 +349,7 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
                         }
                         else
                         { 
-                            so_log::log::error( "[so_imex::wav_module::import_audio] : "
+                            so_log::global::error( "[so_imex::wav_module::import_audio] : "
                                 "bits per sample not supported." ) ;
                         }
                     }
@@ -391,7 +391,7 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
 
                                 if( res != so_imex::ok )
                                 {
-                                    so_log::log::error( "[wav_module::import_audio] : pcm_audio " +
+                                    so_log::global::error( "[wav_module::import_audio] : pcm_audio " +
                                         params_in.key ) ;
 
                                     mp.data_ptr->destroy() ;
@@ -400,13 +400,13 @@ so_thread::task_graph_t wav_module::import_audio( import_params_cref_t params_in
                         }
                         else
                         {
-                            so_log::log::error( "[so_imex::wav_module::import_audio] : "
+                            so_log::global::error( "[so_imex::wav_module::import_audio] : "
                                 "bits per sample not supported." ) ;
                         }
                     }
                     else
                     {
-                        so_log::log::error( "[so_imex::wav_module::import_audio] : "
+                        so_log::global::error( "[so_imex::wav_module::import_audio] : "
                             "wav format not supported." ) ;
                     }
                 }

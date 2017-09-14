@@ -41,12 +41,6 @@ so_appx::result app::on_initialize(
 }
 
 //***********************************************************************    
-so_device::idevice_system_ptr_t app::dev( void_t ) 
-{
-    return _ctx_ptr->dev() ;
-}
-
-//***********************************************************************    
 so_imex::isystem_ptr_t app::imexsys( void_t ) 
 {
     return _ctx_ptr->imexsys() ;

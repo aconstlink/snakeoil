@@ -121,7 +121,7 @@ namespace so_imex
                 "[so_imex::base_resource_manager::manage] : manage item" ) ;
 
             auto const res = _res_mgr.insert( key_in, mi_ptr ) ;
-            if( so_log::log::error( so_resource::no_success( res ),
+            if( so_log::global::error( so_resource::no_success( res ),
                 "[so_imex::base_resource_manager::manage] : insert_and_acquire" ) )
             {
                 so_imex::memory::dealloc( mi_ptr ) ;
@@ -146,7 +146,7 @@ namespace so_imex
 
                 manage_item_ptr_t mi_old ;
                 auto const lres = _res_mgr.exchange( key_in, mi_ptr, mi_old ) ;
-                so_log::log::error_and_exit( so_core::is_not( lres ),
+                so_log::global::error_and_exit( so_core::is_not( lres ),
                     "[so_imex::base_resource_manager::reserve_by_path] : exchange must be successful" ) ;
 
                 return so_imex::reserved ;
@@ -177,14 +177,14 @@ namespace so_imex
 
                 manage_item_ptr_t mi_old ;
                 auto const lres = _res_mgr.exchange( key_inout, mi_ptr, mi_old ) ;
-                so_log::log::error_and_exit( so_core::is_not( lres ),
+                so_log::global::error_and_exit( so_core::is_not( lres ),
                     "[so_imex::base_resource_manager::reserve_by_path] : exchange must be successful" ) ;
 
                 return so_imex::reserved ;
             }
             else if( res == so_resource::found ) return so_imex::found ;
 
-            so_log::log::error( "[so_imex::base_resource_manager::reserve_by_path] : reserve_or_find_if" ) ;
+            so_log::global::error( "[so_imex::base_resource_manager::reserve_by_path] : reserve_or_find_if" ) ;
             return so_imex::invalid ;
         }
 
@@ -199,7 +199,7 @@ namespace so_imex
                 return true ;
             } ) ;
 
-            if( so_log::log::error( so_core::is_not( res ), 
+            if( so_log::global::error( so_core::is_not( res ), 
                 "[so_imex::base_resource_manager::exchange]" ) )
                 return so_imex::failed ;
 

@@ -2,28 +2,40 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#include "default_manager.h"
+#include "manager.h"
 
-#include <snakeoil/log/log.h>
-
+#include <snakeoil/log/global.h>
+#include <iostream>
 #include <cstdlib>
 
 using namespace so_memory ;
 
 //*************************************************************************************
-default_memory_manager::default_memory_manager( void_t ) 
+manager::manager( void_t ) 
 {
 
 }
 
 //*************************************************************************************
-default_memory_manager::~default_memory_manager( void_t ) 
+manager::~manager( void_t ) 
 {
 
 }
 
 //*************************************************************************************
-void_ptr_t default_memory_manager::alloc( size_t sib, so_memory::purpose_cref_t purpose ) 
+manager::this_ptr_t manager::create( void_t )
+{
+    return new this_t() ;
+}
+
+//*************************************************************************************
+void_t manager::destroy( this_ptr_t ptr )
+{
+    delete ptr ;
+}
+
+//*************************************************************************************
+void_ptr_t manager::alloc( size_t sib, so_memory::purpose_cref_t purpose ) 
 {
     void_ptr_t ptr = malloc( sib ) ;
     {
@@ -35,13 +47,13 @@ void_ptr_t default_memory_manager::alloc( size_t sib, so_memory::purpose_cref_t 
 }
 
 //*************************************************************************************
-void_ptr_t default_memory_manager::alloc( size_t sib ) 
+void_ptr_t manager::alloc( size_t sib ) 
 {
-    return this_t::alloc( sib, "[default_memory_manager::alloc]" ) ;
+    return this_t::alloc( sib, "[manager::alloc]" ) ;
 }
 
 //*************************************************************************************
-void default_memory_manager::dealloc( void_ptr_t ptr ) 
+void manager::dealloc( void_ptr_t ptr ) 
 {
     if( ptr == nullptr ) return ;
 
@@ -49,8 +61,8 @@ void default_memory_manager::dealloc( void_ptr_t ptr )
         lock_t lk(_mtx) ;
         auto iter = _ptr_to_info.find( ptr ) ;
 
-        if( so_log::log::error( iter==_ptr_to_info.end(),
-            "[default_memory_manager::dealloc] : ptr location not found") ) 
+        if( so_log::global::error( iter==_ptr_to_info.end(),
+            "[manager::dealloc] : ptr location not found") ) 
             return ;        
 
         _allocated_sib -= iter->second.sib ;
@@ -60,13 +72,13 @@ void default_memory_manager::dealloc( void_ptr_t ptr )
 }
 
 //*************************************************************************************
-size_t default_memory_manager::get_sib( void_t ) const
+size_t manager::get_sib( void_t ) const
 {
     return _allocated_sib ;
 }
 
 //*************************************************************************************
-bool_t default_memory_manager::get_purpose( void_ptr_t ptr, so_memory::purpose_ref_t pout ) const 
+bool_t manager::get_purpose( void_ptr_t ptr, so_memory::purpose_ref_t pout ) const 
 {
     if( so_core::is_nullptr(ptr) ) 
         return false ;
@@ -75,8 +87,8 @@ bool_t default_memory_manager::get_purpose( void_ptr_t ptr, so_memory::purpose_r
         lock_t lk( _mtx );
         auto const iter = _ptr_to_info.find( ptr );
 
-        if( so_log::log::error( iter == _ptr_to_info.end(),
-            "[default_memory_manager::get_purpose] : ptr location not found" ) )
+        if( so_log::global::error( iter == _ptr_to_info.end(),
+            "[manager::get_purpose] : ptr location not found" ) )
             return false ;
 
         pout = iter->second.purpose ;        
@@ -86,12 +98,12 @@ bool_t default_memory_manager::get_purpose( void_ptr_t ptr, so_memory::purpose_r
 }
 
 //*************************************************************************************
-void_t default_memory_manager::dump_to_std( void_t ) const 
+void_t manager::dump_to_std( void_t ) const 
 {
     lock_t lk(_mtx) ;
 
     std::cout << "***************************************************" << std::endl ;
-    std::cout << "[default_memory_manager::dump_to_std] : Dump to std [" << _allocated_sib << "] sib" << std::endl ;
+    std::cout << "[manager::dump_to_std] : Dump to std [" << _allocated_sib << "] sib" << std::endl ;
 
     for( auto iter : _ptr_to_info )
     {
@@ -104,3 +116,8 @@ void_t default_memory_manager::dump_to_std( void_t ) const
     }
 }
 
+//*************************************************************************************
+void_t manager::destroy( void_t )
+{
+    this_t::destroy( this ) ;
+}

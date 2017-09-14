@@ -7,6 +7,8 @@
 
 #include "iuser_notify.h"
 
+#include <functional>
+
 namespace so_device
 {
     class SNAKEOIL_DEVICE_API funk_notify : public iuser_notify

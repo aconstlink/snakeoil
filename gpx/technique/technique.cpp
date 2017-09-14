@@ -8,17 +8,18 @@
 
 #include <snakeoil/gpu/api/iapi.h>
 
+#include <snakeoil/thread/global.h>
 #include <snakeoil/thread/task/tasks.h>
 #include <snakeoil/thread/scheduler.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gpx ;
 
 //***************************************************************
 technique::technique( so_gpx::iplug_factory_ptr_t fptr ) : _plug_fac_ptr(fptr)
 {
-    so_log::log::error_and_exit( so_core::is_nullptr(fptr), 
+    so_log::global::error_and_exit( so_core::is_nullptr(fptr), 
         "[technique::technique] : factory must not be nullptr" ) ;
 }
 
@@ -79,7 +80,7 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
 
         if( so_core::is_nullptr( pd.plug_ptr ) )
         {
-            so_log::log::error( "[technique::part_00] : unable to create plug for api_type " +
+            so_log::global::error( "[technique::part_00] : unable to create plug for api_type " +
                 so_gpu::to_string( api_ptr->get_type() ) + " on wid " + std::to_string( wid ) ) ;
             return so_gpx::technique_transition_result::failed ;
         }
@@ -154,7 +155,7 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
         {
             pd->ts = so_gpx::technique_transition_state::loading ;
 
-            so_thread::scheduler::ts()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
+            so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
             {
                 auto const res = pd->plug_ptr->on_load() ;
                 if( res != so_gpx::plug_result::ok )
@@ -162,7 +163,7 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
                     pd->rs = so_gpx::technique_rest_state::offline ;
                     pd->ts = so_gpx::technique_transition_state::none ;
 
-                    so_log::log::error( "[technique::part_00] : technique load failed for wid : " +
+                    so_log::global::error( "[technique::part_00] : technique load failed for wid : " +
                         std::to_string( wid ) + "in rest state offline" ) ;
 
                     return ;
@@ -234,7 +235,7 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
         {
             pd->ts = so_gpx::technique_transition_state::loading ;
 
-            so_thread::scheduler::ts()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
+            so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
             {
                 auto const res = pd->plug_ptr->on_load() ;
                 if( res != so_gpx::plug_result::ok )
@@ -242,7 +243,7 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
                     pd->rs = so_gpx::technique_rest_state::offline ;
                     pd->ts = so_gpx::technique_transition_state::none ;
 
-                    so_log::log::error( "[technique::part_00] : technique load failed for wid : " +
+                    so_log::global::error( "[technique::part_00] : technique load failed for wid : " +
                         std::to_string( wid ) + "in rest unloaded" ) ;
 
                     return ;

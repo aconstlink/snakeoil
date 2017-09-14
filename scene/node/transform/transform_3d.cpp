@@ -6,7 +6,7 @@
 
 #include "../../visitor/ivisitor.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -110,7 +110,7 @@ transform_3d::trafo_cref_t transform_3d::get_transformation( void_t ) const
 so_scene::result transform_3d::apply( so_scene::so_visitor::ivisitor_ptr_t vptr ) 
 {
     auto res = vptr->visit( this ) ;
-    so_log::log::error( so_scene::no_success(res), 
+    so_log::global::error( so_scene::no_success(res), 
         "[so_scene::transform::apply] : visit" ) ;
 
     this_t::traverse_decorated( vptr ) ;

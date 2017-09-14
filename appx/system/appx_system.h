@@ -54,11 +54,6 @@ namespace so_appx
 
         so_gpx::render_system_ptr_t _rsys_ptr = nullptr ;
 
-        /// system wide io system
-        so_io::system_ptr_t _ios_ptr = nullptr ;
-
-        so_device::idevice_system_ptr_t _dev_ptr = nullptr ;
-
         so_imex::system_ptr_t _imexs_ptr = nullptr ;
         
     private: // window data

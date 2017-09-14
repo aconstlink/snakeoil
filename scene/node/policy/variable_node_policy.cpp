@@ -7,7 +7,7 @@
 #include <snakeoil/flow/node/variable/variable_node.h>
 #include <snakeoil/flow/variable/variable_set.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -70,7 +70,7 @@ bool_t variable_node_policy::bind_variable( so_std::string_in_t bp, so_flow::iva
         return false ;
 
     auto const res = _var_set_ptr->add( bp, ptr ) ;
-    so_log::log::error_and_exit( so_flow::no_success( res ),
+    so_log::global::error_and_exit( so_flow::no_success( res ),
         "[renderable::bind_object_matrix] : rebind not handled" ) ;
 
     return true ;

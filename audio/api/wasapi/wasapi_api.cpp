@@ -7,7 +7,7 @@
 #include "../../buffer/loopback_buffer.h"
 #include "../../buffer/pcm/pcm_buffer.hpp"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <mmdeviceapi.h>
 #include <audioclient.h>
@@ -88,7 +88,7 @@ wasapi_api::wasapi_api( void_t )
             auto const res = CoInitializeEx( NULL, COINIT_MULTITHREADED ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : CoInitializeEx" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : CoInitializeEx" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -101,7 +101,7 @@ wasapi_api::wasapi_api( void_t )
 
             if( hr != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : CoCreateInstance" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : CoCreateInstance" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -112,7 +112,7 @@ wasapi_api::wasapi_api( void_t )
 
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : GetDefaultAudioEndpoint" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : GetDefaultAudioEndpoint" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -123,7 +123,7 @@ wasapi_api::wasapi_api( void_t )
 
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : Device Activate" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : Device Activate" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -132,7 +132,7 @@ wasapi_api::wasapi_api( void_t )
             auto const res = pAudioClient->GetMixFormat( &pwfx ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : GetMixFormat" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : GetMixFormat" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
 
@@ -199,7 +199,7 @@ wasapi_api::wasapi_api( void_t )
 
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : AudioClient Initialize" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : AudioClient Initialize" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -208,7 +208,7 @@ wasapi_api::wasapi_api( void_t )
             auto const res = pAudioClient->GetBufferSize( &bufferFrameCount ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : GetBufferSize" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : GetBufferSize" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -217,7 +217,7 @@ wasapi_api::wasapi_api( void_t )
             auto const res = pAudioClient->GetService( IID_IAudioCaptureClient, (void**)&pCaptureClient ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -230,7 +230,7 @@ wasapi_api::wasapi_api( void_t )
             auto const res = pAudioClient->Start() ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
+                so_log::global::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
                 return cap_ptr->so_init.set_and_signal() ;
             }
         }
@@ -282,7 +282,7 @@ wasapi_api::wasapi_api( void_t )
                 auto const res = pCaptureClient->GetNextPacketSize( &packetLength ) ;
                 if( res != S_OK )
                 {
-                    so_log::log::error( "[wasapi_engine] : GetNextPacketSize" ) ;
+                    so_log::global::error( "[wasapi_engine] : GetNextPacketSize" ) ;
                     break ;
                 }
             }
@@ -300,7 +300,7 @@ wasapi_api::wasapi_api( void_t )
 
                     if( res != S_OK )
                     {
-                        so_log::log::error( "[wasapi_engine] : unable to get audio buffer."
+                        so_log::global::error( "[wasapi_engine] : unable to get audio buffer."
                             "Will cancel thread." ) ;
                         break ;
                     }
@@ -332,7 +332,7 @@ wasapi_api::wasapi_api( void_t )
                     auto const res = pCaptureClient->ReleaseBuffer( num_frames_available ) ;
                     if( res != S_OK )
                     {
-                        so_log::log::error( "[wasapi_engine] : ReleaseBuffer" ) ;
+                        so_log::global::error( "[wasapi_engine] : ReleaseBuffer" ) ;
                         break ;
                     }
                 }
@@ -348,7 +348,7 @@ wasapi_api::wasapi_api( void_t )
                     auto const res = pCaptureClient->GetNextPacketSize( &packetLength ) ;
                     if( res != S_OK )
                     {
-                        so_log::log::error( "[wasapi_engine] : GetNextPacketSize" ) ;
+                        so_log::global::error( "[wasapi_engine] : GetNextPacketSize" ) ;
                         break ;
                     }
                 }
@@ -416,7 +416,7 @@ bool_t wasapi_api::initialize( void_t )
         auto const res = CoInitializeEx( NULL, COINIT_MULTITHREADED ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_api::initialize] : CoInitializeEx" ) ;
+            so_log::global::error( "[wasapi_api::initialize] : CoInitializeEx" ) ;
             return false ;
         }
     }
@@ -430,7 +430,7 @@ bool_t wasapi_api::initialize( void_t )
 
         if( hr != S_OK )
         {
-            so_log::log::error( "[wasapi_api::initialize] : CoCreateInstance" ) ;
+            so_log::global::error( "[wasapi_api::initialize] : CoCreateInstance" ) ;
             return false ;
         }
     }
@@ -451,7 +451,7 @@ bool_t wasapi_api::initialize( void_t )
 
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_api::initialize] : GetDefaultAudioEndpoint" ) ;
+            so_log::global::error( "[wasapi_api::initialize] : GetDefaultAudioEndpoint" ) ;
             return false ;
         }
         lpdev.def_device_ptr = pDevice ;
@@ -463,7 +463,7 @@ bool_t wasapi_api::initialize( void_t )
 
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_api::initialize] : Device Activate" ) ;
+            so_log::global::error( "[wasapi_api::initialize] : Device Activate" ) ;
             return false ;
         }
         lpdev.audio_client_ptr = pAudioClient ;
@@ -473,7 +473,7 @@ bool_t wasapi_api::initialize( void_t )
         auto const res = pAudioClient->GetMixFormat( &pwfx ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_api::initialize] : GetMixFormat" ) ;
+            so_log::global::error( "[wasapi_api::initialize] : GetMixFormat" ) ;
             return false ;
         }
 
@@ -486,7 +486,7 @@ bool_t wasapi_api::initialize( void_t )
 
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_engine::initialize] : AudioClient Initialize" ) ;
+            so_log::global::error( "[wasapi_engine::initialize] : AudioClient Initialize" ) ;
             return false ;
         }
     }
@@ -495,7 +495,7 @@ bool_t wasapi_api::initialize( void_t )
         auto const res = pAudioClient->GetBufferSize( &bufferFrameCount ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_engine::initialize] : GetBufferSize" ) ;
+            so_log::global::error( "[wasapi_engine::initialize] : GetBufferSize" ) ;
             return false ;
         }
     }
@@ -504,7 +504,7 @@ bool_t wasapi_api::initialize( void_t )
         auto const res = pAudioClient->GetService( IID_IAudioCaptureClient, (void**)&pCaptureClient ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
+            so_log::global::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
             return false ;
         }
         lpdev.capture_client_ptr = pCaptureClient ;
@@ -518,7 +518,7 @@ bool_t wasapi_api::initialize( void_t )
         auto const res = pAudioClient->Start() ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
+            so_log::global::error( "[wasapi_engine::initialize] : AudioClient GetService" ) ;
             return false ;
         }
     }
@@ -624,7 +624,7 @@ so_audio::result wasapi_api::store( loopback_buffer_ptr_t lb_ptr )
         auto const res = _lp_dev_ptr->capture_client_ptr->GetNextPacketSize( &packetLength ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[wasapi_api::store] : GetNextPacketSize" ) ;
+            so_log::global::error( "[wasapi_api::store] : GetNextPacketSize" ) ;
             return so_audio::failed ;
         }
     }
@@ -641,7 +641,7 @@ so_audio::result wasapi_api::store( loopback_buffer_ptr_t lb_ptr )
 
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_api::store] : unable to get audio buffer."
+                so_log::global::error( "[wasapi_api::store] : unable to get audio buffer."
                     "Will cancel thread." ) ;
                 return so_audio::failed ;
             }
@@ -656,7 +656,7 @@ so_audio::result wasapi_api::store( loopback_buffer_ptr_t lb_ptr )
             auto const res = _lp_dev_ptr->capture_client_ptr->ReleaseBuffer( num_frames_available ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_api::store] : ReleaseBuffer" ) ;
+                so_log::global::error( "[wasapi_api::store] : ReleaseBuffer" ) ;
                 return so_audio::failed ;
             }
         }
@@ -666,7 +666,7 @@ so_audio::result wasapi_api::store( loopback_buffer_ptr_t lb_ptr )
             auto const res = _lp_dev_ptr->capture_client_ptr->GetNextPacketSize( &packetLength ) ;
             if( res != S_OK )
             {
-                so_log::log::error( "[wasapi_api::store] : GetNextPacketSize" ) ;
+                so_log::global::error( "[wasapi_api::store] : GetNextPacketSize" ) ;
                 return so_audio::failed ;
             }
         }

@@ -43,7 +43,7 @@
 
 #include "../gl_any/log.h"
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 
 using namespace so_gpu ;
 using namespace so_gpu::so_gl ;

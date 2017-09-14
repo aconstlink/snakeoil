@@ -13,10 +13,14 @@
 #include <snakeoil/application/window/gl_window.h>
 #include <snakeoil/application/window/window_message_receiver.h>
 
+#include <snakeoil/device/global.h>
+#include <snakeoil/device/system/device_system.h>
+
 #include <snakeoil/audiox/system/audio_system.h>
 #include <snakeoil/gpx/system/render_system.h>
+#include <snakeoil/thread/global.h>
 #include <snakeoil/thread/scheduler.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 using namespace so_appx ;
@@ -109,7 +113,7 @@ so_appx::result appx_application::create_window(
     auto res = _win_app_ptr->register_window( render_window ) ;
     if( so_app::no_success(res) )
     {
-        so_log::log::error( "[appx_application::create_window] : failed to create gl render window." ) ;
+        so_log::global::error( "[appx_application::create_window] : failed to create gl render window." ) ;
         return so_appx::failed ;
     }
 
@@ -148,7 +152,7 @@ so_app::result appx_application::exec( void_t )
     {
         bool_t thread_running = true ;
 
-        so_log::log::status( "[appx_application] : update thread online" ) ;
+        so_log::global::status( "[appx_application] : update thread online" ) ;
         
         update_data ud ;
         render_data rd ;
@@ -160,7 +164,9 @@ so_app::result appx_application::exec( void_t )
 
             iclock_t::time_point const t1 = iclock_t::now() ;
             
-            so_thread::scheduler::update() ;
+            so_device::global::device_system()->update() ;
+            so_thread::global::update() ;
+            
             
 
             shared_captured->rsystem_ptr->update() ;
@@ -248,7 +254,7 @@ so_app::result appx_application::exec( void_t )
             as->update_finised() ;
         }
 
-        so_log::log::status( "[appx_application] : update thread shutdown" ) ;
+        so_log::global::status( "[appx_application] : update thread shutdown" ) ;
     };
 
     return _win_app_ptr->exec( update_funk ) ;

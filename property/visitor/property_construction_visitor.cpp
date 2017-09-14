@@ -10,7 +10,7 @@
 #include "../properties/multi_choice_property.h"
 #include "../properties/single_choice_property.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_property ;
 
@@ -136,7 +136,7 @@ bool_t property_construction_visitor::insert( so_std::utf8_cref_t name, so_prope
     auto const iter = this_t::map().find( name ) ;
     if( iter != this_t::map().end() )
     {
-        so_log::log::warning( "[property_construction_visitor::insert] : "
+        so_log::global::warning( "[property_construction_visitor::insert] : "
             "can not insert name : " + name ) ;
         return false ;
     }

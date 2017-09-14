@@ -6,7 +6,7 @@
 #define _SNAKEOIL_MEMORY_ARENA_ARENA_HPP_
 
 #include "../typedefs.h"
-#include "../memory.h"
+#include "../global.h"
 #include <snakeoil/core/macros/move.h>
 
 #include <mutex>
@@ -87,9 +87,9 @@ namespace so_memory
             {
                 for( auto * p : _pages )
                 {
-                    so_memory::memory::dealloc( p->mem_ptr ) ;
-                    so_memory::memory::dealloc( p->free_ptr ) ;
-                    so_memory::memory::dealloc( p ) ;
+                    so_memory::global::dealloc( p->mem_ptr ) ;
+                    so_memory::global::dealloc( p->free_ptr ) ;
+                    so_memory::global::dealloc( p ) ;
                 }
             }
 
@@ -192,7 +192,7 @@ namespace so_memory
                     size_t const sib = prealloc * sizeof( T ) ;
                     size_t const sibx = prealloc * ( sizeof( size_t ) << 1 ) ;
 
-                    byte_ptr_t raw_mem = so_memory::memory::alloc_raw<byte_t>( sib + sibx,
+                    byte_ptr_t raw_mem = so_memory::global::alloc_raw<byte_t>( sib + sibx,
                         "[so_memory::arena] : raw memory data" ) ;
 
                     p.mem_ptr = raw_mem ;
@@ -201,7 +201,7 @@ namespace so_memory
                 // 2. the freelist
                 {
                     size_t const sib = prealloc * sizeof( size_t ) ;
-                    byte_ptr_t raw_mem = so_memory::memory::alloc_raw<byte_t>( sib,
+                    byte_ptr_t raw_mem = so_memory::global::alloc_raw<byte_t>( sib,
                         "[so_memory::arena] : raw memory freelist" ) ;
 
                     p.free_ptr = (size_t*)raw_mem ;
@@ -220,7 +220,7 @@ namespace so_memory
                     p.free_elems = prealloc ;
                 }
 
-                page_ptr_t ret = so_memory::memory::alloc( std::move( p ),
+                page_ptr_t ret = so_memory::global::alloc( std::move( p ),
                     "[arena::alloc_page] : page" ) ;
 
                 {

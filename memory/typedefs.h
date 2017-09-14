@@ -6,9 +6,11 @@
 #define _SNAKEOIL_MEMORY_TYPEDEFS_H_
 
 #include <snakeoil/core/types.hpp>
+#include <snakeoil/core/assert.h>
 #include <snakeoil/core/macros/typedef.h>
-
+#include <snakeoil/core/macros/move.h>
 #include <snakeoil/core/checks.h>
+#include <snakeoil/core/break_if.hpp>
 #include <snakeoil/core/boolean.h>
 
 #include <string>

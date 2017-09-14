@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "polygon_mesh.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_geo ;
 
@@ -323,21 +323,21 @@ polygon_mesh::this_t polygon_mesh::repeat_full( size_t const times ) const
 {
     this_t m = *this ;
 
-    if( so_log::log::error(m.position_format == so_geo::vector_component_format::invalid, 
+    if( so_log::global::error(m.position_format == so_geo::vector_component_format::invalid, 
         "[polygon_mesh::repeat_full] : invalid position formal") )
     {
         return std::move( m ) ;
     }
 
     if( m.normals_indices.size() > 0 && 
-        so_log::log::error(m.normal_format == so_geo::vector_component_format::invalid, 
+        so_log::global::error(m.normal_format == so_geo::vector_component_format::invalid, 
         "[polygon_mesh::repeat_full] : invalid normal formal") )
     {
         return std::move( m ) ;
     }
 
     if( m.texcoords_indices.size() > 0 &&
-        so_log::log::error( m.texcoord_format == so_geo::texcoord_component_format::invalid, 
+        so_log::global::error( m.texcoord_format == so_geo::texcoord_component_format::invalid, 
         "[polygon_mesh::repeat_full] : invalid texcoord formal") )
     {
         return std::move( m ) ;

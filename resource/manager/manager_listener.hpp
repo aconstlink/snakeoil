@@ -9,6 +9,8 @@
 
 #include <snakeoil/core/macros/move.h>
 
+#include <functional>
+
 namespace so_resource
 {
     template< typename T >

@@ -33,7 +33,7 @@ so_gpu::result gl_33_api::alloc_image_memory( so_gpu::iimage_2d_ptr_t ptr, image
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::alloc_image_memory] : image2d - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::alloc_image_memory] : image2d - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -88,7 +88,7 @@ so_gpu::result gl_33_api::alloc_image_memory( so_gpu::iimage_2d_ptr_t ptr, image
     }
     else
     {
-        so_log::log::error( "[gl_33_api::alloc_image_memory] : undefined image type" ) ;
+        so_log::global::error( "[gl_33_api::alloc_image_memory] : undefined image type" ) ;
         return so_gpu::invalid_argument ;
     }
 
@@ -100,7 +100,7 @@ so_gpu::result gl_33_api::load_image_memory( so_gpu::iimage_2d_ptr_t ptr, image_
 {
     if( api_object_helper_t::has_no_driver_object( ptr ) )
     {
-        so_log::log::warning( "[gl_33_api::load_image_memory] : image2d - no valid driver object" ) ;
+        so_log::global::warning( "[gl_33_api::load_image_memory] : image2d - no valid driver object" ) ;
         return so_gpu::invalid_argument ;
     }
 
@@ -149,12 +149,12 @@ so_gpu::result gl_33_api::load_image_memory( so_gpu::iimage_2d_ptr_t ptr, image_
     }
     else if( ptr->get_type() == image_type::stencil )
     {
-        so_log::log::warning("[gl_33_api::load_image_memory] : stencil not supported") ;
+        so_log::global::warning("[gl_33_api::load_image_memory] : stencil not supported") ;
         return so_gpu::invalid_argument ;
     }
     else
     {
-        so_log::log::error( "[gl_33_api::load_image_memory] : undefined image type" ) ;
+        so_log::global::error( "[gl_33_api::load_image_memory] : undefined image type" ) ;
         return so_gpu::invalid_argument ;
     }
 
@@ -167,7 +167,7 @@ so_gpu::result gl_33_api::save_image_memory(
 {
     if( api_object_helper_t::has_no_driver_object( ptr ) )
     {
-        so_log::log::warning( "[gl_33_api::save_image_memory] : "
+        so_log::global::warning( "[gl_33_api::save_image_memory] : "
             "image2d - no valid driver object" ) ;
         return so_gpu::invalid_argument ;
     }
@@ -179,7 +179,7 @@ so_gpu::result gl_33_api::save_image_memory(
     if( GLsizei(ptr->get_width()) != api_obj->width ||
         GLsizei(ptr->get_height()) != api_obj->height )
     {
-        so_log::log::warning( "[gl_33_api::save_image_memory] : "
+        so_log::global::warning( "[gl_33_api::save_image_memory] : "
             "width or height invalid" ) ;
         return so_gpu::invalid_argument ;
     }
@@ -217,7 +217,7 @@ so_gpu::result gl_33_api::save_image_memory(
     }
     else
     {
-        so_log::log::error( "[gl_33_api::alloc_image_memory] : undefined image type" ) ;
+        so_log::global::error( "[gl_33_api::alloc_image_memory] : undefined image type" ) ;
         return so_gpu::invalid_argument ;
     }
 
@@ -229,7 +229,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::idata_buffer_ptr_t ptr, m
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::alloc_buffer_memory] : data_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::alloc_buffer_memory] : data_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -272,7 +272,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr,
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::alloc_buffer_memory] : vertex_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::alloc_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -301,7 +301,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, 
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::alloc_buffer_memory] : index_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::alloc_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -328,7 +328,7 @@ void_ptr_t gl_33_api::map_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, memor
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::map_buffer_memory] : vertex_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::map_buffer_memory] : vertex_buffer - no valid driver object") ;
         return nullptr ;
     }
 
@@ -354,7 +354,7 @@ so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr 
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::unmap_buffer_memory] : vertex_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::unmap_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -378,7 +378,7 @@ void_ptr_t gl_33_api::map_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, memory
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::map_buffer_memory] : index_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::map_buffer_memory] : index_buffer - no valid driver object") ;
         return nullptr ;
     }
 
@@ -402,7 +402,7 @@ so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr )
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::unmap_buffer_memory] : index_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::unmap_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -426,7 +426,7 @@ so_gpu::result gl_33_api::load_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, 
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::load_buffer_memory] : vertex_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::load_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -463,7 +463,7 @@ so_gpu::result gl_33_api::load_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, m
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::load_buffer_memory] : index_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::load_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -491,7 +491,7 @@ so_gpu::result gl_33_api::load_buffer_memory( so_gpu::idata_buffer_ptr_t ptr, so
 {
     if( api_object_helper_t::has_no_driver_object(ptr) ) 
     {
-        so_log::log::warning("[gl_33_api::load_buffer_memory] : data_buffer - no valid driver object") ;
+        so_log::global::warning("[gl_33_api::load_buffer_memory] : data_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
     }
 
@@ -524,7 +524,7 @@ so_gpu::result gl_33_api::check_buffer_size( bool_t check_index_buffer )
         if(gl_log::error( "[gl_33_api::execute] : glGetBufferParameteriv" ) ||
             buffer_size == 0)
         {
-            so_log::log::error( "[so_gpu::gl_33_api::use_vao] : no vertex buffer memory" ) ;
+            so_log::global::error( "[so_gpu::gl_33_api::use_vao] : no vertex buffer memory" ) ;
             return so_gpu::invalid ;
         }
     }
@@ -536,7 +536,7 @@ so_gpu::result gl_33_api::check_buffer_size( bool_t check_index_buffer )
         if(gl_log::error( "[gl_33_api::execute] : glGetBufferParameteriv" ) ||
             buffer_size == 0)
         {
-            so_log::log::error( "[so_gpu::gl_33_api::use_vao] : no index buffer memory" ) ;
+            so_log::global::error( "[so_gpu::gl_33_api::use_vao] : no index buffer memory" ) ;
             return so_gpu::invalid ;
         }
     }

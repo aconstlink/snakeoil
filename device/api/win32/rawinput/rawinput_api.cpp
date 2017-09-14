@@ -16,7 +16,7 @@
 #include "../../../component/buttons/three_button_mapping.h"
 
 #include <snakeoil/math/vector/vector2.hpp>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_device ;
 using namespace so_device::so_win32 ;
@@ -38,7 +38,7 @@ rawinput_api::rawinput_api( void_t )
     rid[ 1 ].hwndTarget = NULL ;
     rid[ 1 ].dwFlags = 0;//RIDEV_NOLEGACY ;
 
-    so_log::log::error(
+    so_log::global::error(
         RegisterRawInputDevices( rid, 2, sizeof( RAWINPUTDEVICE ) ) == FALSE,
         "[rawinput::initialize] : need raw input support."
     ) ;

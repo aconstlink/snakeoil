@@ -5,7 +5,7 @@
 #include "win32_window.h"
 #include "../iwindow_message_listener.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <algorithm>
 #include <windows.h>
@@ -136,7 +136,7 @@ HWND win32_window::create_window( window_info const & wi )
     wndclass.lpszMenuName = 0 ;
     wndclass.lpszClassName = class_name.c_str() ;
         
-    if( so_log::log::error( !RegisterClassA( &wndclass ), 
+    if( so_log::global::error( !RegisterClassA( &wndclass ), 
         "[win32_window::create_window] : RegisterClassA" ) )
         exit(0) ;
     
@@ -179,7 +179,7 @@ HWND win32_window::create_window( window_info const & wi )
         hinst,
         0 ) ;
 
-    if( so_log::log::error( hwnd == NULL, 
+    if( so_log::global::error( hwnd == NULL, 
         "[win32_window::create_window] : CreateWindowA failed" ) )
         exit(0) ;
 

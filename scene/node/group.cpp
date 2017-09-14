@@ -6,7 +6,7 @@
 
 #include "../visitor/ivisitor.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <algorithm>
 
 using namespace so_scene ;
@@ -56,7 +56,7 @@ so_scene::result group::apply( so_scene::so_visitor::ivisitor_ptr_t vptr,
         traverse_children( vptr, pred ) ;
         break ;
     default:
-        so_log::log::warning("[group_node::apply] : unsupported case") ;
+        so_log::global::warning("[group_node::apply] : unsupported case") ;
         break ;
     }
     

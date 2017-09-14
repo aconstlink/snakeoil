@@ -20,7 +20,7 @@
 #include <snakeoil/std/container/vector.hpp>
 
 #include <snakeoil/memory/guards/malloc_guard.hpp>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gpu ;
 using namespace so_gpu::so_gl ;
@@ -32,7 +32,7 @@ using gl_log = so_gpu::so_gl::log ;
 //*****************************************************************************************************
 so_gpu::result gl_33_api::compile( GLuint shader_id, so_gpu::shader_ptr_t shd_ptr ) 
 {
-    if( so_log::log::warning( shd_ptr->has_no_code(), "[gl_33_api::compile] : shader has no code." ) ) 
+    if( so_log::global::warning( shd_ptr->has_no_code(), "[gl_33_api::compile] : shader has no code." ) ) 
         return so_gpu::invalid_argument ;
 
     // compile
@@ -57,14 +57,14 @@ so_gpu::result gl_33_api::compile( GLuint shader_id, so_gpu::shader_ptr_t shd_pt
 
     if( ret == GL_TRUE && length <= 1 ) return so_gpu::ok ;
 
-    if( so_log::log::error( length == 0, "shader compilation failed, but info log length is 0.") ) 
+    if( so_log::global::error( length == 0, "shader compilation failed, but info log length is 0.") ) 
             return so_gpu::failed_gl_api ;
 
     // print first line for info
     // user can place the shader name or any info there.
     {
         size_t pos = shd_ptr->get_code().find_first_of('\n') ;
-        so_log::log::error( "First Line: " + shd_ptr->get_code().substr(0, pos) ) ;
+        so_log::global::error( "First Line: " + shd_ptr->get_code().substr(0, pos) ) ;
     }
     
     // get the error message it is and print it
@@ -78,7 +78,7 @@ so_gpu::result gl_33_api::compile( GLuint shader_id, so_gpu::shader_ptr_t shd_pt
 
         for( auto const & msg : tokens )
         {
-            so_log::log::error( msg ) ;
+            so_log::global::error( msg ) ;
         }
     }
 

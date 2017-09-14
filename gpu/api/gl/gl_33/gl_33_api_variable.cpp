@@ -40,7 +40,7 @@ so_gpu::result gl_33_api::release_variable( so_gpu::variable_set_ptr_t ptr )
     {
         if( so_gpu::no_success( this_t::release_variable( item.first ) ) )
         {
-            so_log::log::error("[gl_33_api::release_variable] : data_variables") ;
+            so_log::global::error("[gl_33_api::release_variable] : data_variables") ;
             continue ;
         }
     }
@@ -49,7 +49,7 @@ so_gpu::result gl_33_api::release_variable( so_gpu::variable_set_ptr_t ptr )
     {
         if( so_gpu::no_success( this_t::release_variable( item.first ) ) )
         {
-            so_log::log::error("[gl_33_api::release_variable] : texture_variables") ;
+            so_log::global::error("[gl_33_api::release_variable] : texture_variables") ;
             continue ;
         }
     }
@@ -58,7 +58,7 @@ so_gpu::result gl_33_api::release_variable( so_gpu::variable_set_ptr_t ptr )
     {
         if( so_gpu::no_success( this_t::release_variable( item.first ) ) )
         {
-            so_log::log::error("[gl_33_api::release_variable] : data_buffer_variables") ;
+            so_log::global::error("[gl_33_api::release_variable] : data_buffer_variables") ;
             continue ;
         }
     }
@@ -79,7 +79,7 @@ so_gpu::result gl_33_api::create_variable( so_gpu::variable_ptr_t ptr )
     
     if( var.data_ptr == nullptr )
     {
-        so_log::log::error("[gl_33_api::create_variable] : Either no memory or undefined type.") ;
+        so_log::global::error("[gl_33_api::create_variable] : Either no memory or undefined type.") ;
         return so_gpu::failed ;
     }
 
@@ -117,7 +117,7 @@ so_gpu::result gl_33_api::validate_variable( so_gpu::variable_set_ptr_t ptr )
 
         if( so_gpu::no_success( this_t::create_variable( item.first ) ) ) 
         {
-            so_log::log::error("[gl_33_api::validate_variable] : data") ;
+            so_log::global::error("[gl_33_api::validate_variable] : data") ;
             continue ;
         }        
     }
@@ -128,7 +128,7 @@ so_gpu::result gl_33_api::validate_variable( so_gpu::variable_set_ptr_t ptr )
 
         if( so_gpu::no_success( this_t::create_variable( item.first ) ) ) 
         {
-            so_log::log::error("[gl_33_api::validate_variable] : texture") ;
+            so_log::global::error("[gl_33_api::validate_variable] : texture") ;
             continue ;
         }        
     }
@@ -139,7 +139,7 @@ so_gpu::result gl_33_api::validate_variable( so_gpu::variable_set_ptr_t ptr )
 
         if( so_gpu::no_success( this_t::create_variable( item.first ) ) ) 
         {
-            so_log::log::error("[gl_33_api::validate_variable] : data_buffer") ;
+            so_log::global::error("[gl_33_api::validate_variable] : data_buffer") ;
             continue ;
         }        
     }
@@ -160,7 +160,7 @@ so_gpu::result gl_33_api::load_variable( so_gpu::variable_set_ptr_t ptr )
     {
         if( api_object_helper_t::has_no_driver_object(item.first) )
         {
-            so_log::log::error("[gl_33_api::load_variable] : no api object") ;
+            so_log::global::error("[gl_33_api::load_variable] : no api object") ;
             continue ;
         }
         auto *api_obj = api_object_helper_t::get_cast_api_object<drv::variable>(item.first) ;

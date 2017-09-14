@@ -9,7 +9,7 @@
 
 #include "../../../modules/imidi_module.h" 
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 #include <algorithm>
@@ -32,7 +32,7 @@ void CALLBACK midi_in_proc(
 
     if( so_core::is_nullptr(gptr) )
     {
-        so_log::log::error( "[midi_in_proc] : nullptr " ) ;
+        so_log::global::error( "[midi_in_proc] : nullptr " ) ;
         return ;
     }
 
@@ -106,7 +106,7 @@ win32_midi_api::~win32_midi_api( void_t )
 
         {
             auto res = this_t::unregister_device( item ) ;
-            so_log::log::error( so_device::no_success(res), 
+            so_log::global::error( so_device::no_success(res), 
                 "[midi_module::~midi_module] : unregister_device" ) ;
         }
                 
@@ -206,7 +206,7 @@ void_t win32_midi_api::get_device_names( so_std::vector< so_std::string_t > & na
         MMRESULT const res = midiInGetDevCaps( i, &caps, sizeof( MIDIINCAPS ) ) ;
         if( res != MMSYSERR_NOERROR )
         {
-            so_log::log::warning( "[so_device::win32_midi_api::get_device_names] : "
+            so_log::global::warning( "[so_device::win32_midi_api::get_device_names] : "
                                    "unable to retrieve device caps" ) ;
             continue ;
         }
@@ -254,7 +254,7 @@ so_device::result win32_midi_api::unregister_device( store_data_ref_t item )
         // midiInAddBuffer used here.
         {
             auto res = midiInReset( item.mdata.inh ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::unregister_device] : midiInReset" ) ;
         }
 
@@ -263,14 +263,14 @@ so_device::result win32_midi_api::unregister_device( store_data_ref_t item )
             ZeroMemory( &mhdr, sizeof(MIDIHDR) ) ;
 
             auto res = midiInUnprepareHeader( item.mdata.inh, &mhdr, sizeof(MIDIHDR) ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::unregister_device] : midiInUnprepareHeader" ) ;
 
             so_device::memory::dealloc_raw( item.mdata.in_buffer ) ;
         }
         {
             auto res = midiInClose( item.mdata.inh ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::unregister_device] : midiInClose" ) ;
         }
         item.mdata.inh = NULL ;
@@ -280,12 +280,12 @@ so_device::result win32_midi_api::unregister_device( store_data_ref_t item )
     {
         {
             auto res = midiOutShortMsg( item.mdata.outh, byte_t(255) ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::unregister_device] : sending -1 failed" ) ;
         }
 
         auto res = midiOutClose( item.mdata.outh ) ;
-        so_log::log::error( res != MMSYSERR_NOERROR,
+        so_log::global::error( res != MMSYSERR_NOERROR,
             "[so_device::so_win32::midi_module::unregister_device] : midiInClose" ) ;
         item.mdata.outh = NULL ;
     }
@@ -314,19 +314,19 @@ void_t win32_midi_api::update_midi( void_t )
         for( auto & msg : msgs )
         {
             MMRESULT res = midiOutShortMsg( item.mdata.outh, (DWORD) midi_message::to_32bit( msg ) ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[midi_module::transmit_message] : midiOutShortMsg " ) ;
         }
      
         {
             auto res = midiInReset( item.mdata.inh ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::update] : midiInReset" ) ;
         }
 
         {
             auto res = midiInStart( item.mdata.inh ) ;
-            so_log::log::error( res != MMSYSERR_NOERROR,
+            so_log::global::error( res != MMSYSERR_NOERROR,
                 "[so_device::so_win32::midi_module::update] : midiInStart" ) ;
         }
 
@@ -386,7 +386,7 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
         MMRESULT const res = midiInGetDevCaps( i, &caps, sizeof(MIDIINCAPS) ) ;
         if( res != MMSYSERR_NOERROR )
         {
-            so_log::log::warning( "[so_device::midi_module::check_handle_for_device] : \
+            so_log::global::warning( "[so_device::midi_module::check_handle_for_device] : \
                                    unable to retrieve device caps" ) ;
             continue ;
         }
@@ -398,7 +398,7 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
         }
     }
 
-    if( so_log::log::warning( index_in == uint_t(-1), 
+    if( so_log::global::warning( index_in == uint_t(-1), 
         "[so_device::midi_module::check_handle_for_device] : \
         Could not find midi device" ) )
     {
@@ -414,7 +414,7 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
         MMRESULT const res = midiOutGetDevCaps( i, &caps, sizeof( MIDIOUTCAPS ) ) ;
         if(res != MMSYSERR_NOERROR)
         {
-            so_log::log::warning( "[so_device::midi_module::check_handle_for_device] : \
+            so_log::global::warning( "[so_device::midi_module::check_handle_for_device] : \
                                         unable to retrieve midi out caps" ) ;
             continue ;
         }
@@ -433,7 +433,7 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
         auto const res = midiInOpen( &hmin, index_in, (DWORD_PTR) midi_in_proc, 
             (DWORD_PTR)_global_self_ptr, CALLBACK_FUNCTION | MIDI_IO_STATUS ) ;
 
-        so_log::log::warning( res != MMSYSERR_NOERROR, 
+        so_log::global::warning( res != MMSYSERR_NOERROR, 
             "[so_device::midi_module::check_handle_for_device] : \
             Input MIDI device can not be opended" ) ;
         
@@ -450,11 +450,11 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
             md.in_buffer = midihdr.lpData ;
 
             auto const prep_res = midiInPrepareHeader( hmin, &midihdr, sizeof( MIDIHDR ) ) ;
-            so_log::log::error( prep_res != MMSYSERR_NOERROR, 
+            so_log::global::error( prep_res != MMSYSERR_NOERROR, 
                 "[so_device::midi_module::check_handle_for_device] : midiInPrepareHeader" ) ;
 
             auto const add_res = midiInAddBuffer( hmin, &midihdr, sizeof( MIDIHDR ) ) ;
-            so_log::log::error( prep_res != MMSYSERR_NOERROR, 
+            so_log::global::error( prep_res != MMSYSERR_NOERROR, 
                 "[so_device::midi_module::check_handle_for_device] : midiInAddBuffer" ) ;
             
             if( prep_res == MMSYSERR_NOERROR && add_res == MMSYSERR_NOERROR )
@@ -473,7 +473,7 @@ void_t win32_midi_api::check_handle_for_device( size_t slot )
             auto const res = midiOutOpen( &hmout, index_out, (DWORD_PTR)midi_out_proc, 
                 (DWORD_PTR)_global_self_ptr, CALLBACK_FUNCTION ) ;
 
-            so_log::log::error( res != MMSYSERR_NOERROR, 
+            so_log::global::error( res != MMSYSERR_NOERROR, 
                 "[so_device::midi_module::check_handle_for_device] : \
                 Output MIDI device can not be opended" ) ;
             if( res == MMSYSERR_NOERROR )

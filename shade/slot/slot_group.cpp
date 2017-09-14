@@ -6,7 +6,7 @@
 
 #include <snakeoil/core/macros/move.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_shade ;
 
@@ -23,7 +23,7 @@ slot_group::slot_group( this_rref_t rhv )
 //**********************************************************************************************
 slot_group::~slot_group( void_t )
 {
-    so_log::log::warning( _slots.size() > 0, 
+    so_log::global::warning( _slots.size() > 0, 
         "[slot_group::~slot_group] : not all slots disconnected." ) ; 
 }
 

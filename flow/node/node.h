@@ -72,7 +72,7 @@ namespace so_flow
             auto const res = inputs_t::add_slot( name, is_ptr ) ;
             if( so_flow::no_success(res) )
             {
-                so_log::log::error( "[so_flow::node::create_input_slot] : can not create slot." ) ;
+                so_log::global::error( "[so_flow::node::create_input_slot] : can not create slot." ) ;
                 is_ptr->destroy() ;
                 return res ;
             }
@@ -95,7 +95,7 @@ namespace so_flow
             auto const res = outputs_t::add_slot( name, os_ptr ) ;
             if(so_flow::no_success( res ))
             {
-                so_log::log::error( "[so_flow::node::create_output_slot] : can not create slot." ) ;
+                so_log::global::error( "[so_flow::node::create_output_slot] : can not create slot." ) ;
                 os_ptr->destroy() ;
                 return res ;
             }

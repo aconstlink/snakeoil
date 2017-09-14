@@ -7,7 +7,7 @@
 #include "gl33/gl33_text_render_2d_plug.h"
 
 #include <snakeoil/gpu/api/gl/igl_33_api.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gfx ;
 
@@ -56,7 +56,7 @@ so_gpx::iplug_ptr_t text_render_2d_plug_factory::create_plug( so_gpu::api_type c
 
     default:
         
-        so_log::log::error( "[text_render_2d_plug_factory::create_plug] : "
+        so_log::global::error( "[text_render_2d_plug_factory::create_plug] : "
             "can not create plug for api: " + so_gpu::to_string(t) ) ;
     }
 

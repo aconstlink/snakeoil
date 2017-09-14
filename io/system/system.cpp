@@ -7,7 +7,7 @@
 #include <snakeoil/thread/typedefs.h>
 #include <snakeoil/thread/helper/helper_os.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <iostream>
 #include <fstream>
@@ -42,13 +42,13 @@ system::~system( void_t )
     while( _load_stack.has_item() )
     {
         this_t::load_item_ptr_t ptr = _load_stack.pop() ;
-        so_memory::memory::dealloc( ptr ) ;
+        so_memory::global::dealloc( ptr ) ;
     }
 
     while( _store_stack.has_item() )
     {
         this_t::store_item_ptr_t ptr = _store_stack.pop() ;
-        so_memory::memory::dealloc( ptr ) ;
+        so_memory::global::dealloc( ptr ) ;
     }
 }
 
@@ -76,7 +76,7 @@ so_io::load_handle_t system::load( so_io::path_cref_t file_path )
                 size_t const length = size_t( is.tellg() ) ;
                 is.seekg( 0, is.beg ) ;
                 
-                char_ptr_t data = so_memory::memory::alloc_raw<char_t>( length ) ;
+                char_ptr_t data = so_memory::global::alloc_raw<char_t>( length ) ;
 
                 is.read( data, length ) ;
                 
@@ -123,7 +123,7 @@ so_io::store_handle_t system::store( so_io::path_cref_t file_path, char_cptr_t d
 
             if( so_core::is_not( ec ) )
             {
-                so_log::log::error( "[so_io::system::store] : create directories : " ) ;
+                so_log::global::error( "[so_io::system::store] : create directories : " ) ;
 
                 // signal shared data
                 {
@@ -190,7 +190,7 @@ so_io::result system::wait_for_operation( so_io::load_handle_rref_t hnd,
 
     // 3. reclaim the item
     {
-        so_memory::memory::dealloc( li->data ) ;
+        so_memory::global::dealloc( li->data ) ;
         *li = this_t::load_item_t() ;
     }
     
@@ -245,12 +245,12 @@ system::load_item_ptr_t system::get_load_item( void_t )
 {
     so_thread::lock_guard_t lk( _load_mtx ) ;
     return _load_stack.has_item() ? _load_stack.pop() : 
-        so_memory::memory::alloc( load_item_t(), "[system::get_load_item] : item" ) ;
+        so_memory::global::alloc( load_item_t(), "[system::get_load_item] : item" ) ;
 }
 
 //************************************************************************************
 system::store_item_ptr_t system::get_store_item( void_t )
 {
     return _store_stack.has_item() ? _store_stack.pop() :
-        so_memory::memory::alloc( store_item_t(), "[system::get_store_item] : item" ) ;
+        so_memory::global::alloc( store_item_t(), "[system::get_store_item] : item" ) ;
 }

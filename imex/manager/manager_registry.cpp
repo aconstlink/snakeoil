@@ -179,7 +179,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_audio_manager()->take_and_clear(
             *other_ptr->get_audio_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear audio_managers" ) ;
     }
 
@@ -187,7 +187,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_image_manager()->take_and_clear( 
             *other_ptr->get_image_manager() ) ;
 
-        so_log::log::error( so_imex::no_success(res), 
+        so_log::global::error( so_imex::no_success(res), 
             "[so_imex::manager_registry::take_over] : take_and_clear image_managers" ) ;
     }
 
@@ -196,7 +196,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_graph_manager()->take_and_clear(
             *other_ptr->get_graph_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear graph_managers" ) ;
     }
 
@@ -204,7 +204,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_mesh_manager()->take_and_clear(
             *other_ptr->get_mesh_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear mesh_managers" ) ;
     }
 
@@ -212,7 +212,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_camera_manager()->take_and_clear(
              *other_ptr->get_camera_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear camera_managers" ) ;
     }
 
@@ -220,7 +220,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_material_manager()->take_and_clear(
             *other_ptr->get_material_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear material_managers" ) ;
     }
 
@@ -228,7 +228,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_vertex_shader_manager()->take_and_clear(
             *other_ptr->get_vertex_shader_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear vertex_shader_managers" ) ;
     }
 
@@ -236,7 +236,7 @@ so_imex::result manager_registry::take_over( this_ptr_t other_ptr )
         so_imex::result const res = this_t::get_pixel_shader_manager()->take_and_clear(
             *other_ptr->get_pixel_shader_manager() ) ;
 
-        so_log::log::error( so_imex::no_success( res ),
+        so_log::global::error( so_imex::no_success( res ),
             "[so_imex::manager_registry::take_over] : take_and_clear pixel_shader_managers" ) ;
     }
 

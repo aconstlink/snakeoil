@@ -10,7 +10,7 @@
 #include <snakeoil/font/glyph_atlas/glyph_atlas.h>
 #include <snakeoil/font/glyph_atlas/stb/stb_glyph_atlas_creator.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gfx ;
 
@@ -165,7 +165,7 @@ so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_
                 auto const ires = _gaptr->find_glyph( font_id, so_font::utf32_t( '?' ),
                     buffer_offset, gi ) ;
 
-                so_log::log::error( so_core::is_not( ires ),
+                so_log::global::error( so_core::is_not( ires ),
                     "[text_render_2d::draw_text] : glyph ? must be included" ) ;
             }
             //adv = ( gi.dims * _glyph_atlas_size ) / 

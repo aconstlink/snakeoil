@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../../typedefs.h"
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 namespace so_device
 {
@@ -124,7 +124,7 @@ namespace so_device
     static so_device::ascii_key convert_ascii_number_keys( size_t const delta )
     {
         bool_t const cond = delta <= ( size_t( ascii_key::k_9 ) - size_t( ascii_key::k_0 ) ) ;
-        so_log::log::error_and_exit( so_core::is_not( cond ),
+        so_log::global::error_and_exit( so_core::is_not( cond ),
             "[so_device::convert_ascii_number_keys]" ) ;
 
         return ascii_key( size_t( ascii_key::k_0 ) + delta ) ;
@@ -133,7 +133,7 @@ namespace so_device
     static ascii_key convert_ascii_letter_keys( size_t const delta )
     {
         bool_t const cond = delta <= ( size_t( ascii_key::z ) - size_t( ascii_key::a ) ) ;
-        so_log::log::error_and_exit( so_core::is_not( cond ),
+        so_log::global::error_and_exit( so_core::is_not( cond ),
             "[so_device::convert_ascii_letter_keys]" ) ;
 
         return ascii_key( size_t( ascii_key::a ) + delta ) ;
@@ -142,7 +142,7 @@ namespace so_device
     static ascii_key convert_ascii_function_keys( size_t const delta )
     {
         bool_t const cond = delta <= ( size_t( ascii_key::f14 ) - size_t( ascii_key::f1 ) ) ;
-        so_log::log::error_and_exit( so_core::is_not( cond ),
+        so_log::global::error_and_exit( so_core::is_not( cond ),
             "[so_device::convert_ascii_function_keys]" ) ;
 
         return ascii_key( size_t( ascii_key::f1 ) + delta ) ;
@@ -151,7 +151,7 @@ namespace so_device
     static ascii_key convert_ascii_numpad_number_keys( size_t const delta )
     {
         bool_t const cond = delta <= ( size_t( ascii_key::num_9 ) - size_t( ascii_key::num_0 ) ) ;
-        so_log::log::error_and_exit( so_core::is_not( cond ),
+        so_log::global::error_and_exit( so_core::is_not( cond ),
             "[so_device::convert_ascii_numpad_number_keys]" ) ;
 
         return ascii_key( size_t( ascii_key::num_0 ) + delta ) ;

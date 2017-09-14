@@ -11,7 +11,7 @@
 #include <snakeoil/flow/node/variable/variable_node.h>
 #include <snakeoil/flow/variable/variable_set.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 using namespace so_scene ;
@@ -385,7 +385,7 @@ so_scene::result renderable::apply( so_scene::so_visitor::ivisitor_ptr_t ptr )
     auto res = ptr->visit( this ) ;
     if( so_scene::no_success(res) )
     {
-        so_log::log::error( "[so_scene::render_config::apply] : visit" ) ;
+        so_log::global::error( "[so_scene::render_config::apply] : visit" ) ;
     }
     return ptr->post_visit( this ) ;
 }

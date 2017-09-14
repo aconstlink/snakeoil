@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "job_scheduler.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_thread ;
 
@@ -23,7 +23,7 @@ job_scheduler::job_scheduler( void_t )
     {
         _threads[ i ] = std::thread( [captured_ptr]( void_t )
         {
-            //so_log::log::status( "Test: hello thread" ) ;
+            //so_log::global::status( "Test: hello thread" ) ;
 
             {
                 so_thread::lock_t lk( captured_ptr->_mtx_online ) ;

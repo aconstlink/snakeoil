@@ -9,7 +9,7 @@
 #include <snakeoil/imex/system/system.h>
 #include <snakeoil/device/system/device_system.h>
 #include <snakeoil/io/system/system.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/core/macros/move.h>
 
@@ -21,10 +21,6 @@ appx_system::appx_system( void_t )
     _ctx = so_appx::memory::alloc( so_appx::appx_context(),
         "[appx_system::appx_system] : appx_context" ) ;
    
-    _dev_ptr = so_device::device_system_t::create(
-        "[appx_system::appx_system] : device_system") ;
-    _ctx->set_dev( _dev_ptr ) ;
-
     _imexs_ptr = so_imex::system_t::create_with_default_modules(
         "[appx_system::appx_system] : imex system" ) ;
     _ctx->set_imexs( _imexs_ptr ) ;
@@ -36,7 +32,6 @@ appx_system::appx_system( this_rref_t rhv )
     _apps = std::move( rhv._apps ) ;
 
     so_move_member_ptr( _ctx, rhv ) ;
-    so_move_member_ptr( _dev_ptr, rhv ) ;
     so_move_member_ptr( _imexs_ptr, rhv ) ;
     so_move_member_ptr( _rsys_ptr, rhv ) ;
 
@@ -50,9 +45,6 @@ appx_system::~appx_system( void_t )
     {
         a.app_ptr->destroy() ;
     }
-
-    if( so_core::is_not_nullptr( _dev_ptr ) )
-        _dev_ptr->destroy() ;
     
     so_appx::memory::dealloc( _ctx ) ;
 
@@ -138,9 +130,6 @@ so_appx::result appx_system::update( size_t wid, so_app::iwindow_message_listene
 //*************************************************************************************
 so_appx::result appx_system::update( update_data_cref_t ud )
 {
-    
-    _dev_ptr->update() ;
-
     // check app's state first and act based on it
     for( auto & d : _apps )
     {

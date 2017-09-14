@@ -7,7 +7,7 @@
 
 #include <snakeoil/io/typedefs.h>
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/std/container/vector.hpp>
@@ -25,7 +25,7 @@ namespace so_geo
     so_typedefs( so_std::string_t, key ) ;
     
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 
 
     so_typedefs( so_std::vector< uint_t >, uints ) ;

@@ -23,6 +23,8 @@ set( SOURCES ${SOURCES}
     result.h
     typedefs.h
     protos.h
+    global.h
+    global.cpp
 
     primitive/sync_object.hpp
     helper.h

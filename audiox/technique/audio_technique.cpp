@@ -8,17 +8,18 @@
 
 #include <snakeoil/audio/api/iapi.h>
 
+#include <snakeoil/thread/global.h>
 #include <snakeoil/thread/task/tasks.h>
 #include <snakeoil/thread/scheduler.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_audiox ;
 
 //*************************************************************************************
 audio_technique::audio_technique( so_audiox::iplug_factory_ptr_t fptr ) 
 {
-    so_log::log::error_and_exit( so_core::is_nullptr(fptr), 
+    so_log::global::error_and_exit( so_core::is_nullptr(fptr), 
         "[audio_technique::audio_technique] : nullptr is invalid" ) ;
 
     _fac_ptr = fptr ;
@@ -91,7 +92,7 @@ so_audiox::technique_state audio_technique::part_00( technique_state target, so_
     //
 
     plug_data_ptr_t pd = _datas[0] ;
-    so_log::log::error_and_exit( so_core::is_nullptr( pd ), 
+    so_log::global::error_and_exit( so_core::is_nullptr( pd ), 
         "[audio_technique::part_00] : plug_data must not be nullptr" ) ;
 
     // 1. handle update state
@@ -132,7 +133,7 @@ so_audiox::technique_state audio_technique::part_00( technique_state target, so_
 
         pd->ts = technique_state::loading ;
 
-        so_thread::scheduler::ts()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
+        so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
         {
             auto const res = pd->plug_ptr->on_load() ;
             if( res != so_audiox::plug_result::ok )

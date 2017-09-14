@@ -18,7 +18,7 @@
 #include <snakeoil/std/container/stack.hpp>
 
 #include <snakeoil/thread/mutex.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 namespace so_resource
 {
@@ -174,7 +174,7 @@ namespace so_resource
         {
             /*for( auto const & item : _items )
             {
-                so_log::log::warning( item.second.ref_count != 0, 
+                so_log::global::warning( item.second.ref_count != 0, 
                     "[so_resource::~resource_manager] : ref count not 0" ) ;
             }*/
         }
@@ -248,7 +248,7 @@ namespace so_resource
         {            
             so_thread::lock_guard_t lk(_mtx) ;
 
-            if( so_log::log::error(hnd_out.is_valid(), 
+            if( so_log::global::error(hnd_out.is_valid(), 
                 "[so_resource::resource_manager::acquire] : valid handle" ) )
                 return false ;
 
@@ -263,7 +263,7 @@ namespace so_resource
         bool_t acquire_if( find_funk_t funk,
             so_resource::purpose_cref_t p, handle_ref_t hnd_out )
         {
-            if(so_log::log::error( hnd_out.is_valid(),
+            if(so_log::global::error( hnd_out.is_valid(),
                 "[so_resource::resource_manager::acquire] : valid handle" ))
                 return false ;
 
@@ -323,12 +323,12 @@ namespace so_resource
             handle_t int_handle = std::move( hnd ) ;
 
             auto iter = _items.find( int_handle.get_key() ) ;
-            so_log::log::error_and_exit( iter == _items.end(),
+            so_log::global::error_and_exit( iter == _items.end(),
                 "[so_resource::resource_manager::release] : handle must be valid" ) ;
 
             store_item_ref_t si = iter->second ;
 
-            so_log::log::error_and_exit( si.ref_count == 0,
+            so_log::global::error_and_exit( si.ref_count == 0,
                 "[so_resource::resource_manager::release] : must not ref_count == 0" ) ;
 
             this_t::release_purpose_id( si, int_handle.get_pid() ) ;
@@ -337,7 +337,7 @@ namespace so_resource
                 auto iiter = std::find( si.listeners.begin(), si.listeners.end(),
                     int_handle._manager_listener_ptr ) ;
 
-                if( so_core::is_not( so_log::log::error( iiter == si.listeners.end(),
+                if( so_core::is_not( so_log::global::error( iiter == si.listeners.end(),
                     "[so_resouce::resource_manager::release] : listener not found" ) ) )
                 {
                     si.listeners.erase( iiter ) ;
@@ -428,7 +428,7 @@ namespace so_resource
                 }
                 if( so_core::is_not(can_move) )
                 {
-                    so_log::log::error( 
+                    so_log::global::error( 
                         "[so_resource::resource_manager::take_all_items_from] : \
                         ref counts not zero" ) ;
                     return *this ;
@@ -441,7 +441,7 @@ namespace so_resource
             {
                 auto iter = _items.find( item.first ) ;
                 
-                if( so_log::log::warning( iter != _items.end(), 
+                if( so_log::global::warning( iter != _items.end(), 
                     "[so_resource::resource_manager::take_all_items_from] : insert"  )  ) 
                     continue ;
 
@@ -615,7 +615,7 @@ namespace so_resource
             so_thread::lock_guard_t lk( _mtx ) ;            
 
             auto iter = _items.find( hnd.get_key() ) ;
-            so_log::log::error_and_exit( iter == _items.end(),
+            so_log::global::error_and_exit( iter == _items.end(),
                 "[so_resource::resource_manager::exchange_self] : handle must be valid" ) ;
 
             // if the user exchanges data for a handle by

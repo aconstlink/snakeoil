@@ -14,7 +14,7 @@
 
 #include <snakeoil/std/filesystem/filesystem.hpp>
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
 
 #include <snakeoil/geometry/mesh/polygon_mesh.h>
 #include <snakeoil/thread/task/task_graph.h>
@@ -25,7 +25,7 @@
 
 #include <snakeoil/std/container/stack.hpp>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/core/cast.hpp>
 
@@ -105,7 +105,7 @@ public:
 
     rapidxml_visitor( rxml_doc_ptr_t xml_doc ) : _dptr( xml_doc )
     {
-        so_log::log::error_and_exit( so_core::is_nullptr( xml_doc ),
+        so_log::global::error_and_exit( so_core::is_nullptr( xml_doc ),
             "[dae_module_export:rapidxml_visitor] : xml doc must not be nullptr" ) ;
 
         _node_stack.push( xml_doc ) ;
@@ -425,7 +425,7 @@ void_t create_accessor( so_dae::node_ptr_t parent, so_std::string_cref_t src, si
 {
     if( fmt_n == 0 )
     {
-        so_log::log::error("[dae_export] : invalid vector format for source: " + src ) ;
+        so_log::global::error("[dae_export] : invalid vector format for source: " + src ) ;
         return ;
     }
 
@@ -724,7 +724,7 @@ void_t create_libary_geometries( so_dae::node_ptr_t parent_ptr, dae_module::expo
         }*/
         else
         {
-            so_log::log::warning( "[dae_export] : mesh type currently not supported" ) ;
+            so_log::global::warning( "[dae_export] : mesh type currently not supported" ) ;
         }
     }
 
@@ -818,12 +818,12 @@ so_thread::task_graph_t dae_module::export_scene( export_params_cref_t params_in
             {
                 so_io::path_t const path = params_in.path_to_file ;
 
-                auto const res = so_io::io::store( 
+                auto const res = so_io::global::store( 
                     path, s.c_str(), s.size() * sizeof( char_t ) ).wait_for_operation() ;
                 
                 if( so_io::no_success( res ) )
                 {
-                    so_log::log::error( "[dae_module] : unable to write xml document to : " + 
+                    so_log::global::error( "[dae_module] : unable to write xml document to : " + 
                         path.string() ) ;
                 }
             }

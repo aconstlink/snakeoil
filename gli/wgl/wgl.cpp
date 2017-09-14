@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "wgl.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/std/string/split.hpp>
 
@@ -16,7 +16,7 @@ using namespace so_gli::so_wgl ;
 /////////////////////////////////////////////////////////////////////////
 
 #define CHECK_AND_LOAD_COND( fn, name ) \
-    !so_log::log::error( \
+    !so_log::global::error( \
     (fn = (fn == NULL ? static_cast<decltype(fn)>(this_t::load_wgl_function( name )) : fn)) == NULL, \
     "[CHECK_AND_LOAD_COND] : Failed to load: "  name  )
 
@@ -27,7 +27,7 @@ using namespace so_gli::so_wgl ;
         fn = static_cast<decltype(fn)>(this_t::load_wgl_function( name )) ; \
     } \
     \
-    so_log::log::error( fn == NULL, "[CHECK_AND_LOAD] : Failed to load: "  name ) ; \
+    so_log::global::error( fn == NULL, "[CHECK_AND_LOAD] : Failed to load: "  name ) ; \
 }
 
 #define NULL_STATIC_MEMBER( fn ) decltype(wgl::fn) wgl::fn = nullptr ;
@@ -88,7 +88,7 @@ void_ptr_t wgl::load_wgl_function( char_cptr_t name )
 //**************************************************************
 bool_t wgl::is_supported( char_cptr_t name ) 
 {
-    if( so_log::log::warning( _wgl_extensions.size() == 0, 
+    if( so_log::global::warning( _wgl_extensions.size() == 0, 
         "[wgl::is_supported] : extension string is empty" ) )
         return false ;    
 
@@ -122,7 +122,7 @@ so_gli::result wgl::init( HDC hdc )
     {
         if( !CHECK_AND_LOAD_COND( wglCreateContextAttribs, "wglCreateContextAttribsARB" ) )
         {
-            so_log::log::error( "[wgl::init] : Function pointer not found. Although extension supported."  ) ;
+            so_log::global::error( "[wgl::init] : Function pointer not found. Although extension supported."  ) ;
             return so_gli::failed_load_function ;
         }
     }

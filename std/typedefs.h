@@ -7,7 +7,7 @@
 
 #include <snakeoil/io/typedefs.h>
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/std/container/list.hpp>
@@ -29,7 +29,7 @@ namespace so_std
     so_typedefs( std::string, key ) ;
     so_typedefs( so_std::list<key_t>, key_list ) ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 }
 
 #endif

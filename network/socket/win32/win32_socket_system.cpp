@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "win32_socket_system.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <ws2tcpip.h>
 
@@ -18,7 +18,7 @@ win32_socket_system::win32_socket_system( void_t )
     auto const res = WSAStartup( MAKEWORD( 2, 2 ), &data ) ;
     if( res != 0 )
     {
-        so_log::log::error( "[win32_socket_system::initialize] : WSAStartup" ) ;
+        so_log::global::error( "[win32_socket_system::initialize] : WSAStartup" ) ;
     }
     _is_init = true ;
 }
@@ -39,10 +39,10 @@ win32_socket_system::~win32_socket_system( void_t )
     for( auto & sd : _udps )
     {
         auto const res = closesocket( sd.second->s ) ;
-        so_log::log::error( res == SOCKET_ERROR, 
+        so_log::global::error( res == SOCKET_ERROR, 
             "[win32_socket_system::~win32_socket_system] : closesocket"  ) ;
 
-        so_memory::memory::dealloc( sd.second ) ;
+        so_memory::global::dealloc( sd.second ) ;
     }
 
     if( _is_init )
@@ -71,8 +71,8 @@ so_net::result win32_socket_system::send( ip4_address_cref_t addr, uint_t const 
         auto s = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP ) ;
         if( s == -1 )
         {
-            so_log::log::error( "[win32_socket_system::send] : socket" ) ;
-            so_log::log::error( "[win32_socket_system::send] : WSAGetLastError " +
+            so_log::global::error( "[win32_socket_system::send] : socket" ) ;
+            so_log::global::error( "[win32_socket_system::send] : WSAGetLastError " +
                 std::to_string( WSAGetLastError() ) ) ;
             return so_net::failed ;
         }
@@ -85,13 +85,13 @@ so_net::result win32_socket_system::send( ip4_address_cref_t addr, uint_t const 
 
     {
         sid = this_t::create_udp_socket_id() ;
-        sdp = so_memory::memory::alloc( std::move( sd ), "" ) ;
+        sdp = so_memory::global::alloc( std::move( sd ), "" ) ;
 
         {
             so_thread::lock_guard_t lk( _mtx_udps ) ;
 
             auto const iter = _udps.find( sid ) ;
-            so_log::log::error_and_exit( iter != _udps.end(),
+            so_log::global::error_and_exit( iter != _udps.end(),
                 "[win32_socket_system::send] : Id can not be stored mutliple times" ) ;
 
             _udps[ sid ] = sdp ;
@@ -121,7 +121,7 @@ so_net::result win32_socket_system::send( ip4_address_cref_t addr, uint_t const 
 
             if( ires == SOCKET_ERROR )
             {
-                so_log::log::error( "[win32_socket_system::send] : socket error" ) ;
+                so_log::global::error( "[win32_socket_system::send] : socket error" ) ;
                 break ;
             }
 
@@ -143,8 +143,8 @@ so_net::result win32_socket_system::recv( ip4_binding_point_cref_t bp,
         auto s = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP ) ;
         if( s == -1 )
         {
-            so_log::log::error( "[win32_socket_system::recv] : socket" ) ;
-            so_log::log::error( "[win32_socket_system::recv] : WSAGetLastError " + 
+            so_log::global::error( "[win32_socket_system::recv] : socket" ) ;
+            so_log::global::error( "[win32_socket_system::recv] : WSAGetLastError " + 
                 std::to_string( WSAGetLastError() ) ) ;
             return so_net::failed ;
         }
@@ -161,8 +161,8 @@ so_net::result win32_socket_system::recv( ip4_binding_point_cref_t bp,
         auto const res = bind( sd.s, ( struct sockaddr * )&server, sizeof( server ) ) ;
         if( res == -1 )
         {
-            so_log::log::error( "[win32_socket_system::recv] : bind" ) ;
-            so_log::log::error( "[win32_socket_system::recv] : WSAGetLastError " + 
+            so_log::global::error( "[win32_socket_system::recv] : bind" ) ;
+            so_log::global::error( "[win32_socket_system::recv] : WSAGetLastError " + 
                 std::to_string( WSAGetLastError() ) ) ;
             return so_net::failed ;
         }
@@ -174,8 +174,8 @@ so_net::result win32_socket_system::recv( ip4_binding_point_cref_t bp,
         auto const res = setsockopt( sd.s, SOL_SOCKET, SO_REUSEADDR, char_cptr_t(&reuse_addr), sizeof(BOOL) ) ;
         if( res != 0 )
         {
-            so_log::log::error( "[win32_socket_system::recv] : setsockopt SO_REUSEADDR" ) ;
-            so_log::log::error( "[win32_socket_system::recv] : WSAGetLastError " +
+            so_log::global::error( "[win32_socket_system::recv] : setsockopt SO_REUSEADDR" ) ;
+            so_log::global::error( "[win32_socket_system::recv] : WSAGetLastError " +
                 std::to_string( WSAGetLastError() ) ) ;
             return so_net::failed ;
         }
@@ -185,13 +185,13 @@ so_net::result win32_socket_system::recv( ip4_binding_point_cref_t bp,
 
     {
         udp_socket_id_t sid = this_t::create_udp_socket_id() ; 
-        sdp = so_memory::memory::alloc( std::move( sd ), "" ) ;
+        sdp = so_memory::global::alloc( std::move( sd ), "" ) ;
 
         {
             so_thread::lock_guard_t lk( _mtx_udps ) ;
             
             auto const iter = _udps.find( sid ) ;
-            so_log::log::error_and_exit( iter != _udps.end(), 
+            so_log::global::error_and_exit( iter != _udps.end(), 
                 "[win32_socket_system::recv] : Id can not be stored mutliple times" ) ;
 
             _udps[ sid ] = sdp ;

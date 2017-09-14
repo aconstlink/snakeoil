@@ -4,8 +4,8 @@
 //------------------------------------------------------------
 #include "stb_glyph_atlas_creator.h"
 
-#include <snakeoil/io/io.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/io/global.h>
+#include <snakeoil/log/global.h>
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb/stb_truetype.h>
@@ -36,7 +36,7 @@ glyph_atlas_ptr_t glyph_atlas_creator::create_glyph_atlas( face_infos_cref_t fac
     {
         for( auto const & idp : face_infos )
         {
-            load_handles.push_back( so_io::io::load( idp.path ) ) ;
+            load_handles.push_back( so_io::global::load( idp.path ) ) ;
         }
 
         for( auto & lh : load_handles )
@@ -46,13 +46,13 @@ glyph_atlas_ptr_t glyph_atlas_creator::create_glyph_atlas( face_infos_cref_t fac
                 if( so_io::no_success( res ) ) return ;
 
                 stbtt_fontinfo font ;
-                uchar_ptr_t raw_data = so_memory::memory::alloc_raw<uchar_t>( sib ) ;
+                uchar_ptr_t raw_data = so_memory::global::alloc_raw<uchar_t>( sib ) ;
                 memcpy( raw_data, din, sib ) ;
 
                 int const stb_res = stbtt_InitFont( &font, raw_data,
                     stbtt_GetFontOffsetForIndex( raw_data, 0 ) ) ;
 
-                so_log::log::error_and_exit( stb_res == 0,
+                so_log::global::error_and_exit( stb_res == 0,
                     "[so_stb::glyph_atlas_creator::create_glyph_atlas] : stbtt_InitFont" ) ;
 
                 font_data_t fd ;

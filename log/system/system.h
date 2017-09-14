@@ -27,6 +27,11 @@ namespace so_log
 
     public:
 
+        static this_ptr_t create( void_t ) ;
+        static void_t destroy( this_ptr_t ) ;
+
+    public:
+
         system( void_t ) ;
         virtual ~system( void_t ) ;
 
@@ -34,6 +39,7 @@ namespace so_log
         virtual result add_logger( logger_ptr_t lptr ) ;
         virtual logger_ptr_t set_default_logger( logger_ptr_t lptr ) ;
     };
+    so_typedef( system ) ;
 }
 
 #endif

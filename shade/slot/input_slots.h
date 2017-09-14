@@ -15,6 +15,8 @@
 #include <snakeoil/std/string/string.hpp>
 #include <snakeoil/std/container/vector.hpp>
 
+#include <functional>
+
 namespace so_shade
 {
     

@@ -38,7 +38,7 @@ namespace so_shade
             if( so_core::is_not_nullptr(rhv._data_ptr) )
             {
                 _sib = rhv._sib ;
-                _data_ptr = so_memory::memory::alloc( _sib ) ;
+                _data_ptr = so_memory::global::alloc( _sib ) ;
                 std::memcpy( _data_ptr, rhv._data_ptr, _sib ) ;
             }
         }
@@ -51,7 +51,7 @@ namespace so_shade
 
         ~variable( void_t )
         {
-            so_memory::memory::dealloc( _data_ptr ) ;
+            so_memory::global::dealloc( _data_ptr ) ;
         }
 
     public:
@@ -64,7 +64,7 @@ namespace so_shade
             if( so_core::is_not_nullptr(rhv._data_ptr) )
             {
                 _sib = rhv._sib ;
-                _data_ptr = so_memory::memory::alloc( _sib ) ;
+                _data_ptr = so_memory::global::alloc( _sib ) ;
                 std::memcpy( _data_ptr, rhv._data_ptr, _sib ) ;
             }
 
@@ -85,7 +85,7 @@ namespace so_shade
         void_t create_default_value( T const & v )
         {
             _sib = sizeof( T ) ;
-            _data_ptr = void_ptr_t(so_memory::memory::alloc<T>( v )) ;
+            _data_ptr = void_ptr_t(so_memory::global::alloc<T>( v )) ;
         }
 
         template< typename T >

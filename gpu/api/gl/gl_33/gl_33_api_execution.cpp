@@ -47,7 +47,7 @@
 #include "../../../sync/sync.h"
 
 #include "../gl_any/log.h" // gl
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_gpu ;
 using namespace so_gpu::so_gl ;
@@ -102,7 +102,7 @@ so_gpu::result gl_33_api::execute( render_config_info_cref_t info )
 
     if( so_gpu::no_success( this_t::prepare_config( config_api->id, info.config_ptr, info.variable_set_index ) ) )
     {
-        so_log::log::error("[gl_33_api::execute] : prepare_config") ;
+        so_log::global::error("[gl_33_api::execute] : prepare_config") ;
         return so_gpu::failed ;
     }
 
@@ -167,7 +167,7 @@ so_gpu::result gl_33_api::execute( so_gpu::feedback_buffer_ptr_t ptr, render_con
 
     if( so_gpu::no_success( this_t::prepare_config( config_api->id, info.config_ptr, info.variable_set_index ) ) )
     {
-        so_log::log::error("[gl_33_api::execute] : prepare_config") ;
+        so_log::global::error("[gl_33_api::execute] : prepare_config") ;
         return so_gpu::failed ;
     }
 
@@ -222,7 +222,7 @@ so_gpu::result gl_33_api::use_feedback_buffer( so_gpu::feedback_buffer_ptr_t ptr
         {
             if( api_object_helper_t::has_no_driver_object(ptr) )
             {
-                so_log::log::warning("[gl_33_api::bind_feedback] : buffer in feedback buffer has no driver object.") ;
+                so_log::global::warning("[gl_33_api::bind_feedback] : buffer in feedback buffer has no driver object.") ;
                 continue ;
             }
             
@@ -243,7 +243,7 @@ so_gpu::result gl_33_api::use_feedback_buffer( so_gpu::feedback_buffer_ptr_t ptr
             }
             else
             {
-                so_log::log::warning("[gl_33_api::bind_feedback] : unsupported buffer type.") ;
+                so_log::global::warning("[gl_33_api::bind_feedback] : unsupported buffer type.") ;
             }
             
             if( bid != GLuint(-1) )
@@ -436,7 +436,7 @@ so_gpu::result gl_33_api::use_texture( GLuint tex_unit, GLuint sampler_id, textu
         
     if( ptr->has_state_changed() )
     {
-        if( so_log::log::error( ptr->get_image() == nullptr, "[gl_33_api::use_texture] : invalid image" ) ) 
+        if( so_log::global::error( ptr->get_image() == nullptr, "[gl_33_api::use_texture] : invalid image" ) ) 
             return so_gpu::failed ;
 
         if( ptr->get_image()->get_type() == so_gpu::image_type::color_2d )
@@ -505,13 +505,13 @@ so_gpu::result gl_33_api::prepare_config( GLuint vao_id, config_ptr_t config_ptr
     
     if( so_gpu::no_success( this_t::use_vao( vao_id, config_ptr ) ) )
     {
-        so_log::log::error("[gl_33_api::execute] : use_vao") ;  
+        so_log::global::error("[gl_33_api::execute] : use_vao") ;  
         return so_gpu::failed ;
     }
 
     if( so_gpu::no_success( this_t::use_program( program_api->id, prog_ptr ) ) )
     {
-        so_log::log::error("[gl_33_api::execute] : use_program") ;
+        so_log::global::error("[gl_33_api::execute] : use_program") ;
     }
     
     if(config_ptr->has_config_changed())
@@ -557,11 +557,11 @@ so_gpu::result gl_33_api::bind_attributes( GLuint /*id*/, config_ptr_t config_pt
     ivertex_buffer_ptr_t ivb_ptr = dynamic_cast<ivertex_buffer_ptr_t>(vb_ptr) ;
     if( ivb_ptr == nullptr ) return so_gpu::failed ;
 
-    if( so_log::log::error( api_object_helper_t::has_no_driver_object(prog), 
+    if( so_log::global::error( api_object_helper_t::has_no_driver_object(prog), 
         "[gl_33_api::bind_attributes] : no valid program object" ) )
         return so_gpu::failed ;
 
-    if( so_log::log::error( api_object_helper_t::has_no_driver_object(vb_ptr), 
+    if( so_log::global::error( api_object_helper_t::has_no_driver_object(vb_ptr), 
         "[gl_33_api::bind_attributes] : no valid vertex buffer object" ) ) 
         return so_gpu::failed ;
 
@@ -647,7 +647,7 @@ so_gpu::result gl_33_api::bind_uniforms( config_ptr_t conf_ptr, size_t var_set_i
 {
     program_ptr_t prog = conf_ptr->get_program() ;
     auto * var_set_ptr = conf_ptr->get_variable_set(var_set_id) ;
-    if( so_log::log::error( var_set_ptr == nullptr, 
+    if( so_log::global::error( var_set_ptr == nullptr, 
         "[gl_33_api::bind_uniforms] : invalid var set id." ) )
         return so_gpu::failed ;
 
@@ -655,16 +655,16 @@ so_gpu::result gl_33_api::bind_uniforms( config_ptr_t conf_ptr, size_t var_set_i
     {
         auto * shadar = prog->find_shader_variable( item.second ) ;
         auto * var_ptr = item.first ;
-        if( so_log::log::warning(shadar == nullptr,
+        if( so_log::global::warning(shadar == nullptr,
             "[gl_33_api::bind_uniforms] : no corresponding shader variable : " + item.second) ) 
         {
             // kick out?
             continue ; 
         }
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(shadar),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(shadar),
             "[gl_33_api::bind_uniforms] : no corresponding shader variable : "+ item.second) ) 
             continue ; 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(var_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(var_ptr),
             "[gl_33_api::bind_uniforms] : no config variable : " + item.second) ) 
             continue ; 
 
@@ -682,7 +682,7 @@ so_gpu::result gl_33_api::bind_textures( config_ptr_t conf_ptr, size_t var_set_i
 {
     program_ptr_t prog = conf_ptr->get_program() ;
     auto * var_set_ptr = conf_ptr->get_variable_set(var_set_id) ;
-    if( so_log::log::error( var_set_ptr == nullptr, "[gl_33_api::bind_uniforms] : invalid var set id." ) )
+    if( so_log::global::error( var_set_ptr == nullptr, "[gl_33_api::bind_uniforms] : invalid var set id." ) )
         return so_gpu::failed ;
 
     // bind gl shader variable location to textures
@@ -691,11 +691,11 @@ so_gpu::result gl_33_api::bind_textures( config_ptr_t conf_ptr, size_t var_set_i
         auto * shadar = prog->find_shader_variable( item.second ) ;
         auto * var_ptr = item.first ;
         
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(shadar),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(shadar),
             "[gl_33_api::bind_uniforms] : no corresponding shader variable:" + item.second) ) 
             continue ; 
 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(var_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(var_ptr),
             "[gl_33_api::bind_uniforms] : no config variable : " + item.second) ) 
             continue ; 
 
@@ -711,11 +711,11 @@ so_gpu::result gl_33_api::bind_textures( config_ptr_t conf_ptr, size_t var_set_i
         auto * shadar = prog->find_shader_variable( item.second ) ;
         auto * var_ptr = item.first ;
         
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(shadar),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(shadar),
             "[gl_33_api::bind_uniforms] : no corresponding shader variable : " + item.second) ) 
             continue ; 
 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(var_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(var_ptr),
             "[gl_33_api::bind_uniforms] : no config variable : " + item.second) ) 
             continue ; 
 
@@ -732,12 +732,12 @@ so_gpu::result gl_33_api::bind_textures( config_ptr_t conf_ptr, size_t var_set_i
 so_gpu::result gl_33_api::commit_uniforms( config_ptr_t conf_ptr, size_t var_set_index ) 
 {
     auto * var_set_ptr = conf_ptr->get_variable_set(var_set_index) ;
-    if( so_log::log::error( var_set_ptr == nullptr, "[gl_33_api::commit_uniforms] : invalid var set id." ) )
+    if( so_log::global::error( var_set_ptr == nullptr, "[gl_33_api::commit_uniforms] : invalid var set id." ) )
         return so_gpu::failed ;
 
     for( auto item : var_set_ptr->data_variables() )
     {
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(item.first),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(item.first),
             "[gl_33_api::bind_uniforms] : no config variable : " + item.second ) ) 
             continue ; 
         auto * variable_api_obj = api_object_helper_t::get_cast_api_object< drv::variable> (item.first) ;        
@@ -752,7 +752,7 @@ so_gpu::result gl_33_api::commit_uniforms( config_ptr_t conf_ptr, size_t var_set
 so_gpu::result gl_33_api::commit_textures( config_ptr_t conf_ptr, size_t var_set_index, GLuint & tex_unit ) 
 {
     auto * var_set_ptr = conf_ptr->get_variable_set(var_set_index) ;
-    if( so_log::log::error( var_set_ptr == nullptr, 
+    if( so_log::global::error( var_set_ptr == nullptr, 
         "[gl_33_api::commit_textures] : invalid var set id." ) )
         return so_gpu::failed ;
 
@@ -762,15 +762,15 @@ so_gpu::result gl_33_api::commit_textures( config_ptr_t conf_ptr, size_t var_set
         auto * var_ptr = item.first ;
         auto * tex_ptr = var_ptr->get_texture() ;
         
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(var_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(var_ptr),
             "[gl_33_api::commit_textures] : no api object in variable: " + item.second) ) 
             continue ; 
 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(tex_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(tex_ptr),
             "[gl_33_api::commit_textures] : no api object in texture: " + item.second) ) 
             continue ; 
 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(tex_ptr->get_image()),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(tex_ptr->get_image()),
             "[gl_33_api::commit_textures] : no api object in image: " + item.second) ) 
             continue ; 
 
@@ -798,11 +798,11 @@ so_gpu::result gl_33_api::commit_textures( config_ptr_t conf_ptr, size_t var_set
         auto * var_ptr = item.first ;
         auto * buf_ptr = var_ptr->get_buffer() ;
         
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(var_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(var_ptr),
             "[gl_33_api::commit_textures] : no api object in variable: " + item.second) ) 
             continue ; 
 
-        if( so_log::log::error(api_object_helper_t::has_no_driver_object(buf_ptr),
+        if( so_log::global::error(api_object_helper_t::has_no_driver_object(buf_ptr),
             "[gl_33_api::commit_textures] : no api object in texture: " + item.second) ) 
             continue ; 
 

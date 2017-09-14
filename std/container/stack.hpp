@@ -10,6 +10,7 @@
 #include <snakeoil/core/macros/typedef.h>
 
 #include <vector>
+#include <functional>
 
 namespace so_std
 {

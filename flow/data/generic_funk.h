@@ -10,6 +10,8 @@
 
 #include "data.hpp"
 
+#include <functional>
+
 namespace so_flow
 {
     

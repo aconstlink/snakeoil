@@ -24,10 +24,7 @@ namespace so_appx
     public:
 
         virtual so_gpx::render_system_ptr_t render_system( void_t ) = 0 ;
-
-        /// request the device system
-        virtual so_device::idevice_system_ptr_t dev( void_t ) = 0 ;
-
+        
         /// request the imex system for im/export stuff
         virtual so_imex::isystem_ptr_t  imexsys( void_t ) = 0 ;
 

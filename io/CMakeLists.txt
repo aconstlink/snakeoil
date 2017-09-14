@@ -8,9 +8,9 @@ set( SOURCES
     "result.h"
     "protos.h"
     "typedefs.h"
-    "io.h"
-    "io.cpp"
-    
+    "global.h"
+    "global.cpp"
+
     "handle/handle.h"
     "handle/handle.cpp"
    

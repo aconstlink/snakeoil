@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "imported_from.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 using namespace so_imex::so_node ;

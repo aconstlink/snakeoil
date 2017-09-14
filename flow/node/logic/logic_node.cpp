@@ -5,7 +5,7 @@
 #include "ilogic.h"
 #include "logic_node.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_flow ;
 

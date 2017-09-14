@@ -11,7 +11,7 @@
 
 #include "system/system_module.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_device ;
 
@@ -60,7 +60,7 @@ so_device::result module_registry::register_module( so_device::imodule_ptr_t mpt
 {
     if( so_core::is_nullptr( mptr ) )
     {
-        so_log::log::warning( "[module_registry::register_module] : nullptr not allowed." ) ;
+        so_log::global::warning( "[module_registry::register_module] : nullptr not allowed." ) ;
         return so_device::invalid_argument ;
     }
 
@@ -70,7 +70,7 @@ so_device::result module_registry::register_module( so_device::imodule_ptr_t mpt
         auto const iter = std::find( _mods.begin(), _mods.end(), mptr ) ;
         if( iter != _mods.end() )
         {
-            so_log::log::error( "[module_registry::register_module] : module already added" ) ;
+            so_log::global::error( "[module_registry::register_module] : module already added" ) ;
             return so_device::failed ;
         }
 
@@ -123,7 +123,7 @@ void_t module_registry::create_devices( so_device::imidi_api_ptr_t aptr )
 {
     if( so_core::is_nullptr( aptr ) )
     {
-        so_log::log::warning( "[module_registry::create_devices] : nullptr api" ) ;
+        so_log::global::warning( "[module_registry::create_devices] : nullptr api" ) ;
         return ;
     }
 

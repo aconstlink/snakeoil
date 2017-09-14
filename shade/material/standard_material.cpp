@@ -4,7 +4,7 @@
 //------------------------------------------------------------
 #include "standard_material.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_shade ;
 using namespace so_shade::so_material ;
@@ -111,7 +111,7 @@ so_shade::result standard_material::add_texture( size_t layer, so_shade::texture
 {
     if( _texture_layers.size() <= layer )
     {
-        so_log::log::error( "[standard_material::add_texture] : invalid layer index" ) ;
+        so_log::global::error( "[standard_material::add_texture] : invalid layer index" ) ;
         return so_shade::invalid_argument ;
     }
 
@@ -138,13 +138,13 @@ bool_t standard_material::get_texture( size_t layer, size_t tex,
 {
     if( layer >= _texture_layers.size() )
     {
-        so_log::log::error( "[standard_material::get_texture] : invalid texture layer index" ) ;
+        so_log::global::error( "[standard_material::get_texture] : invalid texture layer index" ) ;
         return false ;
     }
 
     if( tex >= _texture_layers[layer].texture_infos.size() )
     {
-        so_log::log::error( "[standard_material::get_texture] : invalid texture index" ) ;
+        so_log::global::error( "[standard_material::get_texture] : invalid texture index" ) ;
         return false ;
     }
 
@@ -171,7 +171,7 @@ bool_t standard_material::get_color_layer( size_t i, so_math::vec3f_out_t vout )
 {
     if( i >= _color_layers.size() ) 
     {
-        so_log::log::warning( 
+        so_log::global::warning( 
             "[so_shade::standard_material::get_color_layer] : incorrect index" ) ;
         return false ;
     }

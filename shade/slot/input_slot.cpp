@@ -6,7 +6,7 @@
 
 #include "output_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 using namespace so_shade ;
@@ -75,13 +75,13 @@ so_shade::result input_slot::connect( so_shade::ioutput_slot_ptr_t os_ptr )
     // ask the connector first, if the connection is valid
     if( so_core::is_not( this_t::call_on_connect( this, os_ptr, connect_direction::output_to_input ) ) )
     {
-        so_log::log::error( "[so_shade::input_slot::connect] : invalid connection" ) ;
+        so_log::global::error( "[so_shade::input_slot::connect] : invalid connection" ) ;
         return so_shade::invalid_argument ;
     }
 
     {
         auto const res = os_ptr->connect( this ) ;
-        if( so_log::log::error( so_shade::no_success(res), 
+        if( so_log::global::error( so_shade::no_success(res), 
             "[so_shade::input_slot::connect] : unable to connect to output" ) )
         {
             return res ;

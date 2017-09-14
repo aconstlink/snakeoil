@@ -101,7 +101,7 @@ namespace so_resource
         /// at its resource manager
         void_t invalidate( void_t )
         {
-            so_log::log::warning( _local_ref_count != 0, 
+            so_log::global::warning( _local_ref_count != 0, 
                 "[so_resource::handle::invalidate] : not all local references released" ) ;
 
             _key = so_resource::key_t() ;
@@ -123,7 +123,7 @@ namespace so_resource
 
         ~handle( void_t )
         {
-            so_log::log::warning( _local_ref_count != 0, 
+            so_log::global::warning( _local_ref_count != 0, 
                 "[so_resource::handle::~handle] : not all local references released" ) ;
 
             if( so_core::is_not_nullptr(_manager_ptr) )
@@ -158,7 +158,7 @@ namespace so_resource
 
         type_ptr_t operator -> ( void_t ) 
         {
-            so_log::log::error_and_exit( so_core::is_nullptr(_ptr), 
+            so_log::global::error_and_exit( so_core::is_nullptr(_ptr), 
                 "[so_resource::handle::operator ->()] : fast access ptr == nullptr" ) ;
 
             return _ptr ;
@@ -166,7 +166,7 @@ namespace so_resource
 
         type_cptr_t operator -> ( void_t ) const
         {
-            so_log::log::error_and_exit( so_core::is_nullptr( _ptr ),
+            so_log::global::error_and_exit( so_core::is_nullptr( _ptr ),
                 "[so_resource::handle::operator ->()] : fast access ptr == nullptr" ) ;
 
             return _ptr ;
@@ -182,7 +182,7 @@ namespace so_resource
 
         void_t release_local( void_t ) 
         {
-            so_log::log::error_and_exit( _local_ref_count == 0,
+            so_log::global::error_and_exit( _local_ref_count == 0,
                 "[so_resource::handle::release_local] : _ref_count" ) ;
 
             --_local_ref_count ;

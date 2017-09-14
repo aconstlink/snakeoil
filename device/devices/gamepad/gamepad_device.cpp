@@ -9,7 +9,7 @@
 
 #include "../notification/iuser_notify.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <algorithm>
 
@@ -170,7 +170,7 @@ void_t gamepad_device::update( gamepad_messages_ref_t msgs_out )
 
             if( iter == _out_datas.end() )
             {
-                so_log::log::error( "[so_device::gamepad_device::update] : \
+                so_log::global::error( "[so_device::gamepad_device::update] : \
                                         Item does not exist: " + item.key ) ;
                 continue ;
             }
@@ -180,7 +180,7 @@ void_t gamepad_device::update( gamepad_messages_ref_t msgs_out )
                 auto const res = item.funk( iter->cptr ) ;
                 if( so_core::is_not( res ) )
                 {
-                    so_log::log::error( so_core::is_not( res ),
+                    so_log::global::error( so_core::is_not( res ),
                         "[so_device::gamepad_device::update] : component found but trigger funk failed : " +
                         item.key ) ;
                     continue ;
@@ -270,7 +270,7 @@ so_device::result gamepad_device::add_component( so_device::key_cref_t name,
 
     if( iter != _in_datas.end() )
     {
-        so_log::log::warning( "[so_device::midi_device::add_component] : component already added" ) ;
+        so_log::global::warning( "[so_device::midi_device::add_component] : component already added" ) ;
         return so_device::invalid_argument ;
     }
 
@@ -298,7 +298,7 @@ so_device::result gamepad_device::add_component( so_device::key_cref_t name,
 
     if( iter != _out_datas.end() )
     {
-        so_log::log::warning( "[so_device::midi_device::add_component] : component already added" ) ;
+        so_log::global::warning( "[so_device::midi_device::add_component] : component already added" ) ;
         return so_device::invalid_argument ;
     }
 

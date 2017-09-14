@@ -11,6 +11,7 @@ namespace so_thread
 {
     so_class_proto_typedefs( itask_scheduler ) ;
     so_class_proto_typedefs( task_scheduler ) ;
+    so_class_proto_typedefs( job_scheduler ) ;
     so_class_proto_typedefs( itask ) ;
     so_class_proto_typedefs( task_graph ) ;
 

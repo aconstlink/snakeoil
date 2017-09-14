@@ -8,7 +8,7 @@
 #include "../slot/output_slot.h"
 #include "../kernel/ikernel.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_shade ;
 using namespace so_shade::so_graph ;
@@ -102,7 +102,7 @@ generic_funk_node::generic_funk_node( so_shade::so_kernel::ikernel_ptr_t kptr ) 
                 "[so_shade::generic_funk_node::generic_funk_node] : input_slot: " + arg_name ) ;
 
             auto const res = base_t::add_input_slot( is_ptr ) ;
-            so_log::log::error( so_shade::no_success(res), 
+            so_log::global::error( so_shade::no_success(res), 
                 "[so_shade::generic_funk_node::generic_funk_node] : add input slot" ) ;
 
             is_ptr->register_connector( con_ptr ) ;
@@ -119,7 +119,7 @@ generic_funk_node::generic_funk_node( so_shade::so_kernel::ikernel_ptr_t kptr ) 
                 "[so_shade::generic_funk_node::generic_funk_node] : output_slot: " + out_name ) ;
 
             auto const res = base_t::add_output_slot( os_ptr ) ;
-            so_log::log::error( so_shade::no_success( res ),
+            so_log::global::error( so_shade::no_success( res ),
                 "[so_shade::generic_funk_node::generic_funk_node] : add output slot" ) ;
 
             os_ptr->register_connector( con_ptr );

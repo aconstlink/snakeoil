@@ -12,7 +12,7 @@
 #include <snakeoil/std/container/list.hpp>
 #include <snakeoil/std/container/vector.hpp>
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 
 #include <snakeoil/core/assert.h>
 #include <snakeoil/core/types.hpp>
@@ -32,7 +32,7 @@ namespace so_imex
     so_typedefs( so_std::list<key_t>, key_list ) ;
     so_typedefs( so_std::vector<so_std::string_t>, file_extension_names ) ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 }
 
 #endif

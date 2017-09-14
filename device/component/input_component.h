@@ -18,17 +18,17 @@ namespace so_device
 
             static component_ptr_t create( so_memory::purpose_cref_t p )
             {
-                return so_memory::memory::alloc( component_t(), p ) ;
+                return so_memory::global::alloc( component_t(), p ) ;
             }
 
             static component_ptr_t create( component_rref_t rhv, so_memory::purpose_cref_t p )
             {
-                return so_memory::memory::alloc( std::move( rhv ), p ) ;
+                return so_memory::global::alloc( std::move( rhv ), p ) ;
             }
 
             static void_t destroy( component_ptr_t ptr )
             {
-                so_memory::memory::dealloc( ptr ) ;
+                so_memory::global::dealloc( ptr ) ;
             }
 
             virtual void_t destroy( void_t )

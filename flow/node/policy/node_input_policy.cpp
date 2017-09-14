@@ -7,7 +7,7 @@
 
 #include "../../slot/iinput_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_flow ;
 using namespace so_flow::so_policy ;
@@ -27,7 +27,7 @@ node_input_policy::this_ref_t node_input_policy::operator = ( this_rref_t rhv )
 {
     for( auto & item : _inputs )
     {
-        so_log::log::warning( item.second.touched != 0,
+        so_log::global::warning( item.second.touched != 0,
             "[so_flow::node_input_policy::~node_input_policy] : slot is touched but will be deleted" ) ;
         item.second.is_ptr->destroy() ;
     }
@@ -41,7 +41,7 @@ node_input_policy::~node_input_policy( void_t )
 {
     for( auto & item : _inputs )
     {
-        so_log::log::warning( item.second.touched != 0, 
+        so_log::global::warning( item.second.touched != 0, 
             "[so_flow::node_input_policy::~node_input_policy] : slot is touched but will be deleted" ) ;
         item.second.is_ptr->destroy() ;
     }
@@ -103,7 +103,7 @@ so_flow::result node_input_policy::destroy_input_slot( so_flow::key_cref_t key )
         if(iter == _inputs.end())
             return so_flow::invalid_argument ;
 
-        if( so_log::log::warning( iter->second.touched != 0, 
+        if( so_log::global::warning( iter->second.touched != 0, 
             "[so_flow::node_input_policy::destroy_input_slot] : touched slot will not be destroyed : " +
             key ) ) return so_flow::slot_is_touched ;
 
@@ -141,7 +141,7 @@ bool_t node_input_policy::untouch( so_flow::key_in_t key_in )
     if( iter == _inputs.end() )
         return false ;
 
-    so_log::log::error_and_exit( iter->second.touched == 0, 
+    so_log::global::error_and_exit( iter->second.touched == 0, 
         "[so_flow::node_input_policy::untouch] : handle can not be untouched. programming error" ) ;
 
     iter->second.touched-- ;

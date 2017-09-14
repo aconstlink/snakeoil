@@ -9,6 +9,8 @@
 
 #include <snakeoil/std/container/vector.hpp>
 
+#include <functional>
+
 namespace so_shade
 {
     namespace so_shader

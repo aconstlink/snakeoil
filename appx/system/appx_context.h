@@ -16,7 +16,6 @@ namespace so_appx
     private:
 
         so_gpx::render_system_ptr_t _rsys_ptr = nullptr ;
-        so_device::idevice_system_ptr_t _dev_ptr = nullptr ;
         so_imex::isystem_ptr_t _imexs_ptr = nullptr ;
 
     private:
@@ -29,13 +28,11 @@ namespace so_appx
         appx_context( this_rref_t ) ;
         
         so_appx::result set_render_system( so_gpx::render_system_ptr_t ) ;
-        so_appx::result set_dev( so_device::idevice_system_ptr_t ) ;     
         so_appx::result set_imexs( so_imex::isystem_ptr_t ) ;
 
     public: // interface
 
         virtual so_gpx::render_system_ptr_t render_system( void_t ) ;
-        virtual so_device::idevice_system_ptr_t dev( void_t ) ;
         virtual so_imex::isystem_ptr_t  imexsys( void_t ) ;
         
     };

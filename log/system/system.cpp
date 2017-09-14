@@ -26,6 +26,20 @@ system::~system( void_t )
 }
 
 //*************************************************************************************
+system::this_ptr_t system::create( void_t )
+{
+    /// do not use snakeoil memory
+    /// at the moment, snakeoil memory is above log
+    return new this_t() ;
+}
+
+//*************************************************************************************
+void_t system::destroy( this_ptr_t ptr )
+{
+    delete ptr ;
+}
+
+//*************************************************************************************
 result system::log( so_log::log_level ll, std::string const & msg )
 {
     for( auto * logger : _loggers )

@@ -48,28 +48,28 @@ namespace so_property
 
         static this_ptr_t create( so_memory::purpose_cref_t p )
         {
-            return so_memory::memory::alloc( this_t(), p ) ;
+            return so_memory::global::alloc( this_t(), p ) ;
         }
 
         static this_ptr_t create( this_rref_t prop, so_memory::purpose_cref_t p )
         {
-            return so_memory::memory::alloc( std::move( prop ), p ) ;
+            return so_memory::global::alloc( std::move( prop ), p ) ;
         }
 
         static this_ptr_t create( so_std::utf8_cref_t name, value_cref_t v, so_memory::purpose_cref_t p )
         {
-            return so_memory::memory::alloc( this_t( name, v ), p ) ;
+            return so_memory::global::alloc( this_t( name, v ), p ) ;
         }
 
         static this_ptr_t create( so_std::utf8_cref_t name, value_cref_t v, value_cref_t min_val, value_cref_t max_val,
             so_memory::purpose_cref_t p )
         {
-            return so_memory::memory::alloc( this_t( name, v, min_val, max_val ), p ) ;
+            return so_memory::global::alloc( this_t( name, v, min_val, max_val ), p ) ;
         }
 
         static void_t destroy( this_ptr_t ptr )
         {
-            so_memory::memory::dealloc( ptr ) ;
+            so_memory::global::dealloc( ptr ) ;
         }
 
     public:

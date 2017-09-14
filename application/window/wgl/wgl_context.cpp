@@ -13,7 +13,7 @@
 
 #include <snakeoil/std/string/split.hpp>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_app ;
 using namespace so_app::so_win32 ;
@@ -78,7 +78,7 @@ so_app::result wgl_context::activate( void_t )
 
     _hdc = GetDC( _hwnd ) ;
 
-    if( so_log::log::error( wglMakeCurrent( _hdc, _hrc ) == FALSE, 
+    if( so_log::global::error( wglMakeCurrent( _hdc, _hrc ) == FALSE, 
         "[wgl_context::activate] : wglMakeCurrent") ) 
         return so_app::failed_wgl ;
         
@@ -90,11 +90,11 @@ so_app::result wgl_context::deactivate( void_t )
 {
     if( _hdc == NULL ) return so_app::ok ;
 
-    if( so_log::log::error( wglMakeCurrent( 0,0 ) == FALSE, 
+    if( so_log::global::error( wglMakeCurrent( 0,0 ) == FALSE, 
         "[wgl_context::deactivate] : wglMakeCurrent") ) 
         return so_app::failed_wgl ;
 
-    if( so_log::log::error( ReleaseDC( _hwnd, _hdc ) == FALSE, 
+    if( so_log::global::error( ReleaseDC( _hwnd, _hdc ) == FALSE, 
         "[wgl_context::deactivate] : ReleaseDC") ) 
         return so_app::failed_wgl ;
     
@@ -108,11 +108,11 @@ so_app::result wgl_context::vsync( bool_t on_off )
 {
     so_app::result const res = this_t::is_extension_supported("WGL_EXT_swap_control") ;
 
-    if( so_log::log::error( so_app::no_success(res), 
+    if( so_log::global::error( so_app::no_success(res), 
         "[wgl_context::vsync] : vsync not supported." ) ) 
         return res ;
     
-    if( so_log::log::error( so_gli::so_wgl::wgl::wglSwapInterval(on_off) != TRUE, 
+    if( so_log::global::error( so_gli::so_wgl::wgl::wglSwapInterval(on_off) != TRUE, 
         "[wgl_context::vsync] : wglSwapIntervalEXT" ) )
         return so_app::failed_wgl ;
 
@@ -125,7 +125,7 @@ so_app::result wgl_context::swap( void_t )
     if( _hdc == NULL ) 
         return so_app::invalid_win32_handle ;
 
-    if( so_log::log::error( SwapBuffers( _hdc ) == FALSE, 
+    if( so_log::global::error( SwapBuffers( _hdc ) == FALSE, 
         "[wgl_context::swap] : SwapBuffers") ) 
         return so_app::failed_wgl ;
     
@@ -141,13 +141,13 @@ irender_context_ptr_t wgl_context::create_shared_context( void_t )
 //***********************************************************************
 so_app::result wgl_context::create_context( gl_info_cref_t gli, iwindow_handle_ptr_t wnd_ptr ) 
 {
-    if( so_log::log::error( wnd_ptr == nullptr, 
+    if( so_log::global::error( wnd_ptr == nullptr, 
         "[wgl_context::create_context] : Window handle is nullptr" ) )
         return so_app::invalid_argument ;
     
     _hwnd = this_t::get_win32_handle(wnd_ptr) ;
     
-    if( so_log::log::error( _hwnd == NULL, 
+    if( so_log::global::error( _hwnd == NULL, 
         "[wgl_context::create_context] : Window handle is no win32 handle." ) )
         return so_app::invalid_argument ;
 
@@ -219,7 +219,7 @@ so_app::result wgl_context::get_gl_version( so_app::gl_version & version ) const
         if( err != GL_NO_ERROR )
         {
             so_std::string_t const es = std::to_string(err) ;
-            so_log::log::error( "[wgl_context::get_gl_version] : get gl major <"+es+">" ) ;
+            so_log::global::error( "[wgl_context::get_gl_version] : get gl major <"+es+">" ) ;
         }
     }
     {
@@ -228,7 +228,7 @@ so_app::result wgl_context::get_gl_version( so_app::gl_version & version ) const
         if( err != GL_NO_ERROR )
         {
             so_std::string_t es = std::to_string(err) ;
-            so_log::log::error( "[wgl_context::get_gl_version] : get gl minor <"+es+">" ) ;
+            so_log::global::error( "[wgl_context::get_gl_version] : get gl minor <"+es+">" ) ;
         }
     }
     version.major = major ;
@@ -244,7 +244,7 @@ void_t wgl_context::clear_now( so_math::vec4f_t const & vec )
     so_gli::gl::glClear( GL_COLOR_BUFFER_BIT ) ;
     
     GLenum const gler = so_gli::gl::glGetError() ;
-    so_log::log::error( gler != GL_NO_ERROR, "[wgl_context::clear_now] : glClear" ) ;
+    so_log::global::error( gler != GL_NO_ERROR, "[wgl_context::clear_now] : glClear" ) ;
 }
 
 //***********************************************************************
@@ -283,11 +283,11 @@ so_app::result wgl_context::create_the_context( gl_info_cref_t gli )
     // we still need to determine if OpenGL 3.x is supported.
     _hrc = wglCreateContext( hdc ) ;
 
-    if( so_log::log::error(_hrc == NULL, 
+    if( so_log::global::error(_hrc == NULL, 
         "[wgl_context::create_the_context] : Failed to create the temporary context.") ) 
         return failed_gfx_context_creation ;
 
-    if( so_log::log::error( wglMakeCurrent( hdc, _hrc ) == FALSE, 
+    if( so_log::global::error( wglMakeCurrent( hdc, _hrc ) == FALSE, 
         "[wgl_context::create_the_context] : wglMakeCurrent" ) )
     {
         return so_app::failed ;
@@ -347,7 +347,7 @@ so_app::result wgl_context::create_the_context( gl_info_cref_t gli )
     {
         this_t::activate() ;
         
-        so_log::log::warning( so_app::no_success( this_t::vsync( gli.vsync_enabled ) ), 
+        so_log::global::warning( so_app::no_success( this_t::vsync( gli.vsync_enabled ) ), 
             "[wgl_context::create_the_context] : vsync setting failed." ) ;
         
         this_t::deactivate() ;
@@ -358,7 +358,7 @@ so_app::result wgl_context::create_the_context( gl_info_cref_t gli )
         size_t const milli = size_t(std::chrono::duration_cast<std::chrono::milliseconds>(
             local_clock_t::now() - t1).count()) ;
 
-        so_log::log::status("[wgl_context] : created [" + std::to_string(milli) +" ms]" ) ;
+        so_log::global::status("[wgl_context] : created [" + std::to_string(milli) +" ms]" ) ;
     }
 
     return so_app::ok ;
@@ -372,12 +372,12 @@ HGLRC wgl_context::create_the_shared( void_t )
 
     gl_version version ;
 
-    so_log::log::error( so_app::no_success( this_t::activate() ), 
+    so_log::global::error( so_app::no_success( this_t::activate() ), 
         "[wgl_context] : could not activate wgl context." ) ;
 
     if( so_app::no_success( this_t::get_gl_version( version ) ) )
     {
-        so_log::log::error("[wgl_context::create_shared_context] : Requested version failed.") ;
+        so_log::global::error("[wgl_context::create_shared_context] : Requested version failed.") ;
         wglMakeCurrent( 0, 0 ) ;
         return NULL ;
     }
@@ -394,7 +394,7 @@ HGLRC wgl_context::create_the_shared( void_t )
     HGLRC shared_context = so_gli::so_wgl::wgl::wglCreateContextAttribs( _hdc, _hrc, attribList ) ;
 
     /// don't forget to init
-    so_log::log::error( so_gli::no_success( so_gli::gl::init() ), 
+    so_log::global::error( so_gli::no_success( so_gli::gl::init() ), 
         "[wgl_context::create_the_shared] : gl init failed." ) ;
 
     this_t::deactivate() ;
@@ -403,7 +403,7 @@ HGLRC wgl_context::create_the_shared( void_t )
     {
         size_t const milli = 
             size_t(std::chrono::duration_cast<std::chrono::milliseconds>( local_clock_t::now() - t1).count()) ;
-        so_log::log::status("[wgl_context] : shared created [" + 
+        so_log::global::status("[wgl_context] : shared created [" + 
             std::to_string(milli) +" ms]" ) ;
     }
 

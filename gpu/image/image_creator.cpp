@@ -12,7 +12,7 @@
 #include <snakeoil/math/vector/vector3.hpp>
 #include <snakeoil/math/vector/vector4.hpp>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 using namespace so_gpu ;
@@ -176,7 +176,7 @@ void_t image_creator::construct_from( so_imex::image_ptr_t imex_ptr )
         }
         else
         {
-            so_log::log::warning("num components not available in test") ;
+            so_log::global::warning("num components not available in test") ;
         }
     }
     // else float ... here.

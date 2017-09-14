@@ -11,7 +11,7 @@
 #include <snakeoil/audio/api/null/null_api.h>
 #include <snakeoil/audio/api/api_creator.h>
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 #include <algorithm>
 #include <chrono>
@@ -127,7 +127,7 @@ audio_system::audio_system( void_t )
                 auto const res = sdp->aptr->initialize() ;
                 if( so_core::is_not(res) )
                 {
-                    so_log::log::error( "[audio_system::audio_system] : initialize for " +
+                    so_log::global::error( "[audio_system::audio_system] : initialize for " +
                         so_audio::to_string( sdp->aptr->get_type() ) ) ;
                     return ;
                 }

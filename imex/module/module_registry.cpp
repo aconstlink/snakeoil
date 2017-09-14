@@ -14,9 +14,10 @@
 #include <snakeoil/property/property_sheet.h>
 #include <snakeoil/property/properties/group_property.h>
 
+#include <snakeoil/thread/global.h>
 #include <snakeoil/thread/task/tasks.h>
 #include <snakeoil/thread/scheduler.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_imex ;
 
@@ -122,7 +123,7 @@ so_imex::result module_registry::register_module( so_imex::iscene_module_ptr_t m
         auto iter2 = std::find( iter->second.begin(), iter->second.end(), mod_ptr ) ;
         if( iter2 != iter->second.end() )
         {
-            so_log::log::error("[so_imex::module_registry::register_module] : module already contained") ;
+            so_log::global::error("[so_imex::module_registry::register_module] : module already contained") ;
             continue ;
         }
         iter->second.push_back( mod_ptr ) ;
@@ -149,7 +150,7 @@ so_imex::result module_registry::register_module( so_imex::imesh_module_ptr_t mo
         auto iter2 = std::find( iter->second.begin(), iter->second.end(), mod_ptr );
         if( iter2 != iter->second.end() )
         {
-            so_log::log::error( "[so_imex::module_registry::register_module] : module already contained" );
+            so_log::global::error( "[so_imex::module_registry::register_module] : module already contained" );
             continue;
         }
         iter->second.push_back( mod_ptr );
@@ -176,7 +177,7 @@ so_imex::result module_registry::register_module( so_imex::iimage_module_ptr_t m
         auto iter2 = std::find( iter->second.begin(), iter->second.end(), mod_ptr );
         if( iter2 != iter->second.end() )
         {
-            so_log::log::error( "[so_imex::module_registry::register_module] : module already contained" );
+            so_log::global::error( "[so_imex::module_registry::register_module] : module already contained" );
             continue;
         }
         iter->second.push_back( mod_ptr );
@@ -203,7 +204,7 @@ so_imex::result module_registry::register_module( so_imex::iaudio_module_ptr_t m
         auto iter2 = std::find( iter->second.begin(), iter->second.end(), mod_ptr );
         if( iter2 != iter->second.end() )
         {
-            so_log::log::error( "[so_imex::module_registry::register_module] : " 
+            so_log::global::error( "[so_imex::module_registry::register_module] : " 
                 "audio module already contained" );
             continue;
         }
@@ -410,7 +411,7 @@ so_thread::task_graph_t module_registry::import_scene(
                  
 
             auto tg = mod_ptr->import_scene( params_copy ) ;
-            so_thread::scheduler::ts()->async_now( std::move(tg) ) ;
+            so_thread::global::task_scheduler()->async_now( std::move(tg) ) ;
 
             auto const res = so.wait() ;
             if( so_imex::success(res) )
@@ -453,7 +454,7 @@ so_thread::task_graph_t module_registry::export_scene(
 
 
             auto tg = mod_ptr->export_scene( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move(tg) );
+            so_thread::global::task_scheduler()->async_now( std::move(tg) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -492,7 +493,7 @@ so_thread::task_graph_t module_registry::import_mesh(
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->import_mesh( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move(tg) );
+            so_thread::global::task_scheduler()->async_now( std::move(tg) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -531,7 +532,7 @@ so_thread::task_graph_t module_registry::export_mesh(
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->export_mesh( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move(tg) );
+            so_thread::global::task_scheduler()->async_now( std::move(tg) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -570,7 +571,7 @@ so_thread::task_graph_t module_registry::import_image(
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->import_image( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move(tg) );
+            so_thread::global::task_scheduler()->async_now( std::move(tg) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -609,7 +610,7 @@ so_thread::task_graph_t module_registry::export_image(
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->export_image( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move(tg) );
+            so_thread::global::task_scheduler()->async_now( std::move(tg) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -647,7 +648,7 @@ so_thread::task_graph_t module_registry::import_audio( so_imex::iaudio_module::i
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->import_audio( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move( tg ) );
+            so_thread::global::task_scheduler()->async_now( std::move( tg ) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )
@@ -685,7 +686,7 @@ so_thread::task_graph_t module_registry::export_audio( so_imex::iaudio_module::e
             params_copy.sync_ptr = &so;
 
             auto tg = mod_ptr->export_audio( params_copy );
-            so_thread::scheduler::ts()->async_now( std::move( tg ) );
+            so_thread::global::task_scheduler()->async_now( std::move( tg ) );
 
             auto const res = so.wait();
             if( so_imex::success( res ) )

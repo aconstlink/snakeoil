@@ -6,7 +6,7 @@
 
 #include "pcm/ipcm_buffer.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_audio ;
 
@@ -24,7 +24,7 @@ loopback_buffer::loopback_buffer( this_rref_t rhv )
 //*************************************************************************************
 loopback_buffer::~loopback_buffer( void_t )
 {
-    so_log::log::error_and_exit( so_core::is_not_nullptr(_pcm_ptr), 
+    so_log::global::error_and_exit( so_core::is_not_nullptr(_pcm_ptr), 
         "[loopback_buffer::~loopback_buffer] : please release before destroying the buffer" ) ;
 }
 

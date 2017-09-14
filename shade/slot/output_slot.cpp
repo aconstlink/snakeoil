@@ -5,7 +5,7 @@
 #include "output_slot.h"
 #include "input_slot.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_shade ;
 
@@ -63,7 +63,7 @@ so_shade::result output_slot::connect( so_shade::iinput_slot_ptr_t iptr )
 
     if( so_core::is_not( this_t::call_on_connect(iptr, this, connect_direction::input_to_output) ) )
     {
-        so_log::log::error("[so_shade::output_slot::connect] : invalid connection") ;
+        so_log::global::error("[so_shade::output_slot::connect] : invalid connection") ;
         return so_shade::invalid_argument ;
     }
 

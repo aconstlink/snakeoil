@@ -4,14 +4,14 @@
 //------------------------------------------------------------
 #include "imex_pcm_wrapper.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_audio ;
 
 //*************************************************************************************
 imex_pcm_wrapper::imex_pcm_wrapper( so_imex::iaudio_ptr_t aptr )
 {
-    so_log::log::error_and_exit( so_core::is_nullptr( aptr ), 
+    so_log::global::error_and_exit( so_core::is_nullptr( aptr ), 
         "[imex_pcm_wrapper::imex_pcm_wrapper] : must not be nullptr" ) ;
 
     _imex_audio_ptr = aptr ;

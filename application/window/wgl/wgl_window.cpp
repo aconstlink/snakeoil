@@ -7,7 +7,7 @@
 #include "../win32/win32_window.h"
 
 #include <snakeoil/gpu/api/gl/gl_33/gl_33_api.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_app ;
 using namespace so_app::so_win32 ;
@@ -22,7 +22,7 @@ wgl_window::wgl_window( gl_info_cref_t gli, window_info_cref_t wi )
 
     if( wnd_ptr == nullptr )
     {
-        so_log::log::error( "[wgl_window::wgl_window] : unable to create win32 window. aborting." ) ;
+        so_log::global::error( "[wgl_window::wgl_window] : unable to create win32 window. aborting." ) ;
         return ;
     }
     
@@ -31,7 +31,7 @@ wgl_window::wgl_window( gl_info_cref_t gli, window_info_cref_t wi )
     auto ctx_res = _context_ptr->create_context( gli, wnd_ptr->get_handle() ) ;
     if( so_app::no_success( ctx_res ) )
     {
-        so_log::log::error( "[wgl_window::wgl_window] : Failed to create GL context." ) ;
+        so_log::global::error( "[wgl_window::wgl_window] : Failed to create GL context." ) ;
         return ;
     }
 

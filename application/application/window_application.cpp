@@ -10,9 +10,10 @@
 #include <snakeoil/device/global.h>
 #include <snakeoil/device/system/idevice_system.h>
 
-#include <snakeoil/io/io.h>
+#include <snakeoil/io/global.h>
+#include <snakeoil/thread/global.h>
 #include <snakeoil/thread/scheduler.h>
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
 using namespace so_app ;
@@ -20,10 +21,6 @@ using namespace so_app ;
 //***********************************************************************
 window_application::window_application( void_t ) 
 {
-    so_log::log::init() ;
-    so_memory::memory::init() ;
-    so_thread::scheduler::init() ;
-
     _app_state_ptr = so_app::memory::alloc( application_state_t(),
         "[window_application::window_application] : application_state" ) ;
 }
@@ -35,8 +32,6 @@ window_application::window_application( this_rref_t rhv )
     
     _update_thread = std::move( rhv._update_thread ) ;    
 
-    so_thread::scheduler::make_move() ;
-
     so_move_member_ptr( _app_state_ptr, rhv ) ;
 }
 
@@ -45,7 +40,6 @@ window_application::~window_application( void_t )
 {
     shutdown_and_kill_all_windows() ;
     so_app::memory::dealloc( _app_state_ptr ) ;
-    so_thread::scheduler::deinit() ;
 }
 
 //***********************************************************************
@@ -104,7 +98,7 @@ so_app::result window_application::exec( std::function< void_t( application_stat
 so_app::result window_application::shutdown_and_kill_all_windows( void_t ) 
 {
     so_app::result res = shutdown_update_thread() ;
-    so_log::log::error( so_app::no_success(res), 
+    so_log::global::error( so_app::no_success(res), 
         "[window_application::~window_application] : failed to shutdown update thread." ) ;
 
     for( auto & data : _windows )

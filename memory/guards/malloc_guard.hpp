@@ -39,13 +39,13 @@ namespace so_memory
 
         malloc_guard( size_t num_elements )
         {
-            _mem_ptr = so_memory::memory::alloc_raw<type_t>(sizeof(type_t) * num_elements) ;
+            _mem_ptr = so_memory::global::alloc_raw<type_t>(sizeof(type_t) * num_elements) ;
             _num_elements = num_elements ;
         }
 
         malloc_guard( type_cptr_t src_ptr, size_t num_elements )
         {
-            _mem_ptr = so_memory::memory::alloc_raw<type_t>( sizeof( type_t ) * num_elements ) ;
+            _mem_ptr = so_memory::global::alloc_raw<type_t>( sizeof( type_t ) * num_elements ) ;
             _num_elements = num_elements ;
 
             memcpy( _mem_ptr, src_ptr, num_elements ) ;
@@ -58,7 +58,7 @@ namespace so_memory
         
         ~malloc_guard( void_t )
         {
-            so_memory::memory::dealloc_raw( _mem_ptr ) ;
+            so_memory::global::dealloc_raw( _mem_ptr ) ;
         }
 
     public: // operator 

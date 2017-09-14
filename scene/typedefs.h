@@ -7,7 +7,7 @@
 
 #include <snakeoil/std/string/string.hpp>
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/log/typedefs.h>
@@ -20,7 +20,7 @@ namespace so_scene
 {
     using namespace so_core::so_types ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 
     template< typename T >
     using allocator = so_memory::allocator< T, so_scene::memory > ;

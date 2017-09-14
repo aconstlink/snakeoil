@@ -6,7 +6,7 @@
 
 #include "system/device_system.h"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_device ;
 
@@ -40,7 +40,7 @@ bool_t global::init( void_t )
     global::_ptr = so_device::memory::alloc( this_t(), 
         "[so_device::global::init] : global singleton" ) ;
 
-    so_log::log::status( "[online] : snakeoil device" ) ;
+    so_log::global::status( "[online] : snakeoil device" ) ;
 
     return true ;
 }

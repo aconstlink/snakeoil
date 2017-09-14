@@ -8,7 +8,7 @@
 #include "protos.h"
 #include "mutex.h"
 
-#include <snakeoil/memory/memory.h>
+#include <snakeoil/memory/global.h>
 #include <snakeoil/memory/allocator.hpp>
 
 #include <snakeoil/std/string/string.hpp>
@@ -31,7 +31,7 @@ namespace so_thread
 
     so_typedefs( std::thread, thread ) ;
 
-    using memory = so_memory::memory ;
+    using memory = so_memory::global ;
 
     template< typename T >
     using allocator = so_memory::allocator<T, so_thread::memory > ;

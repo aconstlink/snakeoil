@@ -9,6 +9,8 @@
 #include "protos.h"
 #include "api.h"
 
+#include <snakeoil/thread/mutex.h>
+
 namespace so_device
 {
     class SNAKEOIL_DEVICE_API global
@@ -21,6 +23,7 @@ namespace so_device
 
     private: // singleton
 
+        static so_thread::mutex_t _mtx ;
         static this_ptr_t _ptr ;
 
     public:
@@ -32,7 +35,7 @@ namespace so_device
 
     public: // singleton functions
 
-        static bool_t init( void_t ) ;
+        static this_ptr_t init( void_t ) ;
         static void_t deinit( void_t ) ;
 
         static this_ptr_t get( void_t ) ;

@@ -10,6 +10,8 @@
 
 #include "handle/handle.h"
 
+#include <snakeoil/thread/mutex.h>
+
 namespace so_io
 {
     class SNAKEOIL_IO_API global
@@ -22,6 +24,7 @@ namespace so_io
 
     private:
 
+        static so_thread::mutex_t _mtx ;
         static this_ptr_t _ptr ;
 
     public:
@@ -38,7 +41,7 @@ namespace so_io
 
     public:
 
-        static void_t init( void_t ) ;
+        static this_ptr_t init( void_t ) ;
         static void_t deinit( void_t ) ;
         static this_ptr_t get( void_t ) ;
         static system_ptr_t io_system( void_t ) ;

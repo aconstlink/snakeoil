@@ -113,6 +113,12 @@ std::string const & win32_window::get_name( void_t ) const
 }
 
 //***********************************************************************
+void_t win32_window::send_close( void_t )
+{
+    PostMessage( _handle.get_handle(), WM_CLOSE, 0, 0 ) ;
+}
+
+//***********************************************************************
 HWND win32_window::create_window( window_info const & wi ) 
 {
     window_info wil = wi ;

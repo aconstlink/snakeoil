@@ -62,6 +62,12 @@ namespace so_imex
             return reinterpret_cast<type_t*>(data_ptr) ;
         }
 
+        template< typename type_t >
+        type_t const * data_as( void_t ) const
+        {
+            return reinterpret_cast< type_t const* >( data_ptr ) ;
+        }
+
         virtual void_t destroy( void_t ) ;
     };
     so_typedef( image ) ;

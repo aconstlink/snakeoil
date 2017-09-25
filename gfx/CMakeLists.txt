@@ -6,6 +6,10 @@
 set( GL33_SOURCES 
   text/gl33/gl33_text_render_2d_plug.h
   text/gl33/gl33_text_render_2d_plug.cpp
+  line/gl33/gl33_line_render_2d_plug.h
+  line/gl33/gl33_line_render_2d_plug.cpp
+  image/gl33/gl33_image_render_2d_plug.h
+  image/gl33/gl33_image_render_2d_plug.cpp
 )
   
 set( SOURCES 
@@ -26,6 +30,18 @@ set( SOURCES
     text/text_render_2d_plug_factory.h
     text/text_render_2d_plug_factory.cpp
     text/text_render_2d_shared_data.h
+
+    line/line_render_2d.h
+    line/line_render_2d.cpp
+    line/line_render_2d_plug_factory.h
+    line/line_render_2d_plug_factory.cpp
+    line/line_render_2d_shared_data.h
+
+    image/image_render_2d.h
+    image/image_render_2d.cpp
+    image/image_render_2d_plug_factory.h
+    image/image_render_2d_plug_factory.cpp
+    image/image_render_2d_shared_data.h
 
     enums/align.h
     )

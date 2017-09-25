@@ -8,6 +8,8 @@
 #include "protos.h"
 #include "typedefs.h"
 
+#include "mutex.h"
+
 namespace so_thread
 {
     class SNAKEOIL_THREAD_API global
@@ -21,6 +23,7 @@ namespace so_thread
 
     private:
 
+        static mutex_t _mtx ;
         static this_ptr_t _ptr ;
 
     public:
@@ -37,7 +40,7 @@ namespace so_thread
 
     public:
 
-        static void_t init( void_t ) ;
+        static this_ptr_t init( void_t ) ;
         static void_t deinit( void_t ) ;
         static void_t update( void_t ) ;
         static this_ptr_t get( void_t ) ;

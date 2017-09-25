@@ -31,6 +31,7 @@ module_registry::module_registry( this_rref_t rhv )
     _scene_registry = std::move( rhv._scene_registry ) ;
     _image_registry = std::move( rhv._image_registry ) ;
     _mesh_registry = std::move( rhv._mesh_registry ) ;
+    _audio_registry = std::move( rhv._audio_registry ) ;
 }
 
 //*************************************************************************************
@@ -77,6 +78,22 @@ module_registry::~module_registry( void_t )
             for(auto * mod_ptr : item.second)
             {
                 if(std::find( mods.begin(), mods.end(), mod_ptr ) == mods.end())
+                {
+                    mod_ptr->destroy() ;
+                    mods.push_back( mod_ptr ) ;
+                }
+            }
+        }
+    }
+
+    {
+        audio_modules_t mods ;
+
+        for( auto item : _audio_registry )
+        {
+            for( auto * mod_ptr : item.second )
+            {
+                if( std::find( mods.begin(), mods.end(), mod_ptr ) == mods.end() )
                 {
                     mod_ptr->destroy() ;
                     mods.push_back( mod_ptr ) ;

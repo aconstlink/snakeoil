@@ -8,6 +8,7 @@
 
 using namespace so_log ;
 
+so_thread::mutex_t global::_mtx ;
 global::this_ptr_t global::_ptr = nullptr ;
 
 //*************************************************************************************
@@ -29,18 +30,25 @@ global::~global( void_t )
 }
 
 //*************************************************************************************
-bool_t global::init( void_t )
+global::this_ptr_t global::init( void_t )
 {
     if( so_core::is_not_nullptr( global_t::_ptr ) )
-        return true ;
+        return this_t::_ptr ;
 
-    // again, do not use snakeoil memory
-    // memory is above log
-    global::_ptr = new this_t() ;
+    {
+        so_thread::lock_guard_t lk( this_t::_mtx ) ;
 
-    this_t::status( "[online] : snakeoil log" ) ;
+        if( so_core::is_not_nullptr( global_t::_ptr ) )
+            return this_t::_ptr ;
 
-    return true ;
+        // again, do not use snakeoil memory
+        // memory is above log
+        this_t::_ptr = new this_t() ;
+
+        this_t::status( "[online] : snakeoil log" ) ;
+    }
+
+    return this_t::_ptr ;
 }
 
 //*************************************************************************************
@@ -56,8 +64,7 @@ void_t global::deinit( void_t )
 //*************************************************************************************
 global::this_ptr_t global::get( void_t )
 {
-    this_t::init() ;
-    return this_t::_ptr ;
+    return this_t::init() ;
 }
 
 //*************************************************************************************

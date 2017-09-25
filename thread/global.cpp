@@ -11,6 +11,7 @@
 
 using namespace so_thread ;
 
+mutex_t global::_mtx ;
 global * global::_ptr = nullptr ;
 
 //***********************************************************************
@@ -55,15 +56,24 @@ void_t global::destroy( this_ptr_t ptr )
 }
 
 //***********************************************************************
-void_t global::init( void_t )
+global::this_ptr_t global::init( void_t )
 {
-    if( so_core::is_not_nullptr( _ptr ) ) 
-        return ;
-    
-    _ptr = this_t::create( this_t(), 
-        "[global::init] : global singleton lazy initialization" ) ;
-    
-    so_log::global::status( "[online] : snakeoil thread" ) ;
+    if( so_core::is_not_nullptr( _ptr ) )
+        return this_t::_ptr ;
+
+    {
+        so_thread::lock_guard_t lk( this_t::_mtx ) ;
+
+        if( so_core::is_not_nullptr( _ptr ) )
+            return this_t::_ptr ;
+
+        _ptr = this_t::create( this_t(),
+            "[so_thread::global::init] : global singleton lazy initialization" ) ;
+
+        so_log::global::status( "[online] : snakeoil thread" ) ;
+    }
+
+    return this_t::_ptr ;
 }
 
 //***********************************************************************
@@ -85,8 +95,7 @@ void_t global::update( void_t )
 //***********************************************************************
 global::this_ptr_t global::get( void_t )
 {
-    this_t::init() ;
-    return _ptr ;
+    return this_t::init() ;
 }
 
 //***********************************************************************

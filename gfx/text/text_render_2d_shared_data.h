@@ -26,6 +26,8 @@ namespace so_gfx
         {
             size_t group_id ;
             size_t num_glyphs ;
+            so_math::mat4f_t proj ;
+            so_math::mat4f_t view ;
         };
         so_typedef( per_group_info ) ;
         so_typedefs( so_std::vector< per_group_info_t >, per_group_infos ) ;
@@ -35,6 +37,7 @@ namespace so_gfx
             size_t offset ;
             so_math::vec2f_t pos ;
             so_math::vec3f_t color ;
+            float_t point_size_scale ;
         };
         so_typedef( glyph_info ) ;
         so_typedefs( so_std::vector< glyph_info >, glyph_infos ) ;

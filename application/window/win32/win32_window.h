@@ -54,6 +54,8 @@ namespace so_app
             
             virtual std::string const & get_name( void_t ) const ;
 
+            virtual void_t send_close( void_t ) ;
+
         private:
 
             HWND create_window( window_info const & ) ;

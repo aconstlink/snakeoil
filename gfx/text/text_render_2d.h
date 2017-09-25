@@ -26,11 +26,17 @@
 #include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/math/vector/vector3.hpp>
 
+#include <functional>
+
 namespace so_gfx
 {
     class SNAKEOIL_GFX_API text_render_2d
     {
         so_this_typedefs( text_render_2d ) ;
+
+    public:
+
+        so_typedefs( std::function< so_math::vec2f_t ( so_math::vec2f_cref_t ) >, offset_funk ) ;
 
     public:
         
@@ -65,6 +71,8 @@ namespace so_gfx
             size_t offset ;
             so_math::vec2f_t pos ;
             so_math::vec3f_t color ;
+
+            float_t point_size_scale ;
         };
         so_typedef( glyph_info ) ;
 
@@ -77,25 +85,36 @@ namespace so_gfx
 
             size_t group_id = 0 ;
 
+            so_math::mat4f_t proj ;
+            so_math::mat4f_t view ;
+
             group_info( void_t ){}
             group_info( this_cref_t rhv ){
                 glyph_infos = rhv.glyph_infos ;
                 group_id = rhv.group_id ;
+                proj = rhv.proj ;
+                view = rhv.view ;
             }
             group_info( this_rref_t rhv ) {
                 glyph_infos = std::move( rhv.glyph_infos ) ;
                 group_id = rhv.group_id ;
+                proj = rhv.proj ;
+                view = rhv.view ;
             }
             ~group_info( void_t ) {}
 
             this_ref_t operator = ( this_cref_t rhv ) {
                 glyph_infos = rhv.glyph_infos ;
                 group_id = rhv.group_id ;
+                proj = rhv.proj ;
+                view = rhv.view ;
                 return *this ;
             }
             this_ref_t operator = ( this_rref_t rhv ) {
                 glyph_infos = std::move( rhv.glyph_infos ) ;
                 group_id = rhv.group_id ;
+                proj = rhv.proj ;
+                view = rhv.view ;
                 return *this ;
             }
 
@@ -123,17 +142,26 @@ namespace so_gfx
 
     public:
 
-        void_t set_canvas_info( canvas_info_cref_t ) ;
         void_t init_fonts( size_t const, std::vector< so_io::path_t > const & ) ;
         
-        so_gfx::result draw_text( size_t const layer, size_t const font_id, size_t const point_size,
+        void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+
+        so_gfx::result draw_text( size_t const group, size_t const font_id, size_t const point_size,
             so_math::vec2f_cref_t pos, so_math::vec3f_cref_t color, so_std::string_cref_t ) ;
 
-        so_gfx::result draw_begin( void_t ) ;
+        so_gfx::result draw_text( size_t const group, size_t const font_id, size_t const point_size,
+            so_math::vec2f_cref_t pos, offset_funk_t, so_math::vec3f_cref_t color, so_std::string_cref_t ) ;
+
+        so_gfx::result draw_begin( canvas_info_cref_t ) ;
         so_gfx::result draw_end( void_t ) ;
         so_gfx::result render( size_t const ) ;
 
         so_gfx::result release( void_t ) ;
+
+    private:
+
+        this_t::group_infos_t::iterator insert_group( size_t const ) ;
+
     };
     so_typedef( text_render_2d ) ;
 }

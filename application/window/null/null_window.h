@@ -48,6 +48,7 @@ namespace so_app
             virtual iwindow_handle_ptr_t get_handle( void_t ) ;
 
             virtual so_std::string_cref_t get_name( void_t ) const ;
+            virtual void_t send_close( void_t ) ;
 
         public: // gpu iwindow interface
 

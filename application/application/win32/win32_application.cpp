@@ -71,7 +71,7 @@ so_app::result win32_application::exec_derived( void_t )
 {
     MSG msg ;
     while( GetMessage( &msg, 0,0,0) )
-    {		
+    {
         TranslateMessage( &msg ) ;
         DispatchMessage( &msg ) ;
 
@@ -87,6 +87,3 @@ so_app::result win32_application::exec_derived( void_t )
 
     return ok ;
 }
-
-//***********************************************************************
-

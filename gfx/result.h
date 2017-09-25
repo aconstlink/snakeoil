@@ -14,7 +14,8 @@ namespace so_gfx
     {
         ok,
         failed,
-        invalid_argument
+        invalid_argument,
+        invalid_id
     };
 
     namespace so_internal

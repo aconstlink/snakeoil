@@ -33,6 +33,11 @@ namespace so_gpx
         };
         so_typedef( execute_info ) ;
 
+        struct update_info
+        {
+        };
+        so_typedef( update_info ) ;
+
         struct init_info
         {
             so_gpu::gpu_manager_ptr_t mgr = nullptr ;
@@ -60,20 +65,16 @@ namespace so_gpx
         /// release all api objects
         virtual so_gpx::plug_result on_release( void_t ) = 0 ;
 
-        /// do all gpu/cpu transfer
+        /// do all gpu object update and gpu/cpu transfer
         /// this is the place where user provided data from
         /// on_update can be transfered to/from the gpu.
-        virtual so_gpx::plug_result on_transfer( void_t ) = 0 ;
+        virtual so_gpx::plug_result on_update( update_info_cref_t ) = 0 ;
+        
+        
 
         /// do all api execution commands
         virtual so_gpx::plug_result on_execute( execute_info_cref_t ) = 0 ;
-
-    public: // user/api side
-
-            /// update api buffers/images with user data
-            /// this function gives the user a time slice where
-            /// all its data can be brought into the api space
-        virtual so_gpx::plug_result on_update( void_t ) = 0 ;
+            
 
     public:
 

@@ -26,7 +26,7 @@ namespace so_gpu
 
         image_creator( void_t ) ;
         image_creator( this_cref_t ) = delete ;
-        image_creator( so_imex::image_ptr_t ) ;
+        image_creator( so_imex::image_cptr_t, so_memory::purpose_cref_t ) ;
         image_creator( this_rref_t ) ;
         virtual ~image_creator( void_t ) ;
 
@@ -36,7 +36,11 @@ namespace so_gpu
 
     public:
 
-        void_t construct_from( so_imex::image_ptr_t ) ;
+        void_t construct_from( so_imex::iimage_cptr_t, so_memory::purpose_cref_t ) ;
+        void_t construct_from( so_imex::image_cptr_t, so_memory::purpose_cref_t ) ;
+
+        static void_t copy_from( so_imex::iimage_cptr_t, so_gpu::iimage_2d_ptr_t ) ;
+
     };
     so_typedef( image_creator ) ;
 }

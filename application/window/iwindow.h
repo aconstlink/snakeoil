@@ -26,6 +26,8 @@ namespace so_app
         virtual iwindow_handle_ptr_t get_handle( void_t ) = 0 ;
 
         virtual so_std::string_cref_t get_name( void_t ) const = 0 ;
+
+        virtual void_t send_close( void_t ) = 0 ;
     };
     so_typedef( iwindow ) ;
     

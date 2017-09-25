@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GFX_TEXT_GL33_TEXT_RENDER_2D_PLUG_H_
-#define _SNAKEOIL_GFX_TEXT_GL33_TEXT_RENDER_2D_PLUG_H_
+#pragma once
 
 #include "../../api.h"
 #include "../../result.h"
@@ -44,6 +43,27 @@ namespace so_gfx
 
             size_t _num_quads = 10000 ;
 
+        private:
+
+            struct per_group_data
+            {
+                size_t group_id ;
+                size_t varset_id ;
+                
+                uint32_t num_elements ;
+
+                uint32_ptr_t start_offset ;
+                so_math::mat4f_ptr_t proj ;
+                so_math::mat4f_ptr_t view ;
+
+                so_gpu::variable_set_ptr_t var_set ;
+            };
+            so_typedef( per_group_data ) ;
+
+            so_typedefs( so_std::vector< per_group_data >, per_group_datas ) ;
+
+            per_group_datas_t _per_group_datas ;
+
         private: 
 
             struct vertex
@@ -64,14 +84,10 @@ namespace so_gfx
 
             so_gpu::program_ptr_t _prog_text ;
             so_gpu::config_ptr_t _config_text ;
-            so_gpu::variable_set_ptr_t _vars_text ;
             so_gpu::framebuffer_2d_ptr_t _fb_ptr ;
 
             data_buffer_ptr_t _glyph_info_ptr = nullptr ;
             data_buffer_ptr_t _text_info_ptr = nullptr ;
-
-            /// the number of glyph to be rendered.
-            size_t _num_text_glyphs = 0 ;
 
         public:
 
@@ -95,12 +111,11 @@ namespace so_gfx
 
             virtual so_gpx::plug_result on_initialize( init_info_cref_t ) ;
             virtual so_gpx::plug_result on_release( void_t ) ;
-            virtual so_gpx::plug_result on_transfer( void_t ) ;
             virtual so_gpx::plug_result on_execute( execute_info_cref_t ) ;
 
         public:
 
-            virtual so_gpx::plug_result on_update( void_t ) ;
+            virtual so_gpx::plug_result on_update( update_info_cref_t ) ;
 
         public:
 
@@ -109,5 +124,3 @@ namespace so_gfx
         so_typedef( gl33_text_render_2d_plug ) ;
     }
 }
-
-#endif

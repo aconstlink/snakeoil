@@ -7,6 +7,9 @@
 #include "../../image/image.h"
 #include "../../image/deduce_image_format.h"
 #include "../../manager/image_manager.h"
+#include "../../manager/manager_registry.h"
+
+#include "../../global.h"
 
 #include <snakeoil/io/global.h>
 #include <snakeoil/io/system/system.h>
@@ -113,16 +116,23 @@ so_thread::task_graph_t stb_module::import_image( import_params_cref_t params_in
 
             // store the new image
             {
+                auto * img_mgr = params_in.img_mgr_ptr ;
+
+                if( so_core::is_nullptr( img_mgr ) )
+                {
+                    img_mgr = so_imex::global::manager_registry()->get_image_manager() ;
+                }
+
                 so_imex::image_manager_t::manage_params sr ;
                 sr.data_ptr = imex_image_ptr ;
                 sr.file_path = params_in.path_to_file ;
                 
                 // @note not 100 % bullet proof. between reserve and exchange, the data
                 // could be changed from somewhere else.
-                auto const res = params_in.img_mgr_ptr->reserve_by_key( params_in.key ) ;
+                auto const res = img_mgr->reserve_by_key( params_in.key ) ;
                 if( res == so_imex::found || res == so_imex::reserved )
                 {
-                    auto const res2 = params_in.img_mgr_ptr->exchange( params_in.key, sr ) ;
+                    auto const res2 = img_mgr->exchange( params_in.key, sr ) ;
                     if( so_log::global::error( so_imex::no_success( res2 ),
                         "[so_imex::stb_module::import_image] : manageing image" ) )
                     {

@@ -61,6 +61,9 @@ set( NON_ARCH_SOURCES
     utility/degree.hpp
     utility/angle.hpp
     utility/fn.hpp
+    utility/index_1d_to_2d.hpp
+    utility/index_2d_to_1d.hpp
+    utility/index_3d_to_1d.hpp
 
     utility/3d/look_at.hpp
     utility/3d/ortho_basis.hpp

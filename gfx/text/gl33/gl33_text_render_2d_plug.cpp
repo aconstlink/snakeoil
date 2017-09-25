@@ -21,6 +21,7 @@
 #include <snakeoil/font/glyph_atlas/glyph_atlas.h>
 
 #include <snakeoil/io/global.h>
+#include <snakeoil/log/global.h>
 
 #include <snakeoil/math/vector/vector4.hpp>
 
@@ -39,7 +40,6 @@ gl33_text_render_2d_plug::gl33_text_render_2d_plug(
     _ps_text = so_gpu::pixel_shader_t::create( "pixel shader" ) ;
     _prog_text = so_gpu::program_t::create( "program" ) ;
     _config_text = so_gpu::config_t::create( "config" ) ;
-    _vars_text = so_gpu::variable_set_t::create( "varset" ) ;
 }
 
 //************************************************************************************
@@ -56,10 +56,11 @@ gl33_text_render_2d_plug::gl33_text_render_2d_plug( this_rref_t rhv ) : this_bas
     so_move_member_ptr( _ps_text, rhv ) ;
     so_move_member_ptr( _prog_text, rhv ) ;
     so_move_member_ptr( _config_text, rhv ) ;
-    so_move_member_ptr( _vars_text, rhv ) ;
 
     so_move_member_ptr( _glyph_info_ptr, rhv ) ;
     so_move_member_ptr( _text_info_ptr, rhv ) ;
+
+    _per_group_datas = std::move( rhv._per_group_datas ) ;
 }
 
 //************************************************************************************
@@ -83,9 +84,6 @@ gl33_text_render_2d_plug::~gl33_text_render_2d_plug( void_t )
     if( so_core::is_not_nullptr( _config_text ) )
         so_gpu::config_t::destroy( _config_text ) ;
 
-    if( so_core::is_not_nullptr( _vars_text ) )
-        _vars_text->destroy() ;
-
     if( so_core::is_not_nullptr( _gpu_img_ptr ) )
         _gpu_img_ptr->destroy() ;
 
@@ -97,6 +95,14 @@ gl33_text_render_2d_plug::~gl33_text_render_2d_plug( void_t )
 
     if( so_core::is_not_nullptr( _text_info_ptr ) )
         _text_info_ptr->destroy() ;
+
+    for( auto & item : _per_group_datas )
+    {
+        item.var_set->destroy() ;
+        so_gpu::memory::dealloc( item.start_offset ) ;
+        so_gpu::memory::dealloc( item.proj ) ;
+        so_gpu::memory::dealloc( item.view ) ;
+    }
 }
 
 //************************************************************************************
@@ -290,12 +296,6 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_initialize( so_gpx::iplug_t::in
             _config_text->bind( so_gpu::vertex_attribute::position, "in_pos" ) ;
             _config_text->bind( so_gpu::primitive_type::triangles, _vb_text, _ib_text ) ;
         }
-        {
-            auto const res = this_t::api()->create_variable( _vars_text ) ;
-        }
-        {
-            _config_text->add_variable_set( _vars_text ) ;
-        }
     }
 
     {
@@ -311,17 +311,10 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_initialize( so_gpx::iplug_t::in
 
     {
         auto const res = this_t::api()->create_buffer( _glyph_info_ptr ) ;
-        _vars_text->bind_buffer<so_math::vec4f_t>( "u_glyph_info", _glyph_info_ptr ) ;
     }
 
     {
         auto const res = this_t::api()->create_buffer( _text_info_ptr ) ;
-        _vars_text->bind_buffer<so_math::vec4f_t>( "u_text_info", _text_info_ptr ) ;
-    }
-
-    {
-        _vars_text->bind_texture( "u_smp_glyph", _tx ) ;
-        _vars_text->bind_data<so_math::vec2f_t>( "u_scale", &(_sd->dim_scale) ) ;
     }
 
     //
@@ -359,19 +352,113 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_release( void_t )
     this_t::api()->release_shader( _ps_text ) ;
     this_t::api()->release_program( _prog_text ) ;
     this_t::api()->release_config( _config_text ) ;
-    this_t::api()->release_variable( _vars_text ) ;
+    //this_t::api()->release_variable( _vars_text ) ;
 
     this_t::api()->release_image( _gpu_img_ptr ) ;
     this_t::api()->release_texture( _tx ) ;
     this_t::api()->release_buffer( _glyph_info_ptr ) ;
     this_t::api()->release_buffer( _text_info_ptr ) ;
 
+    for( auto & item : _per_group_datas )
+    {
+        this_t::api()->release_variable( item.var_set ) ;
+    }
+
     return so_gpx::plug_result::ok ;
 }
 
 //*********************************************************************
-so_gpx::plug_result gl33_text_render_2d_plug::on_transfer( void_t )
+so_gpx::plug_result gl33_text_render_2d_plug::on_update( update_info_cref_t )
 {
+    // 1. copy the data
+    {
+        _text_info_ptr->resize( 0 ) ;
+
+        // copy all glyph data
+        {
+            for( auto const & gi : _sd->glyph_infos )
+            {
+                float_t const offset = float_t( gi.offset ) ;
+                so_math::vec3f_t const color = gi.color ;
+                so_math::vec2f_t const pos = gi.pos ;
+                float_t const pss = gi.point_size_scale ;
+
+                _text_info_ptr->add_element( so_math::vec4f_t( offset, pos.x(), pos.y(), pss ) ) ;
+                _text_info_ptr->add_element( so_math::vec4f_t( color, 0.0f ) ) ;
+            }
+        }
+
+        // 1. copy all per group data
+        // 2. calc start offset
+        {
+            uint32_t offset = 0 ;
+            for( auto const & gi : _sd->per_group_infos )
+            {
+                auto iter = std::find_if( _per_group_datas.begin(), _per_group_datas.end(), 
+                    [&]( this_t::per_group_data_cref_t pgd ) 
+                { 
+                    return pgd.group_id == gi.group_id ;
+                } ) ;
+                
+                if( iter == _per_group_datas.end() )
+                {
+                    this_t::per_group_data_t pgd ;
+                    pgd.group_id = gi.group_id ;
+                    
+                    pgd.var_set = so_gpu::variable_set_t::create(
+                        "[gl33_text_render_2d_plug::on_update] : variable_set") ;
+
+                    this_t::api()->create_variable( pgd.var_set ) ;
+
+                    // configure variable set
+                    {
+                        // required for rendering
+                        pgd.varset_id = _config_text->get_num_varsets() ;
+                        _config_text->add_variable_set( pgd.var_set ) ;
+
+                        pgd.var_set->bind_buffer<so_math::vec4f_t>( "u_glyph_info", _glyph_info_ptr ) ;
+                        pgd.var_set->bind_buffer<so_math::vec4f_t>( "u_text_info", _text_info_ptr ) ;
+                        
+                        pgd.var_set->bind_texture( "u_smp_glyph", _tx ) ;
+                        
+                        pgd.var_set->bind_data<so_math::vec2f_t>( "u_scale", &( _sd->dim_scale ) ) ;
+                        
+                        {
+                            pgd.proj= so_gpu::memory::alloc<so_math::mat4f_t>(
+                                "[gl33_text_render_2d_plug::on_update] : projection matrix" ) ;
+                            pgd.var_set->bind_data<so_math::mat4f_t>( "u_proj", pgd.proj ) ;
+                        }
+
+                        {
+                            pgd.view = so_gpu::memory::alloc<so_math::mat4f_t>(
+                                "[gl33_text_render_2d_plug::on_update] : view matrix" ) ;
+                            pgd.var_set->bind_data<so_math::mat4f_t>( "u_view", pgd.view ) ;
+                        }
+
+                        {
+                            pgd.start_offset = so_gpu::memory::alloc<uint32_t>(
+                                "[gl33_text_render_2d_plug::on_update] : start_offset") ;
+                            pgd.var_set->bind_data<uint32_t>( "u_offset", pgd.start_offset ) ;
+                        }
+                    }
+
+                    iter = _per_group_datas.insert( _per_group_datas.end(), pgd ) ;
+                }
+
+                // need to be updated every call
+                {
+                    iter->num_elements = uint32_t( gi.num_glyphs ) ;
+                    ( *iter->start_offset ) = offset ;
+                    ( *iter->proj ) = gi.proj ;
+                    ( *iter->view ) = gi.view ;
+                    offset += iter->num_elements ;
+                }
+            }
+        }
+    }
+
+    // 2. transfer to gpu
+    // @todo optimize. Do not always reallocate
     {
         auto const res = this_t::api()->alloc_buffer_memory( _text_info_ptr,
             so_gpu::memory_alloc_info_t( true ) ) ;
@@ -383,42 +470,35 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_transfer( void_t )
 //*********************************************************************
 so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execute_info_cref_t ri )
 {
-    if( _num_text_glyphs == 0 )
+    auto iter = std::find_if( _per_group_datas.begin(), _per_group_datas.end(), 
+        [&]( this_t::per_group_data_cref_t pgd ){ return pgd.group_id == ri.rnd_id ; } ) ;
+
+    // nothing to do. Could be an error
+    if( iter == _per_group_datas.end() )
+    {
+        so_log::global::warning( "[gl33_text_render_2d_plug::on_execute] : "
+            "rendering an unused group id is inefficient" ) ;
         return so_gpx::plug_result::ok ;
+    }
+
+    if( iter->num_elements == 0 )
+    {
+        // basically also inefficient
+        return so_gpx::plug_result::ok ;
+    }
 
     // @todo save state
 
     this_t::api()->enable( so_gpu::render_state::blend ) ;
     this_t::api()->set_state( so_gpu::blend_factor::one, so_gpu::blend_factor::one_minus_src_alpha ) ;
     {
-        this_t::api()->load_variable( _vars_text ) ;
-        this_t::api()->execute( so_gpu::render_config_info( _config_text, 0,
-            _num_text_glyphs * 6 ) ) ;
+        this_t::api()->load_variable( iter->var_set ) ;
+        this_t::api()->execute( so_gpu::render_config_info( _config_text, iter->varset_id,
+            (iter->num_elements) * 6 ) ) ;
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;
 
     // @todo restore state
 
     return so_gpx::plug_result::ok ;
-}
-
-//*********************************************************************
-so_gpx::plug_result gl33_text_render_2d_plug::on_update( void_t )
-{
-    _text_info_ptr->resize( 0 ) ;
-    {
-        for( auto const & gi : _sd->glyph_infos )
-        {
-            float_t const offset = float_t(gi.offset) ;
-            so_math::vec3f_t const color = gi.color ;
-            so_math::vec2f_t const pos = gi.pos ;
-
-            _text_info_ptr->add_element( so_math::vec4f_t( offset, pos.x(), pos.y(), 0.0f ) ) ;
-            _text_info_ptr->add_element( so_math::vec4f_t( color, 0.0f ) ) ;
-        }
-
-        _num_text_glyphs = _sd->glyph_infos.size() ;
-    }
-
-    return so_gpx::plug_result::need_transfer ;
 }

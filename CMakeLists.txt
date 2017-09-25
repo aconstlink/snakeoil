@@ -8,7 +8,7 @@ project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 0 )
-set( SNAKEOIL_PATCH_VERSION 9 )
+set( SNAKEOIL_PATCH_VERSION 10 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -131,7 +131,6 @@ set( SUBDIRS
     "animation"
     "noise"
     "network"
-    "utility"
     "device"
     "imex"
     "shade"

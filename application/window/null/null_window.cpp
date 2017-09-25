@@ -87,6 +87,11 @@ so_std::string_cref_t null_window::get_name( void_t ) const
 }
 
 //***********************************************************************
+void_t null_window::send_close( void_t )
+{
+}
+
+//***********************************************************************
 void_t null_window::render_thread_begin( void_t )
 {
 

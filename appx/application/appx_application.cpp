@@ -110,15 +110,24 @@ so_appx::result appx_application::create_window(
     so_app::gl_window_ptr_t render_window = 
         so_app::gl_window_t::create( so_app::gl_window_t(gli, wi) ) ;
     
-    auto res = _win_app_ptr->register_window( render_window ) ;
-    if( so_app::no_success(res) )
+    // 1. register normal window
     {
-        so_log::global::error( "[appx_application::create_window] : failed to create gl render window." ) ;
-        return so_appx::failed ;
+        auto res = _win_app_ptr->register_window( render_window ) ;
+        if( so_app::no_success( res ) )
+        {
+            so_log::global::error( "[appx_application::create_window] : failed to create gl render window." ) ;
+            return so_appx::failed ;
+        }
     }
 
+    // 2. register opengl window
     {
-        _rs_ptr->register_window( "gl_window", render_window ) ;
+        auto const res = _rs_ptr->register_window( "gl_window_"+std::to_string(wid), render_window ) ;
+        if( so_core::is_not( res ) )
+        {
+            so_log::global::error("[appx_application::create_window] : can not create render window") ;
+            return so_appx::failed ;
+        }
         so_thread::lock_guard_t lk( _shared_data_ptr->mtx ) ;
         _shared_data_ptr->rsystem_ptr = _rs_ptr ;
         _shared_data_ptr->asystem_ptr = _as_ptr ;
@@ -214,8 +223,18 @@ so_app::result appx_application::exec( void_t )
             // 2. Update apps
             //
 
-            appx_captured->update( ud ) ;
-                    
+            {
+                auto const res = appx_captured->update( ud ) ;
+                if( res == so_appx::terminate )
+                {
+                    for( auto & data : _rwindows )
+                    {
+                        data.window_ptr->send_close() ;
+                    }
+                }
+            }
+
+            
             // for each render window
             // wait for render sync
             shared_captured->rsystem_ptr->render_begin() ;

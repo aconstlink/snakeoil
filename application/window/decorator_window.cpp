@@ -82,6 +82,12 @@ so_std::string_cref_t decorator_window::get_name( void_t ) const
 }
 
 //***********************************************************************
+void_t decorator_window::send_close( void_t )
+{
+    return _decorated_ptr->send_close() ;
+}
+
+//***********************************************************************
 bool_t decorator_window::has_decorated( void_t ) const 
 {
     return _decorated_ptr != nullptr ;

@@ -36,7 +36,6 @@ namespace so_gpx
                 rs = rhv.rs ;
                 sg = rhv.sg ;
 
-                transfer_triggered = rhv.transfer_triggered ;
                 scheduled = rhv.scheduled ;
                 rhv.scheduled = false ;
                 rnd_id = rhv.rnd_id ;
@@ -57,7 +56,6 @@ namespace so_gpx
 
             so_gpu::iapi_ptr_t api_ptr ;
             so_gpx::iplug_ptr_t plug_ptr ;
-            bool_t transfer_triggered = false ;
             
             size_t rnd_id = size_t(0) ;
             size_t rnd_max = size_t(-1) ;

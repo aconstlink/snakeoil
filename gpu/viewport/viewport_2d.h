@@ -60,6 +60,13 @@ namespace so_gpu
         size_t get_width( void_t ) const { return _xywh.z() ; }
         size_t get_height( void_t ) const { return _xywh.w() ; }
 
+
+        template< typename type_t >
+        type_t get_x( void_t ) const { return static_cast< type_t >( _xywh.x() ) ; }
+
+        template< typename type_t >
+        type_t get_y( void_t ) const { return static_cast< type_t >( _xywh.y() ) ; }
+
         template< typename type_t >
         type_t get_width( void_t ) const { return static_cast<type_t>(_xywh.z()) ; }
         

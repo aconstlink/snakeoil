@@ -11,6 +11,8 @@
 
 #include "log_level.h"
 
+#include <snakeoil/thread/mutex.h>
+
 namespace so_log
 {
     class SNAKEOIL_LOG_API global
@@ -26,6 +28,7 @@ namespace so_log
 
     private: // singleton
 
+        static so_thread::mutex_t _mtx ;
         static this_ptr_t _ptr ;
 
     public:
@@ -37,7 +40,7 @@ namespace so_log
 
     public: // singleton functions
 
-        static bool_t init( void_t ) ;
+        static this_ptr_t init( void_t ) ;
         static void_t deinit( void_t ) ;
 
         static this_ptr_t get( void_t ) ;

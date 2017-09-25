@@ -66,53 +66,70 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
     so_gpx::iglobal_service_ptr_t service_ptr, so_gpx::ilocal_service_ptr_t wservice_ptr, 
     so_gpu::gpu_manager_ptr_t gpu_mgr_ptr )
 {
-    if( _plugs.size() <= wid || _plugs[wid] == nullptr )
+    plug_data_ptr_t pd ;
+
     {
-        plug_data pd ;
-        pd.api_ptr = api_ptr ;
-        pd.wid = wid ;
-        
-        pd.rs = technique_rest_state::offline ;
-        pd.ts = technique_transition_state::none ;
-        pd.sg = goal ;
+        bool_t is_new = true ;
 
-        pd.plug_ptr = _plug_fac_ptr->create_plug( api_ptr->get_type(), api_ptr ) ;
-
-        if( so_core::is_nullptr( pd.plug_ptr ) )
         {
-            so_log::global::error( "[technique::part_00] : unable to create plug for api_type " +
-                so_gpu::to_string( api_ptr->get_type() ) + " on wid " + std::to_string( wid ) ) ;
-            return so_gpx::technique_transition_result::failed ;
+            so_thread::lock_guard_t lk( _mtx_plugs ) ;
+            is_new = so_core::is_not( wid < _plugs.size() && _plugs[ wid ] != nullptr ) ;
         }
-
-        // inform the plug about the creation
+        
+        if( is_new )
         {
-            so_gpx::iplug_t::create_info_t ci ;
-            ci.gs_ptr = service_ptr ;
-            ci.ls_ptr = wservice_ptr ;
-            pd.plug_ptr->on_create( ci ) ;
+            plug_data ipd ;
+            ipd.api_ptr = api_ptr ;
+            ipd.wid = wid ;
+
+            ipd.rs = technique_rest_state::offline ;
+            ipd.ts = technique_transition_state::none ;
+            ipd.sg = goal ;
+
+            ipd.plug_ptr = _plug_fac_ptr->create_plug( api_ptr->get_type(), api_ptr ) ;
+
+            if( so_core::is_nullptr( ipd.plug_ptr ) )
+            {
+                so_log::global::error( "[technique::part_00] : unable to create plug for api_type " +
+                    so_gpu::to_string( api_ptr->get_type() ) + " on wid " + std::to_string( wid ) ) ;
+                return so_gpx::technique_transition_result::failed ;
+            }
+
+            // inform the plug about the creation
+            {
+                so_gpx::iplug_t::create_info_t ci ;
+                ci.gs_ptr = service_ptr ;
+                ci.ls_ptr = wservice_ptr ;
+                ipd.plug_ptr->on_create( ci ) ;
+            }
+
+            {
+                so_thread::lock_guard_t lk( _mtx_plugs ) ;
+                if( _plugs.size() <= wid || _plugs[ wid ] == nullptr )
+                {
+                    _plugs.resize( wid + 1, nullptr ) ;
+                    _plugs[ wid ] = so_gpx::memory::alloc( std::move( ipd ),
+                        "[technique::part_00] : plug_data" ) ;
+                }
+                else
+                {
+                    ipd.plug_ptr->destroy() ;
+                }
+            }
         }
 
         {
             so_thread::lock_guard_t lk( _mtx_plugs ) ;
-            if( _plugs.size() <= wid || _plugs[wid] == nullptr )
-            {
-                _plugs.resize( wid + 1, nullptr ) ;
-                _plugs[wid] = so_gpx::memory::alloc( std::move( pd ),
-                    "[technique::part_00] : plug_data" ) ;
-            }
-            else
-            {
-                pd.plug_ptr->destroy() ;
-            }
+            pd = _plugs[ wid ] ;
+        }
+
+        if( so_core::is_nullptr( pd ) )
+        {
+            return so_gpx::technique_transition_result::failed ;
         }
     }
 
-    plug_data_ptr_t pd = _plugs[ wid ] ;
-    if( so_core::is_nullptr(pd) )
-    {
-        return so_gpx::technique_transition_result::failed ;
-    }
+    
 
     // do not do anything if the technique is 
     // other then none transition
@@ -137,10 +154,9 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
         }
         else if( goal == so_gpx::technique_schedule_goal::for_exec )
         {
-            if( pd->transfer_triggered )
             {
-                pd->plug_ptr->on_transfer() ;
-                pd->transfer_triggered = false ;
+                so_gpx::iplug_t::update_info_t ui ;
+                pd->plug_ptr->on_update(ui) ;
             }
 
             pd->ts = so_gpx::technique_transition_state::executing ;
@@ -388,18 +404,14 @@ so_gpx::result technique::part_01_update( so_gpx::window_id_t wid )
         return so_gpx::failed ;
     }
 
+    // required for instanced rendering
+    // i.e. multiple render calls of the same technique
     if( pd->updated ) return so_gpx::ok ;
 
     if( pd->rs != so_gpx::technique_rest_state::online ) return so_gpx::ok ;
 
     if( pd->ts != so_gpx::technique_transition_state::none &&
         pd->ts != so_gpx::technique_transition_state::executing ) return so_gpx::ok ;
-
-    auto const res = pd->plug_ptr->on_update() ;
-    if( res == so_gpx::plug_result::need_transfer )
-    {
-        pd->transfer_triggered = true ;
-    }
 
     pd->updated = true ;
 

@@ -29,6 +29,8 @@ set( SOURCES
     result.h
     typedefs.h
     protos.h
+    global.h
+    global.cpp
     sync_object.h
     sync_object.cpp
 

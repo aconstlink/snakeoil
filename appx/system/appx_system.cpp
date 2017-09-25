@@ -183,7 +183,9 @@ so_appx::result appx_system::update( update_data_cref_t ud )
                 }
             }
 
-            d.app_ptr->on_update( ud ) ;
+            auto const res = d.app_ptr->on_update( ud ) ;
+            if( res == so_appx::terminate )
+                return so_appx::terminate ;
         }
     }
 

@@ -38,6 +38,8 @@ text_render_2d::text_render_2d( this_rref_t rhv )
     so_move_member_ptr( _gpxr, rhv ) ;
     so_move_member_ptr( _sd_ptr, rhv ) ;
     so_move_member_ptr( _fac_ptr, rhv ) ;
+
+    _gis = std::move( rhv._gis ) ;
 }
 
 //************************************************************************************
@@ -67,14 +69,10 @@ void_t text_render_2d::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-void_t text_render_2d::set_canvas_info( canvas_info_cref_t ci )
-{
-    _ci = ci ;
-}
-
-//************************************************************************************
 void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::path_t > const & paths )
 {
+    _point_size = point_size ;
+
     so_font::so_stb::glyph_atlas_creator_t::face_infos_t fis ;
     {
         size_t i = 0 ;
@@ -109,32 +107,71 @@ void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::
 }
 
 //************************************************************************************
-so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_id, size_t const point_size,
+text_render_2d::group_infos_t::iterator text_render_2d::insert_group( size_t const group )
+{
+    group_info_t li ;
+    li.group_id = group ;
+    li.proj = so_math::mat4f_t().identity() ;
+    li.view = so_math::mat4f_t().identity() ;
+
+    auto const lower_iter = std::lower_bound( _gis.begin(), _gis.end(), group,
+        [&] ( this_t::group_info_cref_t li, size_t const val )
+    {
+        return li.group_id < val;
+    } ) ;
+
+    return _gis.insert( lower_iter, li ) ;
+}
+
+//************************************************************************************
+void_t text_render_2d::set_view_projection( size_t const group, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
+{
+    auto iter = std::find_if( _gis.begin(), _gis.end(), [&] ( this_t::group_info_cref_t li )
+    {
+        return  li.group_id == group ;
+    } ) ;
+
+    if( iter == _gis.end() )
+    {
+        iter = this_t::insert_group( group ) ;
+    }
+    iter->proj = proj ;
+    iter->view = view ;
+}
+
+//************************************************************************************
+so_gfx::result text_render_2d::draw_text( size_t const group, size_t const font_id, size_t const point_size,
     so_math::vec2f_cref_t spos, so_math::vec3f_cref_t color, so_std::string_cref_t text )
 {
+    this_t::offset_funk_t of = [&]( so_math::vec2f_cref_t pos ) 
+    { 
+        return pos ;
+    } ;
+
+    return this_t::draw_text( group, font_id, point_size, spos, of, color, text ) ;
+}
+
+//************************************************************************************
+so_gfx::result text_render_2d::draw_text( size_t const group, size_t const font_id, size_t const point_size,
+    so_math::vec2f_cref_t spos, offset_funk_t of, so_math::vec3f_cref_t color, so_std::string_cref_t text )
+{
+    float_t const point_size_scale = float_t(point_size) / float_t(_point_size) ;
+
     // 1. transform text to glyphs
     // 2. add text to buffer
 
     group_infos_t::iterator cur_group_iter ;
     {
         so_thread::lock_guard_t lk( _mtx_lis ) ;
-        auto iter = std::find_if( _gis.begin(), _gis.end(), [&]( this_t::group_info_cref_t li )
-        { 
-            return  li.group_id == layer ;
+        auto iter = std::find_if( _gis.begin(), _gis.end(), [&] ( this_t::group_info_cref_t li )
+        {
+            return  li.group_id == group ;
         } ) ;
         cur_group_iter = iter ;
 
         if( iter == _gis.end() )
         {
-            group_info_t li ;
-            li.group_id = layer ;
-            
-            auto const lower_iter = std::lower_bound( _gis.begin(), _gis.end(), layer,
-                [&]( this_t::group_info_cref_t li, size_t const val  )
-            { 
-                return li.group_id < val;
-            } ) ;
-            cur_group_iter = _gis.insert( lower_iter, li ) ;
+            cur_group_iter = this_t::insert_group( group ) ;
         }
     }
 
@@ -169,24 +206,30 @@ so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_
                     "[text_render_2d::draw_text] : glyph ? must be included" ) ;
             }
             //adv = ( gi.dims * _glyph_atlas_size ) / 
-              //  so_math::vec2f_t( ci.vp.get_width<float_t>(),ci.vp.get_height<float_t>() ) ;
-            adv = gi.dims * scale ;
+            //  so_math::vec2f_t( ci.vp.get_width<float_t>(),ci.vp.get_height<float_t>() ) ;
+            adv = gi.dims * scale  ;
         }
         else
         {
+            
             adv = so_math::vec2f_t(
-                float_t(_point_size) / _ci.vp.get_width<float_t>(),
-                float_t( _point_size ) / _ci.vp.get_height<float_t>() ) ;
+                float_t( 20 ) / _ci.vp.get_width<float_t>(),
+                float_t( 20 ) / _ci.vp.get_height<float_t>() ) ;
+                
+            //adv = so_math::vec2f_t( float_t( 10 ), float_t( 10 )  ) ;
         }
 
+        adv *= so_math::vec2f_t( point_size_scale, 1.0f ) ;
+
         // 2. compute position
-        so_math::vec2f_t const pos = start_pos  ;
-        
+        so_math::vec2f_t const pos = start_pos ;
+
         // 3. store
         this_t::glyph_info_t this_gi ;
-        this_gi.pos = pos ;
+        this_gi.pos = of( pos ) ;
         this_gi.offset = buffer_offset ;
         this_gi.color = color ;
+        this_gi.point_size_scale = point_size_scale ;
 
         if( do_search )
             gis.push_back( this_gi ) ;
@@ -198,7 +241,7 @@ so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_
         group_info_ref_t li = *cur_group_iter ;
 
         so_thread::lock_guard_t lk( li.mtx ) ;
-        
+
 
         for( auto const & igi : gis )
             li.glyph_infos.push_back( igi ) ;
@@ -208,8 +251,9 @@ so_gfx::result text_render_2d::draw_text( size_t const layer, size_t const font_
 }
 
 //************************************************************************************
-so_gfx::result text_render_2d::draw_begin( void_t )
+so_gfx::result text_render_2d::draw_begin( canvas_info_cref_t ci )
 {
+    _ci = ci ;
     return so_gfx::ok ;
 }
 
@@ -225,7 +269,6 @@ so_gfx::result text_render_2d::draw_end( void_t )
     // 2. refill glyph shared data buffers
     // 3. clear the group's glyph draw buffers
     {
-        size_t gid = 0 ;
         for( auto & p : _gis )
         {
             group_info_ref_t li = p ;
@@ -239,15 +282,17 @@ so_gfx::result text_render_2d::draw_end( void_t )
                 igi.color = gi.color ;
                 igi.offset = gi.offset ;
                 igi.pos = gi.pos ;
+                igi.point_size_scale = gi.point_size_scale ;
                 _sd_ptr->glyph_infos.push_back( igi ) ;
             }
 
             // do per group info
             {
                 text_render_2d_shared_data_t::per_group_info_t pli ;
-                pli.group_id = gid++ ;
+                pli.group_id = li.group_id ;
                 pli.num_glyphs = li.glyph_infos.size() ;
-
+                pli.proj = li.proj ;
+                pli.view = li.view ;
                 _sd_ptr->per_group_infos.push_back( pli ) ;
             }
 

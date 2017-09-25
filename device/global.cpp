@@ -10,6 +10,7 @@
 
 using namespace so_device ;
 
+so_thread::mutex_t global::_mtx ;
 global::this_ptr_t global::_ptr = nullptr ;
 
 //****************************************************************************************
@@ -32,17 +33,24 @@ global::~global( void_t )
 }
 
 //****************************************************************************************
-bool_t global::init( void_t )
+global::this_ptr_t global::init( void_t )
 {
     if( so_core::is_not_nullptr( global_t::_ptr ) )
-        return true ;
+        return this_t::_ptr ;
 
-    global::_ptr = so_device::memory::alloc( this_t(), 
-        "[so_device::global::init] : global singleton" ) ;
+    {
+        so_thread::lock_guard_t lk( this_t::_mtx ) ;
 
-    so_log::global::status( "[online] : snakeoil device" ) ;
+        if( so_core::is_not_nullptr( global_t::_ptr ) )
+            return this_t::_ptr ;
 
-    return true ;
+        global::_ptr = so_device::memory::alloc( this_t(),
+            "[so_device::global::init]" ) ;
+
+        so_log::global::status( "[online] : snakeoil device" ) ;
+    }
+
+    return this_t::_ptr ;
 }
 
 //****************************************************************************************
@@ -58,8 +66,7 @@ void_t global::deinit( void_t )
 //****************************************************************************************
 global::this_ptr_t global::get( void_t )
 {
-    this_t::init() ;
-    return this_t::_ptr ;
+    return this_t::init() ;
 }
 
 //****************************************************************************************

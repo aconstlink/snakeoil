@@ -97,9 +97,9 @@ so_gpu::attribute_state_field_cref_t render_state::get_attributes( void_t ) cons
 }
 
 //*************************************************************************************
-so_gpu::state_sets_cptr_t render_state::get_states( void_t ) const 
+so_gpu::state_sets_cref_t render_state::get_states( void_t ) const 
 {
-    return &_ss ;
+    return _ss ;
 }
 
 //*************************************************************************************

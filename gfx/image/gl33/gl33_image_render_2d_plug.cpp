@@ -144,9 +144,9 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_load( void_t )
     {
         _vb->add_layout_element<so_math::vec3f_t>( so_gpu::vertex_attribute::position ) ;
 
-        size_t const num_glyph_quads = _num_quads ;
+        size_t const num_quads = _num_quads ;
 
-        for( size_t i = 0; i<num_glyph_quads; ++i )
+        for( size_t i = 0; i < num_quads; ++i )
         {
             _vb->add_vertex( vertex_t { so_math::vec3f_t( -0.5f, -0.5f, 0.0f ) } ) ;
             _vb->add_vertex( vertex_t { so_math::vec3f_t( -0.5f, 0.5f, 0.0f ) } ) ;
@@ -154,7 +154,7 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_load( void_t )
             _vb->add_vertex( vertex_t { so_math::vec3f_t( 0.5f, -0.5f, 0.0f ) } ) ;
         }
 
-        for( size_t i = 0; i<num_glyph_quads; ++i )
+        for( size_t i = 0; i < num_quads; ++i )
         {
             uint_t const index = uint_t( i ) * 4 ;
 

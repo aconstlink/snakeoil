@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_SCENE_VISITOR_VISITOR_H_
-#define _SNAKEOIL_SCENE_VISITOR_VISITOR_H_
+#pragma once
 
 #include "ivisitor.h"
 
@@ -61,5 +60,3 @@ namespace so_scene
         };
     }
 }
-
-#endif

@@ -82,12 +82,26 @@ namespace so_gpu
 
     struct state_sets
     {
+        so_this_typedefs( state_sets ) ;
+
         blend_state_set blend_s ;
         color_state_set color_s ;
         depth_state_set depth_s ;
         stencil_state_set stencil_s ;
         polygon_state_set polygon_s ;
         viewport_state_set viewport_s ;
+
+        this_ref_t operator = ( this_cref_t rhv )
+        {
+            blend_s = rhv.blend_s ;
+            color_s = rhv.color_s ;
+            depth_s = rhv.depth_s ;
+            stencil_s = rhv.stencil_s ;
+            polygon_s = rhv.polygon_s ;
+            viewport_s = rhv.viewport_s ;
+
+            return *this ;
+        }
     };
     so_typedef( state_sets ) ;
 }

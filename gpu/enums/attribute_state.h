@@ -21,8 +21,9 @@ namespace so_gpu
 
     class attribute_state_field
     {
-        typedef attribute_state_field this_t ;
-        typedef this_t & this_ref_t ;
+        so_this_typedefs( attribute_state_field ) ;
+
+    private:
 
         size_t _bits ;
 
@@ -30,13 +31,13 @@ namespace so_gpu
         
         attribute_state_field( void_t ) : _bits(0) {}
 
-        this_ref_t add( attribute_state ps ) 
+        this_ref_t add( attribute_state const ps ) 
         { 
             _bits |= size_t(1) << size_t(ps) ; 
             return *this ; 
         }
 
-        this_ref_t remove( attribute_state ps ) 
+        this_ref_t remove( attribute_state const ps ) 
         { 
             _bits ^= ((size_t(1) << size_t(ps)) & _bits) ; 
             return *this ; 
@@ -47,12 +48,12 @@ namespace so_gpu
             _bits = 0 ; return *this ; 
         }
 
-        size_t get_bit( attribute_state ps ) const 
+        size_t get_bit( attribute_state const ps ) const 
         { 
             return (_bits >> size_t(ps)) & size_t(1) ; 
         }
 
-        bool_t has_set( attribute_state ps ) const 
+        bool_t has_set( attribute_state const ps ) const 
         { 
             return get_bit(ps) != 0 ; 
         }

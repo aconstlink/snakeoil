@@ -54,7 +54,7 @@ namespace so_scene
 
 
             so_gpu::attribute_state_field_cref_t get_attributes( void_t ) const ;
-            so_gpu::state_sets_cptr_t get_states( void_t ) const ;
+            so_gpu::state_sets_cref_t get_states( void_t ) const ;
 
             void_t set_decorated( so_scene::so_node::node_ptr_t ) ;
 

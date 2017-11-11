@@ -8,9 +8,12 @@
 
 #include <snakeoil/imex/image/image.h>
 
+#include <snakeoil/thread/parallel_for.hpp>
+
 #include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/math/vector/vector3.hpp>
 #include <snakeoil/math/vector/vector4.hpp>
+#include <snakeoil/math/utility/index_1d_to_2d.hpp>
 
 #include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
@@ -83,17 +86,18 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
-                {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[index + 0] ) ) ;
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
 
-                    index += num_comp ;
+                for( size_t i = r.begin(); i < r.end(); ++i )
+                {
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ i + 0 ] ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -109,18 +113,21 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y=0; y<imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x=0; x<imex_ptr->width; ++x )
-                {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[index+0], 
-                        img_data_in_ptr[index+1] ) ) ;
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
 
-                    index += num_comp ;
+                for( size_t i = r.begin(); i < r.end(); ++i )
+                {
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ index + 0 ],
+                        img_data_in_ptr[ index + 1 ] ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -136,20 +143,23 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y=0; y<imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x=0; x<imex_ptr->width; ++x )
-                {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[index+0], 
-                        img_data_in_ptr[index+1], 
-                        img_data_in_ptr[index+2],
-                        255 ) ) ;
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
 
-                    index += num_comp ;
+                for( size_t i = r.begin(); i < r.end(); ++i )
+                {
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ index + 0 ],
+                        img_data_in_ptr[ index + 1 ],
+                        img_data_in_ptr[ index + 2 ],
+                        255 ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -164,20 +174,23 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
             image_2d_ptr_t gpu_img_ptr = image_2d_t::create( p ) ;
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y=0; y<imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x=0; x<imex_ptr->width; ++x )
-                {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[index+0], 
-                        img_data_in_ptr[index+1], 
-                        img_data_in_ptr[index+2],
-                        img_data_in_ptr[index+3]) ) ;
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
 
-                    index += num_comp ;
+                for( size_t i = r.begin(); i < r.end(); ++i )
+                {
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ index + 0 ],
+                        img_data_in_ptr[ index + 1 ],
+                        img_data_in_ptr[ index + 2 ],
+                        img_data_in_ptr[ index + 3 ] ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -201,17 +214,20 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
-                {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[ index + 0 ] ) ) ;
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
 
-                    index += num_comp ;
+                for( size_t i = r.begin(); i < r.end(); ++i )
+                {
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ index + 0 ] ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -228,20 +244,23 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
-                        255.0f ) ) ;
-
-                    index += num_comp ;
+                        1.0f ) ) ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -256,20 +275,23 @@ void_t image_creator::construct_from( so_imex::image_cptr_t imex_ptr, so_memory:
             image_2d_ptr_t gpu_img_ptr = image_2d_t::create( p ) ;
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
                         img_data_in_ptr[ index + 3 ] ) ) ;
-
-                    index += num_comp ;
                 }
-            }
+            } ) ;
 
             _img_ptr = gpu_img_ptr ;
         }
@@ -302,18 +324,18 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
-            {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&]( so_thread::range_1d< size_t > const & r ) 
+            { 
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i=r.begin(); i<r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
-                        img_data_in_ptr[ index + 0 ] ) ) ;
-
-                    index += num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
+                        img_data_in_ptr[ i + 0 ] ) ) ;
                 }
-            }
-
+            } ) ;
         }
         else if( num_comp == 2 )
         {
@@ -331,19 +353,21 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ] ) ) ;
-
-                    index += num_comp ;
                 }
-            }
-
+            } ) ;
         }
         else if( num_comp == 3 )
         {
@@ -361,21 +385,23 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
                         255 ) ) ;
-
-                    index += num_comp ;
                 }
-            }
-
+            } ) ;
         }
         else if( num_comp == 4 )
         {
@@ -392,21 +418,23 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
             }
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
                         img_data_in_ptr[ index + 3 ] ) ) ;
-
-                    index += num_comp ;
                 }
-            }
-
+            } ) ;
         }
         else
         {
@@ -432,18 +460,20 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ] ) ) ;
-
-                    index += num_comp ;
                 }
-            }
-
+            } ) ;
         }
         // @todo comp == 2
         else if( num_comp == 3 )
@@ -462,21 +492,23 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
 
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
-                        255.0f ) ) ;
-
-                    index += num_comp ;
+                        1.0f ) ) ;
                 }
-            }
-
+            } ) ;
         }
         else if( num_comp == 4 )
         {
@@ -493,21 +525,23 @@ void_t image_creator::copy_from( so_imex::iimage_cptr_t img_in, so_gpu::iimage_2
             }
             gpu_img_ptr->resize( imex_ptr->width, imex_ptr->height ) ;
 
-            size_t index = 0 ;
-            for( size_t y = 0; y < imex_ptr->height; ++y )
+            so_thread::parallel_for<size_t>( so_thread::range_1d<size_t>( 0, imex_ptr->width*imex_ptr->height ),
+                [&] ( so_thread::range_1d< size_t > const & r )
             {
-                for( size_t x = 0; x < imex_ptr->width; ++x )
+                so_math::index_1d_to_2d<size_t> i1dt2d( imex_ptr->width, imex_ptr->height ) ;
+
+                for( size_t i = r.begin(); i < r.end(); ++i )
                 {
-                    gpu_img_ptr->set_pixel( x, y, pixel_t(
+                    size_t const index = i * num_comp ;
+                    so_math::vector2<size_t> const xy = i1dt2d.to_index( i ) ;
+
+                    gpu_img_ptr->set_pixel( xy.x(), xy.y(), pixel_t(
                         img_data_in_ptr[ index + 0 ],
                         img_data_in_ptr[ index + 1 ],
                         img_data_in_ptr[ index + 2 ],
                         img_data_in_ptr[ index + 3 ] ) ) ;
-
-                    index += num_comp ;
                 }
-            }
-
+            } ) ;
         }
     }
 }

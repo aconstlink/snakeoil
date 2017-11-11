@@ -198,51 +198,11 @@ set( SOURCES
 
     property/property_map.h
     property/property_map.cpp
-    
-    #traverser/image_loader.h
-    #traverser/image_loader.cpp
 
     ${SNAKEOIL_SOURCES}
     )
 
 set( EXTERNAL_LIBRARIES )
-
-if( FBXSDK_ENABLE )
-    set( FBX_SOURCES
-        module/fbx/fbx_module.h
-        module/fbx/fbx_module.cpp
-        module/fbx/fbx_module_import.cpp
-    )
-    set( SOURCES ${SOURCES} ${FBX_SOURCES} )
-
-    include_directories( ${FBXSDK_INCLUDE_DIRS} )
-    add_definitions( ${FBXSDK_DEFINITIONS} )
-
-    set( EXTERNAL_LIBRARIES
-        ${EXTERNAL_LIBRARIES}
-        ${FBXSDK_LIBRARIES}
-        )
-endif()
-
-if( MELANGESDK_ENABLE )
-    set( C4D_SOURCES
-        module/c4d/c4d_import_context.h
-        module/c4d/c4d_import_context.cpp
-        module/c4d/c4d_module.h
-        module/c4d/c4d_module.cpp
-        module/c4d/c4d_module_import.cpp
-        module/c4d/c4d_module_export.cpp
-    )
-    set( SOURCES ${SOURCES} ${C4D_SOURCES} )
-
-    include_directories( ${MELANGESDK_INCLUDE_DIRS} )
-    add_definitions( ${MELANGESDK_DEFINITIONS} )
-
-    set( EXTERNAL_LIBRARIES
-        ${EXTERNAL_LIBRARIES}
-        ${MELANGESDK_LIBRARIES}
-        )
-endif()
 
 if( OPENCTM_ENABLE )
     set( OPENCTM_SOURCES

@@ -5,11 +5,12 @@
 #ifndef _SNAKEOIL_STD_CONTAINER_STACK_HPP_
 #define _SNAKEOIL_STD_CONTAINER_STACK_HPP_
 
+#include "vector.hpp"
+
 #include <snakeoil/core/types.hpp>
 #include <snakeoil/core/assert.h>
 #include <snakeoil/core/macros/typedef.h>
 
-#include <vector>
 #include <functional>
 
 namespace so_std
@@ -20,17 +21,18 @@ namespace so_std
     template< typename O, size_t pre_alloc >
     class stack
     {
-        typedef so_std::stack< O, pre_alloc > this_stack_t ;
-        so_this_typedefs( this_stack_t ) ;
+        typedef so_std::stack< O, pre_alloc > this_t ;
+        so_this_typedefs( this_t ) ;
+        
         
         so_typedefs( O, object ) ;
-        typedef std::vector< object_t > stack_t ;
+        typedef so_std::vector< object_t > stack_t ;
         
         typedef std::function< void_t( object_cref_t, bool_t const, bool_t const ) > for_each_funk_t ;
 
     private:
 
-        std::vector< object_t > _stack ;
+        so_std::vector< object_t > _stack ;
 
         /// one above top of stack
         /// top of stack is last pushed
@@ -87,7 +89,7 @@ namespace so_std
             ++_cur_pos ;
         }
 
-        object_rref_t pop( void_t )
+        object_t pop( void_t )
         {
             so_assert( _cur_pos > 0 ) ;
             --_cur_pos ;
@@ -114,7 +116,7 @@ namespace so_std
         object_cref_t top( void_t ) const 
         {
             so_assert( _cur_pos != 0 ) ;
-            return _stack[_cur_pos-1] ;
+            return _stack.at( _cur_pos-1 ) ;
         }
 
         bool_t top( object_ref_t out_ ) const 

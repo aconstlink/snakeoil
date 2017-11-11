@@ -251,19 +251,20 @@ so_gfx::result text_render_2d::draw_text( size_t const group, size_t const font_
 }
 
 //************************************************************************************
-so_gfx::result text_render_2d::draw_begin( canvas_info_cref_t ci )
+so_gfx::result text_render_2d::set_canvas_info( canvas_info_cref_t ci )
 {
     _ci = ci ;
     return so_gfx::ok ;
 }
 
 //************************************************************************************
-so_gfx::result text_render_2d::draw_end( void_t )
+so_gfx::result text_render_2d::prepare_for_rendering( void_t )
 {
     // 1. clear out the shared data
     {
         _sd_ptr->glyph_infos.resize( 0 ) ;
         _sd_ptr->per_group_infos.resize( 0 ) ;
+        _render_groups.clear() ;
     }
 
     // 2. refill glyph shared data buffers
@@ -293,6 +294,7 @@ so_gfx::result text_render_2d::draw_end( void_t )
                 pli.num_glyphs = li.glyph_infos.size() ;
                 pli.proj = li.proj ;
                 pli.view = li.view ;
+                _render_groups.push_back( li.group_id ) ;
                 _sd_ptr->per_group_infos.push_back( pli ) ;
             }
 
@@ -309,8 +311,27 @@ so_gfx::result text_render_2d::draw_end( void_t )
 }
 
 //************************************************************************************
+bool_t text_render_2d::need_to_render( size_t const gid ) const
+{
+    for( auto id : _render_groups )
+    {
+        if( id < gid ) continue ;
+        if( id > gid ) break ;
+        return true ;
+    }
+
+    return false ;
+}
+
+//************************************************************************************
 so_gfx::result text_render_2d::render( size_t const gid )
 {
+    {
+        bool_t const b = this_t::need_to_render( gid ) ;
+        if( so_core::is_not( b ) )
+            return so_gfx::ok ;
+    }
+
     so_gpx::schedule_instance_t si ;
     si.render_id = gid ;
     _gpxr->schedule( _t_rnd, 0, si ) ;

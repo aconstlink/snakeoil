@@ -48,6 +48,7 @@ if( NOT snakeoil_FIND_COMPONENTS )
     snakeoil_log
     #snakeoil_core
     snakeoil_project_cars
+    snakeoil_ui
    )
 else()
     foreach( COMP ${snakeoil_FIND_COMPONENTS} )
@@ -103,18 +104,9 @@ endif()
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${SNAKEOIL_MODULES_DIR}" )
     
-# melange sdk
-set( MELANGESDK_ENABLE_HINT @MELANGESDK_ENABLE@ )
-find_package( MelangeSdk )
-
 # OpenCtm
 set( OPENCTM_ENABLE @OPENCTM_ENABLE@ )
 find_package( OpenCtm )
-
-# ProtoBuf
-set( PROTOBUF_ENABLE @PROTOBUF_ENABLE@ )
-find_package( Protobuf )
-
 
 ####################################################################
 # Build-In externals paths

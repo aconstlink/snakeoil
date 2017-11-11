@@ -199,19 +199,22 @@ so_gfx::result image_render_2d::draw_image( size_t const group, image_id_cref_t 
         }
     }
 
-    group_info_t::ids_and_images_t::iterator id_to_images_iter ;
+    id_to_images_ptr_t id_to_images_ptr = nullptr ;
     {
         so_thread::lock_guard_t lk( gptr->mtx ) ;
-        id_to_images_iter = std::find_if( gptr->ids_and_images.begin(), gptr->ids_and_images.end(), 
+        auto iter = std::find_if( gptr->ids_and_images.begin(), gptr->ids_and_images.end(), 
             [&] ( this_t::id_to_images_ptr_t item ) { return item->image_index == image_id._iid ; } ) ;
 
-        if( id_to_images_iter == gptr->ids_and_images.end() )
+        if( iter == gptr->ids_and_images.end() )
         {
             this_t::id_to_images_t iti ;
             iti.image_index = image_id._iid ;
-            id_to_images_iter = gptr->ids_and_images.insert( gptr->ids_and_images.end(), 
-                so_gfx::memory::alloc( std::move(iti), "[image_render_2d::draw_image] : id_to_images " ) ) ;
+            id_to_images_ptr = so_gfx::memory::alloc( std::move( iti ), "[image_render_2d::draw_image] : id_to_images " ) ;
+
+            gptr->ids_and_images.insert( gptr->ids_and_images.end(), id_to_images_ptr ) ;
         }
+        else
+            id_to_images_ptr = *iter ;
     }
     
     // image info
@@ -224,26 +227,21 @@ so_gfx::result image_render_2d::draw_image( size_t const group, image_id_cref_t 
         ii.rot = rot ;
         ii.image_id = image_id ;
 
-        so_thread::lock_guard_t lk( (*id_to_images_iter)->mtx ) ;
-        (*id_to_images_iter)->image_infos.push_back( ii ) ;
+        so_thread::lock_guard_t lk( id_to_images_ptr->mtx ) ;
+        id_to_images_ptr->image_infos.push_back( ii ) ;
     }
     
     return so_gfx::ok ;
 }
 
 //************************************************************************************
-so_gfx::result image_render_2d::draw_begin( void_t )
-{
-    return so_gfx::ok ;
-}
-
-//************************************************************************************
-so_gfx::result image_render_2d::draw_end( void_t )
+so_gfx::result image_render_2d::prepare_for_rendering( void_t )
 {
     // 1. clear out the shared data
     {
         _sd_ptr->image_infos.resize( 0 ) ;
         _sd_ptr->per_group_infos.resize( 0 ) ;
+        _render_groups.clear() ;
     }
 
     // 2. copy data to shared data object
@@ -264,6 +262,7 @@ so_gfx::result image_render_2d::draw_end( void_t )
                     //pgi.proj ;
                     //pgi.view ;
 
+                    _render_groups.push_back( p->group_id ) ;
                     _sd_ptr->per_group_infos.push_back( pgi ) ;
                 }
 
@@ -309,8 +308,27 @@ so_gfx::result image_render_2d::draw_end( void_t )
 }
 
 //************************************************************************************
+bool_t image_render_2d::need_to_render( size_t const gid ) const
+{
+    for( auto id : _render_groups )
+    {
+        if( id < gid ) continue ;
+        if( id > gid ) break ;
+        return true ;
+    }
+
+    return false ;
+}
+
+//************************************************************************************
 so_gfx::result image_render_2d::render( size_t const gid )
 {
+    {
+        bool_t const b = this_t::need_to_render( gid ) ;
+        if( so_core::is_not( b ) )
+            return so_gfx::ok ;
+    }
+
     so_gpx::schedule_instance_t si ;
     si.render_id = gid ;
     _gpxr->schedule( _t_rnd, 0, si ) ;

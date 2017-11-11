@@ -186,6 +186,9 @@ namespace so_gfx
         so_thread::mutex_t _mtx_image ;
         images_t _images ;
         
+        so_typedefs( so_std::vector< size_t >, render_group_ids ) ;
+        render_group_ids_t _render_groups ;
+
     public:
 
         image_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -211,8 +214,9 @@ namespace so_gfx
             so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale, float_t const rot,
             so_math::vec4f_cref_t color ) ;
 
-        so_gfx::result draw_begin( void_t ) ;
-        so_gfx::result draw_end( void_t ) ;
+        
+        so_gfx::result prepare_for_rendering( void_t ) ;
+        bool_t need_to_render( size_t const ) const ;
         so_gfx::result render( size_t const ) ;
 
         so_gfx::result release( void_t ) ;

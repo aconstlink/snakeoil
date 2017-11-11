@@ -68,18 +68,13 @@ void_t line_render_2d::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-void_t line_render_2d::draw_begin( void_t )
-{
-
-}
-
-//************************************************************************************
-void_t line_render_2d::draw_end( void_t )
+void_t line_render_2d::prepare_for_rendering( void_t )
 {
     // 1. clear out the shared data
     {
         _sd_ptr->line_infos.clear() ;
         _sd_ptr->per_group_infos.clear() ;
+        _render_groups.clear() ;
     }
 
     for( auto * gptr : _group_infos )
@@ -106,12 +101,26 @@ void_t line_render_2d::draw_end( void_t )
                 li.pos1 = l.pos1;
                 li.pos0 = l.pos0 ;
 
+                _render_groups.push_back( gptr->group_id ) ;
                 _sd_ptr->line_infos.push_back( li ) ;
             }
         }
 
         gptr->line_infos.clear() ;
     }
+}
+
+//************************************************************************************
+bool_t line_render_2d::need_to_render( size_t const gid ) const
+{
+    for( auto id : _render_groups )
+    {
+        if( id < gid ) continue ;
+        if( id > gid ) break ;
+        return true ;
+    }
+
+    return false ;
 }
 
 //************************************************************************************
@@ -163,6 +172,12 @@ void_t line_render_2d::draw_lines( size_t const group_id, size_t const num_lines
 //************************************************************************************
 void_t line_render_2d::render( size_t const gid )
 {
+    {
+        bool_t const b = this_t::need_to_render( gid ) ;
+        if( so_core::is_not( b ) )
+            return ;
+    }
+
     so_gpx::schedule_instance_t si ;
     si.render_id = gid ;
     _gpxr->schedule( _t_rnd, 0, si ) ;

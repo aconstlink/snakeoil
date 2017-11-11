@@ -10,6 +10,8 @@ set( GL33_SOURCES
   line/gl33/gl33_line_render_2d_plug.cpp
   image/gl33/gl33_image_render_2d_plug.h
   image/gl33/gl33_image_render_2d_plug.cpp
+  rect/gl33/gl33_rect_render_2d_plug.h
+  rect/gl33/gl33_rect_render_2d_plug.cpp
 )
   
 set( SOURCES 
@@ -36,6 +38,12 @@ set( SOURCES
     line/line_render_2d_plug_factory.h
     line/line_render_2d_plug_factory.cpp
     line/line_render_2d_shared_data.h
+
+    rect/rect_render_2d.h
+    rect/rect_render_2d.cpp
+    rect/rect_render_2d_plug_factory.h
+    rect/rect_render_2d_plug_factory.cpp
+    rect/rect_render_2d_shared_data.h
 
     image/image_render_2d.h
     image/image_render_2d.cpp

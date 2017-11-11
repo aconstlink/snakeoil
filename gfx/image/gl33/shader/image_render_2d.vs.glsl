@@ -18,7 +18,8 @@ out vertex_data
 
 void main()
 {
-  int index = ( (gl_VertexID / 6) + int(u_offset) ) << 2 ;
+  int image_id = (gl_VertexID >> 2) + int(u_offset) ; 
+  int index = image_id << 2 ;
 
   vec4 d0 = texelFetch( u_image_info, index + 0 ) ;
   vec4 d1 = texelFetch( u_image_info, index + 1 ) ;
@@ -28,5 +29,6 @@ void main()
   vec2 tx  = sign(in_pos.xy) * vec2(0.5) + vec2(0.5) ;
   vso.tx = d2.xy + tx * d2.zw ;
 
-  gl_Position = vec4( vec3(d0.zw,1.0) * sign(in_pos), 1.0) ;
+  vec2 pos = sign(in_pos.xy) * d0.zw + d0.xy ;
+  gl_Position = vec4( pos, 0.0, 1.0) ;
 }

@@ -129,6 +129,9 @@ namespace so_gpu
 
         virtual void_t resize( size_t width, size_t height )
         {
+            if( _width == width && _height == height )
+                return ;
+
             _width = width ; _height = height ;
             _pixels.resize( width * height ) ;
         }

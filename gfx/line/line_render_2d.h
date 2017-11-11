@@ -95,6 +95,9 @@ namespace so_gfx
         so_thread::mutex_t _mtx_group ;
         group_infos_t _group_infos ;
 
+        so_typedefs( so_std::vector< size_t >, render_group_ids ) ;
+        render_group_ids_t _render_groups ;
+
     public:
 
         line_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -111,9 +114,10 @@ namespace so_gfx
 
     public: // draw
 
-        void_t draw_begin( void_t ) ;
-        void_t draw_end( void_t ) ;
-    
+        
+        void_t prepare_for_rendering( void_t ) ;
+        bool_t need_to_render( size_t const ) const ;
+
         typedef std::function< line_info_t ( size_t const ) > draw_line_funk_t ;
         void_t draw_lines( size_t const, size_t const, draw_line_funk_t ) ;
 

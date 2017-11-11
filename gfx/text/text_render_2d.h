@@ -128,6 +128,9 @@ namespace so_gfx
         so_thread::mutex_t _mtx_lis ;
         group_infos_t _gis ;
 
+        so_typedefs( so_std::vector< size_t >, render_group_ids ) ;
+        render_group_ids_t _render_groups ;
+
     public:
 
         text_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -152,8 +155,9 @@ namespace so_gfx
         so_gfx::result draw_text( size_t const group, size_t const font_id, size_t const point_size,
             so_math::vec2f_cref_t pos, offset_funk_t, so_math::vec3f_cref_t color, so_std::string_cref_t ) ;
 
-        so_gfx::result draw_begin( canvas_info_cref_t ) ;
-        so_gfx::result draw_end( void_t ) ;
+        so_gfx::result set_canvas_info( canvas_info_cref_t ) ;
+        so_gfx::result prepare_for_rendering( void_t ) ;
+        bool_t need_to_render( size_t const ) const ;
         so_gfx::result render( size_t const ) ;
 
         so_gfx::result release( void_t ) ;

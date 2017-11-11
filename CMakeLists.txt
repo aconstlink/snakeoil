@@ -7,8 +7,8 @@ cmake_minimum_required( VERSION 3.6 )
 project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
-set( SNAKEOIL_MINOR_VERSION 0 )
-set( SNAKEOIL_PATCH_VERSION 10 )
+set( SNAKEOIL_MINOR_VERSION 1 )
+set( SNAKEOIL_PATCH_VERSION 0 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -89,10 +89,7 @@ find_package( RapidXml REQUIRED )
 
 #
 # optionals
-find_package( FbxSdk )
 find_package( OpenCtm )
-find_package( Protobuf )
-find_package( MelangeSdk )
 
 if( SNAKEOIL_TARGET_OS_WIN )
     find_package( XInput REQUIRED )
@@ -146,6 +143,7 @@ set( SUBDIRS
     "application"
     "spline"
     "property"
+    "ui"
     )
 elseif( SNAKEOIL_TARGET_OS_LIN )
 set( SUBDIRS

@@ -61,5 +61,6 @@ void main( )
     //
     vec3 pos = sign(in_pos) * 0.5 + 0.5 ; 
     pos = pos * vec3( smp_dims.xy*u_scale*point_ss, 1.0 ) + vec3( text_data_00.yz+vec2(0.0, bearing*point_ss), 0.0 ) ;
-    gl_Position = u_view * u_proj * vec4( pos, 1.0 ) ;
+    
+    gl_Position = u_proj * u_view * vec4( pos, 1.0 ) ;
 }

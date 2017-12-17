@@ -45,18 +45,22 @@ namespace so_gfx
             so_math::mat4f_t proj ;
             so_math::mat4f_t view ;
 
+            float_t line_width = 1.0f ;
+
             group_info( void_t ) {}
             group_info( this_cref_t rhv ) {
                 line_infos = rhv.line_infos ;
                 group_id = rhv.group_id ;
                 proj = rhv.proj ;
                 view = rhv.view ;
+                line_width = rhv.line_width ;
             }
             group_info( this_rref_t rhv ) {
                 line_infos = std::move( rhv.line_infos ) ;
                 group_id = rhv.group_id ;
                 proj = rhv.proj ;
                 view = rhv.view ;
+                line_width = rhv.line_width ;
             }
             ~group_info( void_t ) {}
 
@@ -65,6 +69,7 @@ namespace so_gfx
                 group_id = rhv.group_id ;
                 proj = rhv.proj ;
                 view = rhv.view ;
+                line_width = rhv.line_width ;
                 return *this ;
             }
             this_ref_t operator = ( this_rref_t rhv ) {
@@ -72,6 +77,7 @@ namespace so_gfx
                 group_id = rhv.group_id ;
                 proj = rhv.proj ;
                 view = rhv.view ;
+                line_width = rhv.line_width ;
                 return *this ;
             }
 
@@ -98,6 +104,10 @@ namespace so_gfx
         so_typedefs( so_std::vector< size_t >, render_group_ids ) ;
         render_group_ids_t _render_groups ;
 
+    private: 
+
+        group_info_ptr_t find_or_create_group_info( size_t const ) ;
+
     public:
 
         line_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -113,13 +123,16 @@ namespace so_gfx
         void_t init( void_t ) ;
 
     public: // draw
-
         
         void_t prepare_for_rendering( void_t ) ;
         bool_t need_to_render( size_t const ) const ;
 
         typedef std::function< line_info_t ( size_t const ) > draw_line_funk_t ;
         void_t draw_lines( size_t const, size_t const, draw_line_funk_t ) ;
+
+        /// per group line width. this is a temporary function until 
+        /// a per line - line width is implemented
+        void_t set_line_width( size_t const, float_t const ) ;
 
     public: // render
 

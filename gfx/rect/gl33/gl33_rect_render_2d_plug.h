@@ -88,6 +88,9 @@ namespace so_gfx
             /// lines, a group could have 
             var_sets_t _var_sets ;
 
+            so_math::mat4f_t _proj ;
+            so_math::mat4f_t _view ;
+
         public:
 
             gl33_rect_render_2d_plug( so_gfx::rect_render_2d_shared_data_ptr_t,

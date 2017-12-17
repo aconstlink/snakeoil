@@ -59,6 +59,8 @@ namespace so_device
 
     so_class_proto_typedefs( imidi_notify ) ;
 
+    so_class_proto_typedefs( igamepad_notify ) ;
+
     namespace so_win32
     {
         so_class_proto_typedefs( rawinput_api ) ;

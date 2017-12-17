@@ -4,6 +4,8 @@
 //------------------------------------------------------------
 #include "xinput_api.h"
 
+#include "../../gamepad_notify.h"
+
 #include "../../../devices/gamepad/gamepad_device.h"
 #include "../../../component/buttons/binary_button.h"
 #include "../../../component/buttons/value_button.h"
@@ -41,6 +43,7 @@ xinput_api::xinput_api( this_rref_t rhv )
 {
     _devices = std::move( rhv._devices ) ;
     _xinput_mappings = std::move( rhv._xinput_mappings ) ;
+    _notifies = std::move( rhv._notifies ) ;
 }
 
 //****************************************************************************************
@@ -54,6 +57,11 @@ xinput_api::~xinput_api( void_t )
     {
         so_device::gamepad_device_t::destroy(item.device_ptr) ;
         so_device::so_win32::xinput_device_t::destroy( item.xinput_ptr) ;
+    }
+
+    for( auto * nptr : _notifies )
+    {
+        nptr->destroy() ;
     }
 }
 
@@ -195,188 +203,204 @@ so_device::gamepad_device_ptr_t xinput_api::find_any_device( void_t )
 }
 
 //****************************************************************************************
+so_device::so_vgamepad::xbox_360_ptr_t xinput_api::find_device( size_t const id )
+{
+    if( _devices.size() <= id )
+        return nullptr ;
+
+    return dynamic_cast<so_device::so_vgamepad::xbox_360_ptr_t>( _devices[ id ].vdevs[0] ) ;
+}
+
+//****************************************************************************************
 bool_t xinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t ivdev_ptr )
+{
+    return this_t::register_device( 0, ivdev_ptr ) ;
+}
+
+//****************************************************************************************
+bool_t xinput_api::register_device( size_t const dev_id, so_device::so_vdev::ivdev_ptr_t ivdev_ptr )
 {
     if( so_core::is_nullptr( ivdev_ptr ) )
         return false ;
 
-    if( so_core::can_cast<so_device::so_vgamepad::xbox_360_ptr_t>( ivdev_ptr ) )
-    {
-        if( _devices.size() == 0 )
-            return false ;
+    if( so_core::is_not( so_core::can_cast< so_device::so_vgamepad::xbox_360_ptr_t >( ivdev_ptr ) ) )
+        return false ;
 
-        so_device::so_vgamepad::xbox_360_ptr_t vptr = static_cast<
-            so_device::so_vgamepad::xbox_360_ptr_t >( ivdev_ptr ) ;
+    
+    if( _devices.size() <= dev_id )
+        return false ;
+
+    so_device::so_vgamepad::xbox_360_ptr_t vptr = static_cast<
+        so_device::so_vgamepad::xbox_360_ptr_t >( ivdev_ptr ) ;
 
 
-        // handle virtual device
+    // handle virtual device
 
-        // 1. register notification
+    // 1. register notification
 
-        so_device::funk_notify_ptr_t gamepad_notify = so_device::funk_notify_t::create(
-            [=]( so_device::idevice_ptr_t, so_std::string_cref_t name,
+    so_device::funk_notify_ptr_t gamepad_notify = so_device::funk_notify_t::create(
+        [=]( so_device::idevice_ptr_t, so_std::string_cref_t name,
             so_device::so_input::iinput_component_ptr_t comp_ptr )
+    {
+
+        // sticks
+        if( so_core::is_not_nullptr(
+            dynamic_cast< so_device::so_input::value_stick_ptr_t >( comp_ptr ) ) )
         {
+            auto * stick_ptr = reinterpret_cast<
+                so_device::so_input::value_stick_ptr_t >( comp_ptr ) ;
 
-            // sticks
-            if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_input::value_stick_ptr_t >( comp_ptr ) ) )
+            so_device::so_vgamepad::xbox_stick_state xbbs =
+                so_device::so_vgamepad::xbox_stick_state::invalid ;
+
+            if( stick_ptr->state_is( so_device::stick_state::tilted ) )
             {
-                auto * stick_ptr = reinterpret_cast<
-                    so_device::so_input::value_stick_ptr_t >( comp_ptr ) ;
-
-                so_device::so_vgamepad::xbox_stick_state xbbs =
-                    so_device::so_vgamepad::xbox_stick_state::invalid ;
-
-                if( stick_ptr->state_is( so_device::stick_state::tilted ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_stick_state::tilt ;
-                }
-                else if( stick_ptr->state_is( so_device::stick_state::tilting ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_stick_state::tilting ;
-                }
-                else if( stick_ptr->state_is( so_device::stick_state::untilted ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_stick_state::untilt ;
-                }
-
-                if( name == "stick_right" )
-                {
-                    vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::right, xbbs,
-                        stick_ptr->intensity() ) ;
-                }
-                else if( name == "stick_left" )
-                {
-                    vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::left, xbbs,
-                        stick_ptr->intensity() ) ;
-                }
+                xbbs = so_device::so_vgamepad::xbox_stick_state::tilt ;
+            }
+            else if( stick_ptr->state_is( so_device::stick_state::tilting ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_stick_state::tilting ;
+            }
+            else if( stick_ptr->state_is( so_device::stick_state::untilted ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_stick_state::untilt ;
             }
 
-            // value buttons
-            if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_input::value_button_ptr_t >( comp_ptr ) ) )
+            if( name == "stick_right" )
             {
-                auto * b_ptr = reinterpret_cast<
-                    so_device::so_input::value_button_ptr_t >( comp_ptr ) ;
+                vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::right, xbbs,
+                    stick_ptr->intensity() ) ;
+            }
+            else if( name == "stick_left" )
+            {
+                vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::left, xbbs,
+                    stick_ptr->intensity() ) ;
+            }
+        }
 
-                so_device::so_vgamepad::xbox_button_state xbbs =
-                    so_device::so_vgamepad::xbox_button_state::invalid ;
+        // value buttons
+        if( so_core::is_not_nullptr(
+            dynamic_cast< so_device::so_input::value_button_ptr_t >( comp_ptr ) ) )
+        {
+            auto * b_ptr = reinterpret_cast<
+                so_device::so_input::value_button_ptr_t >( comp_ptr ) ;
 
-                if( b_ptr->state_is( so_device::button_state::pressed ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
-                }
-                else if( b_ptr->state_is( so_device::button_state::pressing ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
-                }
-                else if( b_ptr->state_is( so_device::button_state::released ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::released ;
-                }
+            so_device::so_vgamepad::xbox_button_state xbbs =
+                so_device::so_vgamepad::xbox_button_state::invalid ;
 
-                if( name == "trigger_left" )
-                {
-                    vptr->set_trigger_state( so_device::so_vgamepad::xbox_trigger::left, xbbs, 
-                        b_ptr->intensity() ) ;
-                }
-                else if( name == "trigger_right" )
-                {
-                    vptr->set_trigger_state( so_device::so_vgamepad::xbox_trigger::right, xbbs,
-                        b_ptr->intensity() ) ;
-                }
+            if( b_ptr->state_is( so_device::button_state::pressed ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
+            }
+            else if( b_ptr->state_is( so_device::button_state::pressing ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
+            }
+            else if( b_ptr->state_is( so_device::button_state::released ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::released ;
             }
 
-            // binary buttons
-            if( so_core::is_not_nullptr(
-                dynamic_cast< so_device::so_input::binary_button_ptr_t >( comp_ptr ) ) )
+            if( name == "trigger_left" )
             {
-                auto * b_ptr = reinterpret_cast<
-                    so_device::so_input::binary_button_ptr_t >( comp_ptr ) ;
+                vptr->set_trigger_state( so_device::so_vgamepad::xbox_trigger::left, xbbs,
+                    b_ptr->intensity() ) ;
+            }
+            else if( name == "trigger_right" )
+            {
+                vptr->set_trigger_state( so_device::so_vgamepad::xbox_trigger::right, xbbs,
+                    b_ptr->intensity() ) ;
+            }
+        }
 
-                so_device::so_vgamepad::xbox_button_state xbbs = 
-                    so_device::so_vgamepad::xbox_button_state::invalid ;
+        // binary buttons
+        if( so_core::is_not_nullptr(
+            dynamic_cast< so_device::so_input::binary_button_ptr_t >( comp_ptr ) ) )
+        {
+            auto * b_ptr = reinterpret_cast<
+                so_device::so_input::binary_button_ptr_t >( comp_ptr ) ;
 
-                if( b_ptr->state_is( so_device::button_state::pressed ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
-                }
-                else if( b_ptr->state_is( so_device::button_state::pressing ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
-                }
-                else if( b_ptr->state_is( so_device::button_state::released ) )
-                {
-                    xbbs = so_device::so_vgamepad::xbox_button_state::released ;
-                }
+            so_device::so_vgamepad::xbox_button_state xbbs =
+                so_device::so_vgamepad::xbox_button_state::invalid ;
 
-                if( name == "shoulder_left" )
-                {
-                    vptr->set_shoulder_state( so_device::so_vgamepad::xbox_shoulder::left, xbbs ) ;
-                }
-                else if( name == "shoulder_right" )
-                {
-                    vptr->set_shoulder_state( so_device::so_vgamepad::xbox_shoulder::right, xbbs ) ;
-                }
-                else if( name == "a" )
-                { 
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::a, xbbs ) ;
-                }
-                else if( name == "b" )
-                { 
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::b, xbbs ) ;
-                }
-                else if( name == "x" )
-                {
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::x, xbbs ) ;
-                }
-                else if( name == "y" )
-                { 
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::y, xbbs ) ;
-                }
-                else if( name == "start" )
-                {
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::start, xbbs ) ;
-                }
-                else if( name == "back" )
-                {
-                    vptr->set_button_state( so_device::so_vgamepad::xbox_button::back, xbbs ) ;
-                }
-                else if( name == "dpad_left" )
-                {
-                    vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::left, xbbs ) ;
-                }
-                else if( name == "dpad_right" )
-                {
-                    vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::right, xbbs ) ;
-                }
-                else if( name == "dpad_up" )
-                {
-                    vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::up, xbbs ) ;
-                }
-                else if( name == "dpad_down" )
-                {
-                    vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::down, xbbs ) ;
-                }
-                else if( name == "thumb_left" )
-                {
-                    vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::left, xbbs ) ;
-                }
-                else if( name == "thumb_right" )
-                {
-                    vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::right, xbbs ) ;
-                }
+            if( b_ptr->state_is( so_device::button_state::pressed ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::pressed ;
+            }
+            else if( b_ptr->state_is( so_device::button_state::pressing ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::pressing ;
+            }
+            else if( b_ptr->state_is( so_device::button_state::released ) )
+            {
+                xbbs = so_device::so_vgamepad::xbox_button_state::released ;
             }
 
-        }, "[] : gamepad funk" ) ;
+            if( name == "shoulder_left" )
+            {
+                vptr->set_shoulder_state( so_device::so_vgamepad::xbox_shoulder::left, xbbs ) ;
+            }
+            else if( name == "shoulder_right" )
+            {
+                vptr->set_shoulder_state( so_device::so_vgamepad::xbox_shoulder::right, xbbs ) ;
+            }
+            else if( name == "a" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::a, xbbs ) ;
+            }
+            else if( name == "b" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::b, xbbs ) ;
+            }
+            else if( name == "x" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::x, xbbs ) ;
+            }
+            else if( name == "y" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::y, xbbs ) ;
+            }
+            else if( name == "start" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::start, xbbs ) ;
+            }
+            else if( name == "back" )
+            {
+                vptr->set_button_state( so_device::so_vgamepad::xbox_button::back, xbbs ) ;
+            }
+            else if( name == "dpad_left" )
+            {
+                vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::left, xbbs ) ;
+            }
+            else if( name == "dpad_right" )
+            {
+                vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::right, xbbs ) ;
+            }
+            else if( name == "dpad_up" )
+            {
+                vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::up, xbbs ) ;
+            }
+            else if( name == "dpad_down" )
+            {
+                vptr->set_dpad_state( so_device::so_vgamepad::xbox_dpad::down, xbbs ) ;
+            }
+            else if( name == "thumb_left" )
+            {
+                vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::left, xbbs ) ;
+            }
+            else if( name == "thumb_right" )
+            {
+                vptr->set_stick_state( so_device::so_vgamepad::xbox_stick::right, xbbs ) ;
+            }
+        }
 
-        _devices[ 0 ].device_ptr->register_notification( gamepad_notify ) ;
+    }, "[] : gamepad funk" ) ;
 
-        // 2. register virtual device
-        // add virtual device
-        _devices[ 0 ].vdevs.push_back( ivdev_ptr ) ;
-    }
+    _devices[ dev_id ].device_ptr->register_notification( gamepad_notify ) ;
+
+    // 2. register virtual device
+    // add virtual device
+    _devices[ dev_id ].vdevs.push_back( ivdev_ptr ) ;    
 
     return true ;
 }
@@ -395,6 +419,17 @@ bool_t xinput_api::unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t pt
     }
     
     return false ;
+}
+
+//****************************************************************************************
+void_t xinput_api::install_gamepad_notify( so_device::igamepad_notify_ptr_t ptr )
+{
+    auto iter = std::find( _notifies.begin(), _notifies.end(), ptr ) ;
+    if( iter != _notifies.end() ) return ;
+
+    _notifies.push_back( ptr ) ;
+
+    so_log::global_t::warning("[xinput_api::install_gamepad_notify] : will currently have no effect") ;
 }
 
 //****************************************************************************************
@@ -438,6 +473,15 @@ void_t xinput_api::init_gamepads( void_t )
         gd.xinput_ptr->exchange_state( state ) ;
 
         _devices.push_back( gd ) ;
+
+        {
+            auto * x360 = so_device::memory::alloc( so_device::so_vgamepad::xbox_360_t(),
+                "[xinput_api::init_gamepads] : xbox360 controller" ) ;
+
+            auto const ires = this_t::register_device( i, x360 ) ;
+            so_log::global::error( so_core::is_not( ires ), "[xinput_api::init_gamepads] : "
+                "Could not create xbox360 controller" ) ;
+        }
 
     }
 }

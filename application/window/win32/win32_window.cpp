@@ -170,7 +170,11 @@ HWND win32_window::create_window( window_info const & wi )
     else
     {
         ws_ex_style = WS_EX_APPWINDOW ;// | WS_EX_WINDOWEDGE ;
-        ws_style = WS_OVERLAPPEDWINDOW ; // | WS_CLIPSIBLINGS | WS_CLIPCHILDREN ;
+
+        if( wil.borderless )
+            ws_style = WS_POPUP | SW_SHOWNORMAL;
+        else
+            ws_style = WS_OVERLAPPEDWINDOW ; // | WS_CLIPSIBLINGS | WS_CLIPCHILDREN ;
     }
 
     hwnd = CreateWindowEx( ws_ex_style,

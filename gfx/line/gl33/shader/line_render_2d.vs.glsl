@@ -18,7 +18,8 @@ out vertex_data
 
 void main( void )
 {
-  int index = (gl_VertexID >> 1) << 1 ;
+  int line_id  = (gl_VertexID >> 1) + int(u_offset) ; 
+  int index = line_id << 1 ;
 
   vec4 line_info_00 = texelFetch( u_line_info, index + 0 ) ;
   vec4 line_info_01 = texelFetch( u_line_info, index + 1 ) ;
@@ -30,6 +31,8 @@ void main( void )
   
   vec2 points[2] = vec2[2]( line_info_00.xy, line_info_00.zw ) ;
   vec2 pos = points[ gl_VertexID % 2]  ;
+  
+  vso.color = line_info_01 ;
 
   gl_Position = vec4(pos, 0.0, 1.0) ;
 }

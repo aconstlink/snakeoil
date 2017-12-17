@@ -8,7 +8,7 @@ project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 1 )
-set( SNAKEOIL_PATCH_VERSION 0 )
+set( SNAKEOIL_PATCH_VERSION 1 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -90,10 +90,12 @@ find_package( RapidXml REQUIRED )
 #
 # optionals
 find_package( OpenCtm )
+find_package( Fmod ) 
 
 if( SNAKEOIL_TARGET_OS_WIN )
     find_package( XInput REQUIRED )
     find_package( XAudio2 REQUIRED )
+    find_package( Wddk REQUIRED )
 elseif( SNAKEOIL_OS_LINUX )
 endif()
 

@@ -97,6 +97,9 @@ namespace so_gfx
 
             data_buffer_ptr_t _image_info_ptr = nullptr ;
 
+            so_math::mat4f_t _view ;
+            so_math::mat4f_t _proj ;
+
         public:
 
             gl33_image_render_2d_plug( so_gfx::image_render_2d_shared_data_ptr_t,

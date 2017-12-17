@@ -63,7 +63,9 @@ namespace so_device
         virtual bool_t get_midi_device_names( so_std::vector< so_std::string_t > & names ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( so_std::string_cref_t ) ;
         virtual so_device::midi_device_ptr_t find_midi_device( void_t ) ;
+        virtual void_t install_gamepad_notify( so_device::igamepad_notify_ptr_t ) ;
         virtual so_device::gamepad_device_ptr_t find_gamepad_device( void_t ) ;
+        virtual so_device::so_vgamepad::xbox_360_ptr_t find_xbox360_device( size_t const ) ;
         virtual so_device::ascii_keyboard_ptr_t find_ascii_keyboard( void_t ) ;
         virtual so_device::three_button_mouse_ptr_t find_three_button_mouse( void_t ) ;
 

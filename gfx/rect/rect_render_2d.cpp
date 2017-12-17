@@ -58,6 +58,13 @@ void_t rect_render_2d::init( void_t )
 }
 
 //************************************************************************************
+void_t rect_render_2d::set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
+{
+    _proj = proj ;
+    _view = view ;
+}
+
+//************************************************************************************
 rect_render_2d::this_ptr_t rect_render_2d::create( this_rref_t rhv, so_memory::purpose_cref_t p )
 {
     return so_gfx::memory::alloc( std::move( rhv ), p ) ;
@@ -109,6 +116,12 @@ so_gfx::result rect_render_2d::prepare_for_rendering( void_t )
 
         _render_groups.push_back( gptr->group_id ) ;
         gptr->rect_infos.clear() ;
+    }
+
+    // copy global data
+    {
+        _sd_ptr->proj = _proj ;
+        _sd_ptr->view = _view ;
     }
 
     return so_gfx::ok ;

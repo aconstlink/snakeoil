@@ -38,6 +38,10 @@ namespace so_math
             //return (int)x - (int)( (x < T(0)) && ( (int)x != x ) ) ;
             return x > type_t(0) ? int_t(x) : int_t(x - type_t(1));
         }
+        static type_t fract( type_t v )
+        {
+            return v - this_t::floor( v ) ;
+        }
 
         /// performs x^y
         static type_t pow( typec_t x, typec_t y ) {

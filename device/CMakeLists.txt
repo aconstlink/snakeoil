@@ -3,10 +3,6 @@
 #. Distributed under the MIT license
 #.............................................................
 
-include_directories( 
-    ${XINPUT_INCLUDE_DIRS}
-)
-
 #
 # components
 #
@@ -134,6 +130,7 @@ set( MODULES_SOURCES
 set( API_SOURCES
   api/iapi.h
   api/midi_notify.h
+  api/gamepad_notify.h
   api/imidi_api.h
   api/igamepad_api.h
   api/imouse_api.h
@@ -184,7 +181,12 @@ if( SNAKEOIL_TARGET_OS_WIN )
         ${WIN32_API_SOURCES}
         ${WIN32_SYSTEM_SOURCES}
     )	
-    set( OS_SPECIFIC_LIBS winmm.lib )
+    set( OS_SPECIFIC_LIBS winmm.lib ${WDDK_LIBRARIES} )
+
+    include_directories( 
+      ${XINPUT_INCLUDE_DIRS}
+      ${WDDK_INCLUDE_DIRS}
+    )
     
 endif()
 

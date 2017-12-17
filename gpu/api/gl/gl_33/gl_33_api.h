@@ -192,6 +192,8 @@ namespace so_gpu
 
             virtual so_gpu::result change_states( attribute_state_field_cref_t, state_sets_cptr_t ) ;
 
+            virtual float_t line_width( float_t const w ) ;
+
         public: // other
 
         private:

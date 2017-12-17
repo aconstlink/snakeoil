@@ -45,11 +45,15 @@ namespace so_device
                 left,
                 right
             };
+
+            so_typedefs( so_std::vector<igamepad_notify_ptr_t>, notifies ) ;
             
         private:
 
             devices_t _devices ;
             xinput_mappings _xinput_mappings ;
+
+            notifies_t _notifies ;
 
         public:
 
@@ -76,8 +80,12 @@ namespace so_device
             virtual void_t destroy( void_t ) ;
 
             virtual so_device::gamepad_device_ptr_t find_any_device( void_t ) ;
+            virtual so_device::so_vgamepad::xbox_360_ptr_t find_device( size_t const ) ;
             virtual bool_t register_for_any_device( so_device::so_vdev::ivdev_ptr_t ) ;
+            virtual bool_t register_device( size_t const, so_device::so_vdev::ivdev_ptr_t ) ;
             virtual bool_t unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t ) ;
+
+            virtual void_t install_gamepad_notify( so_device::igamepad_notify_ptr_t ) ;
 
         private:
 

@@ -52,10 +52,11 @@ namespace so_gfx
 
         private:
 
-            image_id( void_t ) {}
             image_id( size_t const iid, size_t const vpid ) : _iid(iid), _vpid(vpid) {}
 
         public:
+
+            image_id( void_t ) {}
 
             image_id( this_cref_t rhv )
             {
@@ -85,6 +86,14 @@ namespace so_gfx
         so_gfx::image_render_2d_shared_data_ptr_t _sd_ptr = nullptr ;
 
         so_gpx::render_system_ptr_t _gpxr = nullptr ;
+
+    private:
+
+        /// global projection matrix
+        so_math::mat4f_t _proj ;
+
+        /// global view matrix
+        so_math::mat4f_t _view ;
 
     private:
 
@@ -203,7 +212,7 @@ namespace so_gfx
 
     public:
 
-        void_t init( void_t ) ;
+        void_t init( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         image_id_t add_image( so_imex::image_ptr_t ) ;
         image_id_t add_image( so_imex::image_ptr_t, so_gpu::viewport_2d_cref_t ) ;

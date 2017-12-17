@@ -64,6 +64,11 @@ namespace so_gfx
 
         so_math::vec2f_t _glyph_atlas_size = so_math::vec2f_t( 1024.0f, 1024.0f ) ;
 
+    private: // default matrices
+
+        so_math::mat4f_t _proj ;
+        so_math::mat4f_t _view ;
+
     private:
 
         struct glyph_info
@@ -146,7 +151,9 @@ namespace so_gfx
     public:
 
         void_t init_fonts( size_t const, std::vector< so_io::path_t > const & ) ;
+        void_t init_fonts( size_t const, std::vector< so_io::path_t > const &, so_std::vector<so_font::utf32_t> const & ) ;
         
+        void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
         void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         so_gfx::result draw_text( size_t const group, size_t const font_id, size_t const point_size,

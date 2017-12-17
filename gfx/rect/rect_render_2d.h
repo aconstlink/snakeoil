@@ -97,6 +97,9 @@ namespace so_gfx
 
         so_gpx::render_system_ptr_t _gpxr = nullptr ;
 
+        so_math::mat4f_t _proj ;
+        so_math::mat4f_t _view ;
+
     public:
 
         rect_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -113,7 +116,7 @@ namespace so_gfx
 
         void_t init( void_t ) ;
 
-        void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+        void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         so_gfx::result draw_rect( size_t const group, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale, 
             float_t const rot, so_math::vec4f_cref_t color ) ;

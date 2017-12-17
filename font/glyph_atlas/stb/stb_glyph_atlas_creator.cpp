@@ -191,9 +191,9 @@ glyph_atlas_ptr_t glyph_atlas_creator::create_glyph_atlas( face_infos_cref_t fac
                 int adv, bearing ;
                 stbtt_GetCodepointHMetrics( &font, bb.cp, &adv, &bearing ) ;
                 
-                gi.adv = so_math::vec2f_t((float_t(adv-bearing) / float_t(iw))*s, gi.dims.y() ) ;
+                gi.adv = so_math::vec2f_t((float_t(adv-bearing) / float_t(iw))*s, gi.dims.y()) ;
             }
-            gi.bearing = (float_t(bb.voffset) / float_t(iw))*s ;
+            gi.bearing = ( float_t( bb.voffset ) / float_t( iw ) )*s*0.5f ;
 
             ga.add_glyph(gi) ;
         }

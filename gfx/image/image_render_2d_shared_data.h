@@ -48,6 +48,10 @@ namespace so_gfx
 
         per_group_infos_t per_group_infos ;
         image_infos_t image_infos ;
+
+
+        so_math::mat4f_t proj ;
+        so_math::mat4f_t view ;
     };
     so_typedef( image_render_2d_shared_data ) ;
 }

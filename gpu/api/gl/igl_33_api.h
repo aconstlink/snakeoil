@@ -150,6 +150,8 @@ namespace so_gpu
             virtual so_gpu::result pop_state( void_t ) = 0 ;
 
             virtual so_gpu::result change_states( attribute_state_field_cref_t, state_sets_cptr_t ) = 0 ;
+
+            virtual float_t line_width( float_t const w ) = 0 ;
         };
     }
 }

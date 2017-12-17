@@ -273,6 +273,11 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
         _draw_calls.clear() ;
     }
 
+    {
+        _proj = _sd->proj ;
+        _view = _sd->view ;
+    }
+
     // 1. copy data
     {
         // copy image infos
@@ -316,6 +321,9 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
                             auto const res = this_t::api()->create_texture( id._tx ) ;
                             so_log::global::error( so_gpu::no_success( res ),
                                 "[gl33_image_render_2d_plug::on_update] : create texture" ) ;
+
+                            id._tx->set_texture_filter( so_gpu::texture_filter_type::nearest,
+                                so_gpu::texture_filter_type::nearest ) ;
                         }
                         {
                             id.var_set = so_gpu::variable_set_t::create(
@@ -329,9 +337,11 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
                                 id.varset_id = _config->get_num_varsets() ;
                                 _config->add_variable_set( id.var_set ) ;
 
-                                id.var_set->bind_buffer<so_math::vec4f_t>( "u_image_info", _image_info_ptr ) ;
+                                id.var_set->bind_buffer<so_math::vec4f_t>( 
+                                    "u_image_info", _image_info_ptr ) ;
 
                                 id.var_set->bind_texture( "u_smp", id._tx ) ;
+                                id.var_set->bind_data<so_math::mat4f_t>( "u_proj", &_proj ) ;
 
                                 //id.var_set->bind_data<so_math::vec2f_t>( "u_scale", &( _sd->dim_scale ) ) ;
 
@@ -374,6 +384,8 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
                 size_t offset = 0 ;
                 for( auto const & gi : _sd->per_group_infos )
                 {
+                    if( gi.num_images == 0 ) continue ;
+
                     // 1. store all image meta info into texture buffer
                     for( size_t i = offset; i < offset+gi.num_images; ++i )
                     {
@@ -392,7 +404,8 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
                         // find image index for retrieving variable data during rendering
                         {
                             auto const iter = std::find_if( _image_datas.begin(), _image_datas.end(),
-                                [&] ( image_data_cref_t d ) { return d._img_ptr == _sd->image_infos[ offset ].img_ptr ; } ) ;
+                                [&] ( image_data_cref_t d ) { 
+                                return d._img_ptr == _sd->image_infos[ offset ].img_ptr ; } ) ;
 
                             if( iter == _image_datas.end() )
                             {
@@ -441,7 +454,7 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_execute( so_gpx::iplug_t::exec
         // @todo save state
 
         this_t::api()->enable( so_gpu::render_state::blend ) ;
-        this_t::api()->set_state( so_gpu::blend_factor::src_alpha, so_gpu::blend_factor::one ) ;
+        this_t::api()->set_state( so_gpu::blend_factor::src_alpha, so_gpu::blend_factor::one_minus_src_alpha ) ;
         {
             (*id.start_offset) = iter->offset ;
             this_t::api()->load_variable( id.var_set ) ;

@@ -17,5 +17,5 @@ void main()
     float mask = texture( u_smp_glyph, psi.txc )[psi.layer] ;
     out_color = vec4( psi.color * mask, mask ) ;
 
-    //out_color = vec4(0.0,0.0,0.0,1.0) ;
+    //out_color = vec4(1.0,0.0,0.0,1.0) ;
 }

@@ -70,16 +70,16 @@ message( STATUS "+++ Determine Target Operating System +++ " )
 
 if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 
-    set( SNAKEOIL_TARGET_OS_WIN_NAME "unknown" )
+    set( SNAKEOIL_TARGET_OS_WIN_NAME_ "unknown" )
     
     if( SNAKEOIL_HOST_OS_WIN7 )
-        set( SNAKEOIL_TARGET_OS_WIN_NAME "Windows 7" )
+        set( SNAKEOIL_TARGET_OS_WIN_NAME_ "Windows 7" )
     elseif( SNAKEOIL_HOST_OS_WIN81 )
-        set( SNAKEOIL_TARGET_OS_WIN_NAME "Windows 8.1" )
+        set( SNAKEOIL_TARGET_OS_WIN_NAME_ "Windows 8.1" )
     endif() 
     
     set( SNAKEOIL_WINDOWS_NAMES "Windows 7" "Windows 8.1" "Windows 10" )
-    set( SNAKEOIL_TARGET_OS_WIN_NAME ${SNAKEOIL_TARGET_OS_WIN_NAME} CACHE STRING "Select your windows target for this application/library." )
+    set( SNAKEOIL_TARGET_OS_WIN_NAME ${SNAKEOIL_TARGET_OS_WIN_NAME_} CACHE STRING "Select your windows target for this application/library." )
     
     set_property( CACHE SNAKEOIL_TARGET_OS_WIN_NAME PROPERTY STRINGS ${SNAKEOIL_WINDOWS_NAMES} )
 

@@ -259,6 +259,16 @@ so_device::midi_device_ptr_t device_system::find_midi_device( void_t )
 }
 
 //****************************************************************************************
+void_t device_system::install_gamepad_notify( so_device::igamepad_notify_ptr_t nptr )
+{
+    for( auto * api : _gamepads )
+    {
+        api->install_gamepad_notify( nptr ) ;
+    }
+
+}
+
+//****************************************************************************************
 so_device::gamepad_device_ptr_t device_system::find_gamepad_device( void_t )
 {
     for( auto * api : _gamepads )
@@ -268,6 +278,19 @@ so_device::gamepad_device_ptr_t device_system::find_gamepad_device( void_t )
             return dev ;
     }
     
+    return nullptr ;
+}
+
+//****************************************************************************************
+so_device::so_vgamepad::xbox_360_ptr_t device_system::find_xbox360_device( size_t const id )
+{
+    for( auto * api : _gamepads )
+    {
+        auto * dev = api->find_device(id) ;
+        if( so_core::is_not_nullptr( dev ) )
+            return dev ;
+    }
+
     return nullptr ;
 }
 

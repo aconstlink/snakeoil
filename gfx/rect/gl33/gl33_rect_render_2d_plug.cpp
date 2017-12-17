@@ -276,6 +276,12 @@ so_gpx::plug_result gl33_rect_render_2d_plug::on_update( update_info_cref_t )
             }
         }
 
+        // copy global data
+        {
+            _proj = _sd->proj ;
+            _view = _sd->view ;
+        }
+
         // 1. copy all per group data
         // 2. calc start offset
         {
@@ -338,6 +344,10 @@ so_gpx::plug_result gl33_rect_render_2d_plug::on_update( update_info_cref_t )
                     ( *iter->proj ) = gi.proj ;
                     ( *iter->view ) = gi.view ;
                     offset += iter->num_elements ;
+
+                    // for now, overwrite with global matrices
+                    ( *iter->proj ) = _proj ;
+                    ( *iter->view ) = _view ;
                 }
             }
         }

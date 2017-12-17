@@ -60,7 +60,9 @@ set( SOURCES ${SOURCES} ${GL33_SOURCES} )
 
 so_vs_src_dir( SOURCES )
 
-add_definitions( -DGFX_SOURCE_DIR="${CMAKE_CURRENT_LIST_DIR}" ) 
+set( SNAKEOIL_GFX_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE STRING "Gfx shader root" )
+add_definitions( -DGFX_SOURCE_DIR="${SNAKEOIL_GFX_DIR}" )
+
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )

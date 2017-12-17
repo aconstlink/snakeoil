@@ -330,6 +330,7 @@ so_gpx::plug_result gl33_line_render_2d_plug::on_update( update_info_cref_t )
                     ( *iter->start_offset ) = offset ;
                     ( *iter->proj ) = gi.proj ;
                     ( *iter->view ) = gi.view ;
+                    iter->line_width = gi.width ;
                     offset += iter->num_elements ;
                 }
             }
@@ -368,6 +369,8 @@ so_gpx::plug_result gl33_line_render_2d_plug::on_execute( execute_info_cref_t ri
 
     // @todo save state
 
+    float_t old_line_width = this_t::api()->line_width( iter->line_width ) ;
+
     this_t::api()->enable( so_gpu::render_state::blend ) ;
     this_t::api()->set_state( so_gpu::blend_factor::one, so_gpu::blend_factor::one_minus_src_alpha ) ;
     {
@@ -377,6 +380,7 @@ so_gpx::plug_result gl33_line_render_2d_plug::on_execute( execute_info_cref_t ri
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;
 
+    this_t::api()->line_width( old_line_width ) ;
     // @todo restore state
 
     return so_gpx::plug_result::ok ;

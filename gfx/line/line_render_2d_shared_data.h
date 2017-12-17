@@ -18,6 +18,7 @@ namespace so_gfx
             size_t num_lines ;
             so_math::mat4f_t proj ;
             so_math::mat4f_t view ;
+            float_t width ;
         };
         so_typedef( per_group_info ) ;
         so_typedefs( so_std::vector< per_group_info_t >, per_group_infos ) ;

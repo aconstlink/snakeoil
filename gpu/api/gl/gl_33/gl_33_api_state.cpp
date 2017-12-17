@@ -286,3 +286,13 @@ so_gpu::result gl_33_api::change_states(
 
     return so_gpu::ok ;
 }
+
+//*****************************************************************************************************
+float_t gl_33_api::line_width( float_t const w )
+{
+    GLfloat ret = 0.0f ;
+    so_gli::gl::glGetFloatv( GL_LINE_WIDTH, &ret ) ;
+    so_gli::gl::glLineWidth( GLfloat( w ) ) ;
+
+    return float_t( ret ) ;
+}

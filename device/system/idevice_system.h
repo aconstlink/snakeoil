@@ -37,8 +37,11 @@ namespace so_device
 
     public: // gamepad
 
+        virtual void_t install_gamepad_notify( so_device::igamepad_notify_ptr_t ) = 0 ;
+
         /// finds the first gamepad device
         virtual so_device::gamepad_device_ptr_t find_gamepad_device( void_t ) = 0 ;
+        virtual so_device::so_vgamepad::xbox_360_ptr_t find_xbox360_device( size_t const ) = 0 ;
 
     public: // keyboard
 

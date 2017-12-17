@@ -9,6 +9,7 @@ in vec3 in_pos ;
 uniform samplerBuffer u_rect_info ;
 
 uniform uint u_offset ;
+uniform mat4 u_proj ;
 
 out vertex_data
 {
@@ -25,6 +26,6 @@ void main( void )
   
   vso.color = d1 ;
   
-  vec2 pos = in_pos.xy * d0.zw + d0.xy ;
-  gl_Position = vec4( pos, 0.0, 1.0) ;
+  vec2 pos = sign(in_pos.xy) * d0.zw * vec2(0.5) + d0.xy ;
+  gl_Position = u_proj * vec4( pos, 1.0, 1.0) ;
 }

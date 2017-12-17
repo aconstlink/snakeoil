@@ -1,4 +1,7 @@
-
+//------------------------------------------------------------
+// snakeoil (c) Alexis Constantin Link
+// Distributed under the MIT license
+//------------------------------------------------------------
 #include "log.h"
 
 #include "../../node/layout/area_2d.h"

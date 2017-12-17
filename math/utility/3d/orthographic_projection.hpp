@@ -13,26 +13,63 @@ namespace so_math
 {
     namespace so_3d
     {
-        /// left hand
-        template< typename type_t >
-        void create_orthographic_projection( type_t width, type_t height, type_t n, type_t f, 
-            so_math::matrix4< type_t > & inout ) 
+        namespace so_internal
         {
-            typedef so_math::vector4< type_t > vec4_t ;
-
-            // make column vectors
-            // but they are the row vectors of
-            // the dx projection matrix.
-            vec4_t vcX(type_t(2.0)/width,	type_t(0),				type_t(0),				type_t(0)) ;
-            vec4_t vcY(type_t(0),			type_t(2.0)/height,		type_t(0),				type_t(0)) ;
-            vec4_t vcZ(type_t(0),			type_t(0),				type_t(1.0)/(f-n),		-(n)/(f-n) ) ;
-            vec4_t vcW(type_t(0),			type_t(0),				type_t(0),				type_t(1) ) ;
-
-            inout.set_row( 0,vcX ) ;
-            inout.set_row( 1,vcY ) ;
-            inout.set_row( 2,vcZ ) ;
-            inout.set_row( 3,vcW ) ;
+            /// 
+            template< typename T >
+            struct orthographic_projection
+            {
+                so_this_typedefs( orthographic_projection<T> ) ;
+                so_typedefs( T, type ) ;
+            } ;
         }
+
+        ///
+        template< typename T >
+        struct orthographic
+        {
+            so_this_typedefs( orthographic<T> ) ;
+
+            so_typedefs( T, type ) ;
+            so_typedefs( so_math::vector2<type_t>, vec2 ) ;
+            so_typedefs( so_math::vector4<type_t>, vec4 ) ;
+            so_typedefs( so_math::matrix4<type_t>, mat4 ) ;
+
+            so_typedefs( so_internal::orthographic_projection<type_t>, proj ) ;
+
+        private:
+
+            static void __create( type_t const width, type_t const height, 
+                type_t const n, type_t const f, mat4_out_t m )
+            {
+                typedef so_math::vector4< type_t > vec4_t ;
+
+                // make column vectors
+                // but they are the row vectors of
+                // the dx projection matrix.
+                vec4_t vcX( type_t( 2.0 ) / width, type_t( 0 ), type_t( 0 ), type_t( 0 ) ) ;
+                vec4_t vcY( type_t( 0 ), type_t( 2.0 ) / height, type_t( 0 ), type_t( 0 ) ) ;
+                vec4_t vcZ( type_t( 0 ), type_t( 0 ), type_t( 1.0 ) / ( f - n ), -( n ) / ( f - n ) ) ;
+                vec4_t vcW( type_t( 0 ), type_t( 0 ), type_t( 0 ), type_t( 1 ) ) ;
+
+                m.set_row( 0, vcX ) ;
+                m.set_row( 1, vcY ) ;
+                m.set_row( 2, vcZ ) ;
+                m.set_row( 3, vcW ) ;
+            }
+
+        public:
+
+            static mat4_t create( type_t const width, type_t const height,
+                type_t const n, type_t const f )
+            {
+                mat4_t m ;
+                
+                this_t::__create( width, height, n, f, m ) ;
+
+                return m ;
+            }
+        } ;
     }
 }
 

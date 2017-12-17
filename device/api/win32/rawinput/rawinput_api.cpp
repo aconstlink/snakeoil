@@ -15,8 +15,15 @@
 #include "../../../component/buttons/three_button.h"
 #include "../../../component/buttons/three_button_mapping.h"
 
+#include "../../gamepad_notify.h"
+
+#include <snakeoil/memory/guards/malloc_guard.hpp>
 #include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/log/global.h>
+
+
+#include <hidsdi.h>
+#include <Hidpi.h>
 
 using namespace so_device ;
 using namespace so_device::so_win32 ;
@@ -24,7 +31,7 @@ using namespace so_device::so_win32 ;
 //*****************************************************************************************
 rawinput_api::rawinput_api( void_t )
 {
-    RAWINPUTDEVICE rid[ 2 ] ;
+    RAWINPUTDEVICE rid[ 3 ] ;
 
     // mouse
     rid[ 0 ].usUsagePage = 0x01 ;
@@ -32,14 +39,20 @@ rawinput_api::rawinput_api( void_t )
     rid[ 0 ].hwndTarget = NULL ;
     rid[ 0 ].dwFlags = 0;//RIDEV_CAPTUREMOUSE | RIDEV_NOLEGACY ;
 
-                         // keyboard
+    // keyboard
     rid[ 1 ].usUsagePage = 0x01 ;
     rid[ 1 ].usUsage = 0x06 ;
     rid[ 1 ].hwndTarget = NULL ;
     rid[ 1 ].dwFlags = 0;//RIDEV_NOLEGACY ;
 
+    // joystick
+    rid[ 2 ].usUsagePage = 0x01 ;
+    rid[ 2 ].usUsage = 0x04 ;
+    rid[ 2 ].hwndTarget = NULL ;
+    rid[ 2 ].dwFlags = 0;//RIDEV_NOLEGACY ;
+
     so_log::global::error(
-        RegisterRawInputDevices( rid, 2, sizeof( RAWINPUTDEVICE ) ) == FALSE,
+        RegisterRawInputDevices( rid, 3, sizeof( RAWINPUTDEVICE ) ) == FALSE,
         "[rawinput::initialize] : need raw input support."
     ) ;
 
@@ -54,6 +67,11 @@ rawinput_api::rawinput_api( void_t )
         _three_button_mice.push_back( so_device::three_button_mouse_t::create( std::move( m ),
             "[rawinput_api::rawinput_api] : three_button_mouse" ) ) ;
     }
+
+    // temp: for fast generic usb gamepad device acces
+    {
+
+    }
 }
 
 //*****************************************************************************************
@@ -64,6 +82,7 @@ rawinput_api::rawinput_api( this_rref_t rhv  )
 
     _ascii_keyboards = std::move( rhv._ascii_keyboards ) ;
     _three_button_mice = std::move( rhv._three_button_mice ) ;
+    _gamepad_notifies = std::move( rhv._gamepad_notifies ) ;
 }
 
 //*****************************************************************************************
@@ -79,6 +98,11 @@ rawinput_api::~rawinput_api( void_t )
     for( auto * ptr : _three_button_mice )
     {
         so_device::three_button_mouse_t::destroy( ptr ) ;
+    }
+
+    for( auto * ptr : _gamepad_notifies )
+    {
+        ptr->destroy() ;
     }
 }
 
@@ -116,6 +140,64 @@ so_device::three_button_mouse_ptr_t rawinput_api::find_three_button_mouse( void_
         return nullptr ;
 
     return _three_button_mice[ 0 ] ;
+}
+
+//*****************************************************************************************
+void_t rawinput_api::create_devices( so_device::igamepad_module_ptr_t )
+{
+
+}
+
+//*****************************************************************************************
+so_device::result rawinput_api::register_device( so_device::key_cref_t,
+    so_device::gamepad_device_ptr_t )
+{
+    return so_device::not_implemented ;
+}
+
+//*****************************************************************************************
+so_device::result rawinput_api::unregister_device( so_device::key_cref_t )
+{
+    return so_device::not_implemented ;
+}
+
+//*****************************************************************************************
+so_device::gamepad_device_ptr_t rawinput_api::find_any_device( void_t )
+{
+    return nullptr ;
+}
+
+//*****************************************************************************************
+so_device::so_vgamepad::xbox_360_ptr_t rawinput_api::find_device( size_t const )
+{
+    return nullptr ;
+}
+
+//*****************************************************************************************
+bool_t rawinput_api::register_for_any_device( so_device::so_vdev::ivdev_ptr_t )
+{
+    return false ;
+}
+
+//*****************************************************************************************
+bool_t rawinput_api::register_device( size_t const, so_device::so_vdev::ivdev_ptr_t )
+{
+    return false ;
+}
+
+//*****************************************************************************************
+bool_t rawinput_api::unregister_virtual_device( so_device::so_vdev::ivdev_ptr_t )
+{
+    return false ;
+}
+
+//*****************************************************************************************
+void_t rawinput_api::install_gamepad_notify( so_device::igamepad_notify_ptr_t nptr )
+{
+    auto const iter = std::find( _gamepad_notifies.begin(), _gamepad_notifies.end(), nptr ) ;
+    if( iter != _gamepad_notifies.end() ) return ;
+
+    _gamepad_notifies.push_back( nptr ) ;
 }
 
 //*****************************************************************************************
@@ -163,6 +245,12 @@ void_t rawinput_api::update_keyboard( void_t )
         }
         _ascii_keyboard_keys.clear() ;
     }
+}
+
+//*****************************************************************************************
+void_t rawinput_api::update_gamepad( void_t ) 
+{
+
 }
 
 //*****************************************************************************************
@@ -325,6 +413,212 @@ bool_t rawinput_api::handle_input_event( HWND hwnd, UINT msg, WPARAM wParam, LPA
         ) ) ;
 
         return true ;
+    }
+    // some other device
+    else
+    {
+        uint_t num_devices = 0 ;
+        RID_DEVICE_INFO di[1000] ;
+        for( size_t i = 0; i < 1000; ++i )
+        {
+            ZeroMemory( &di[i], sizeof( RID_DEVICE_INFO ) ) ;
+            di[i].cbSize = sizeof( RID_DEVICE_INFO ) ;
+        }
+
+        {
+            uint_t buffer_size = sizeof( RID_DEVICE_INFO ) * 1000  ;
+
+            
+            auto ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_DEVICEINFO, NULL, &buffer_size ) ;
+            so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+
+            ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_DEVICEINFO, di, &buffer_size ) ;
+            so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+            
+            if( ires != uint_t(-1) )
+                num_devices = buffer_size / sizeof( RID_DEVICE_INFO ) ;
+        }
+        
+        for( uint_t i = 0; i < num_devices; ++i )
+        {
+            if( di[ i ].hid.usUsage != 4 ) continue ;
+
+            uint_t joystick_id = uint_t( 0 ) ;
+
+            //so_log::global_t::status( "Type : " + std::to_string( di[i].hid.usUsage ) ) ;
+
+            {
+                uint_t buffer_size = 0 ;
+                
+                {
+                    auto ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_DEVICENAME, NULL, &buffer_size ) ;
+                    so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+
+                    if( ires == -1 ) continue ;
+                }
+
+
+                so_memory::malloc_guard<char_t> device_name( buffer_size ) ;
+
+                {
+                    auto ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_DEVICENAME, device_name, &buffer_size ) ;
+                    so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+
+                    if( ires == -1 ) continue ;
+                }
+
+                //so_log::global_t::status( "Name : " + so_std::string_t( device_name ) ) ;
+                {
+                    auto const iter = _gamepad_ids.find( so_std::string_t( device_name ) ) ;
+                    if( iter == _gamepad_ids.end() )
+                    {
+                        _gamepad_ids[ so_std::string_t( device_name ) ] = uint_t(_gamepad_ids.size()) ;
+                    }
+
+                    joystick_id = _gamepad_ids[ so_std::string_t( device_name ) ] ;
+                }
+                
+            }
+
+            {
+                uint_t buffer_size = 0 ;
+
+                {
+                    auto ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_PREPARSEDDATA, NULL, &buffer_size ) ;
+                    //so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+                    if( ires == -1 ) continue ;
+                }
+
+                so_memory::malloc_guard<byte_t> preparsed_data( buffer_size ) ;
+
+                {
+                    auto ires = GetRawInputDeviceInfo( raw->header.hDevice, RIDI_PREPARSEDDATA, preparsed_data, &buffer_size ) ;
+                    //so_log::global::error( ires == -1, "[rawinput_api::] : GetRawInputDeviceInfo" ) ;
+                    if( ires == -1 ) continue ;
+                }
+
+                HIDP_CAPS caps ;
+                {
+                    auto const ires = HidP_GetCaps( *((PHIDP_PREPARSED_DATA*)&preparsed_data), &caps ) ;
+                    if( ires != HIDP_STATUS_SUCCESS ) continue ;
+                }
+
+                uint_t num_buttons = 0 ;
+
+                so_memory::malloc_guard<HIDP_BUTTON_CAPS> bcaps( caps.NumberInputButtonCaps ) ;
+                so_memory::malloc_guard<HIDP_VALUE_CAPS> vcaps( caps.NumberInputValueCaps ) ;
+
+                // button caps
+                {
+                    auto length = caps.NumberInputButtonCaps ;
+                    auto const ires = HidP_GetButtonCaps( HidP_Input, bcaps,
+                        &length, *( ( PHIDP_PREPARSED_DATA* ) &preparsed_data ) ) ;
+                    if( ires != HIDP_STATUS_SUCCESS ) continue ;
+
+                    /*for( size_t c = 0; c < size_t( length ); ++c )
+                    {
+                        num_buttons = bcaps[ c ].Range.UsageMax - bcaps[ c ].Range.UsageMin + 1;
+                        //so_log::global_t::status( "Num Buttons : " + std::to_string( num_buttons ) ) ;
+                    }*/
+                    num_buttons = bcaps[ 0 ].Range.UsageMax - bcaps[ 0 ].Range.UsageMin + 1;
+                }
+
+                // value caps
+                {
+                    auto length = caps.NumberInputValueCaps ;
+                    auto const ires = HidP_GetValueCaps( HidP_Input, vcaps,
+                        &length, *( ( PHIDP_PREPARSED_DATA* ) &preparsed_data ) ) ;
+                    if( ires != HIDP_STATUS_SUCCESS ) continue ;
+
+                    for( size_t c = 0; c < size_t( length ); ++c )
+                    {
+
+                    }
+                }
+
+                {
+                    so_memory::malloc_guard<USAGE> usage( num_buttons ) ;
+                    ULONG usageLength = num_buttons;
+                    auto const ires = HidP_GetUsages( HidP_Input, bcaps[0].UsagePage, 0, usage,
+                        &usageLength, *( ( PHIDP_PREPARSED_DATA* ) &preparsed_data ),
+                        ( PCHAR ) raw->data.hid.bRawData, raw->data.hid.dwSizeHid
+                    ) ;
+                    if( ires != HIDP_STATUS_SUCCESS ) continue ;
+
+                    so_memory::malloc_guard<BOOL> button_states( num_buttons ) ;
+                    
+                    ZeroMemory( button_states, sizeof( button_states ) );
+                    for( i = 0; i < usageLength; i++ )
+                    {
+                        auto const index = usage[ i ] - bcaps[ 0 ].Range.UsageMin ;
+                        button_states[ index ] = TRUE;
+
+                        //so_log::global_t::status("button : " + std::to_string(index)) ;
+
+                        for( auto * nptr : _gamepad_notifies )
+                        {
+                            nptr->on_button_press( "rawinput_deivce_" + std::to_string( joystick_id ), joystick_id, index ) ;
+                        }
+                    }
+                }
+
+                {
+                    for( size_t v = 0; v < caps.NumberInputValueCaps; v++ )
+                    {
+                        ULONG value = 0 ;
+                        LONG xaxis = 0, yaxis = 0 ;
+
+                        auto const ires = HidP_GetUsageValue( HidP_Input, vcaps[ v ].UsagePage, 0,
+                            vcaps[ v ].Range.UsageMin, &value, *( ( PHIDP_PREPARSED_DATA* ) &preparsed_data ),
+                            ( PCHAR ) raw->data.hid.bRawData, raw->data.hid.dwSizeHid
+                        ) ;
+
+                        if( ires != HIDP_STATUS_SUCCESS ) continue ;
+
+                        switch( vcaps[ v ].Range.UsageMin )
+                        {
+                        case 0x30:    // X-axis
+                            xaxis = ( LONG ) value - 127;
+                            break;
+
+                        case 0x31:    // Y-axis
+                            yaxis = ( LONG ) value - 127;
+                            break;
+                            /*
+                        case 0x32: // Z-axis
+                            lAxisZ = ( LONG ) value - 128;
+                            break;
+
+                        case 0x35: // Rotate-Z
+                            lAxisRz = ( LONG ) value - 128;
+                            break;
+
+                        case 0x39:    // Hat Switch
+                            lHat = value;
+                            break;*/
+                        }
+
+#if 0                   
+                        if( xaxis != 0 )
+                            so_log::global_t::status( "xaxis : " + std::to_string( xaxis ) ) ;
+
+                        if( yaxis != 0 )
+                            so_log::global_t::status( "yaxis : " + std::to_string( yaxis ) ) ;
+#endif
+
+                        if( xaxis != 0 || yaxis != 0 )
+                        {
+                            for( auto * nptr : _gamepad_notifies )
+                            {
+                                nptr->on_dpad_press( "rawinput_deivce_" + std::to_string( joystick_id ), joystick_id, xaxis, yaxis ) ;
+                            }
+                        }
+                    }
+                }
+
+                
+            }
+        }
     }
 
     //DefRawInputProc( &raw, sib/sizeof(RAWINPUT), sizeof(RAWINPUTHEADER) ) ;

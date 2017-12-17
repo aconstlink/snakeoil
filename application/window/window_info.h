@@ -16,6 +16,7 @@ namespace so_app
         int_t w = 100 ;
         int_t h = 100 ;
 
+        bool_t borderless = false ;
         bool_t fullscreen = false ;
         bool_t show_cursor = true ;
         std::string window_name = std::string("window name");

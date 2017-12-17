@@ -108,6 +108,17 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 set( OPENCTM_ENABLE @OPENCTM_ENABLE@ )
 find_package( OpenCtm )
 
+# Fmod
+set( FMOD_ENABLE @FMOD_ENABLE@ )
+if( FMOD_ENABLE )
+  set( FMOD_BASE_DIR "@FMOD_BASE_DIR@" )
+  set( fmod_DIR ${FMOD_BASE_DIR} )
+  find_package( Fmod REQUIRED ) 
+  
+  set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS} "@FMOD_INCLUDE_DIRS@" )
+  set( SNAKEOIL_LIBRARIES ${SNAKEOIL_LIBRARIES} "@FMOD_LIBRARIES@" )
+endif()
+
 ####################################################################
 # Build-In externals paths
 ####################################################################

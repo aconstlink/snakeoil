@@ -10,93 +10,80 @@
 
 namespace so_math
 {
-	namespace so_2d
-	{
-		/// assumes the origin of source/destination coords to 
-		/// have the origin at the borders.
-		/// ndc: normalize device coords 
-		/// nnc: negative normalized coords in [-1,1]
-		/// pnc: positive normalized coords in [0,1]
-		template< typename real_t >
-		class coord_transformator
-		{
-			typedef vector2< uint_t > vec2ui_t ;
-			typedef vec2ui_t const & vec2ui_cref_t ;
+    namespace so_2d
+    {
+        /// assumes the origin of source/destination coords to 
+        /// have the origin at the borders.
+        /// ndc: normalize device coords 
+        /// nnc: negative normalized coords in [-1,1]
+        /// pnc: positive normalized coords in [0,1]
+        template< typename real_t >
+        class coord_transformator
+        {
+            so_this_typedefs( coord_transformator< real_t > ) ;
 
-			typedef vector2< real_t > vec2r_t ;
-			typedef vec2r_t const & vec2r_cref_t ;
-			typedef vec2r_t & vec2r_ref_t ;
+            so_typedefs( so_math::vector2<real_t>, vec2r ) ;
 
-		private:
+        private:
 
-			vec2ui_t _src_res ;
-			vec2ui_t _dst_res ;
+            vec2ui_t _res = vec2ui_t(1,1) ;
 
-		public:
+        public:
 
-			coord_transformator( vec2ui_cref_t source_res, vec2ui_cref_t dest_res )
-			{
-				_src_res = source_res ;
-				_dst_res = dest_res ;
-			}
+            coord_transformator( void_t ) {}
 
-			coord_transformator( vec2ui_cref_t dest_res )
-			{
-				_dst_res = dest_res ;
-			}
+            coord_transformator( vec2ui_cref_t res )
+            {
+                _res = res ;
+            }
 
-		public: // transformation
+            coord_transformator( this_cref_t rhv )
+            {
+                _res = rhv._res ;
+            }
 
-			/// transforms from [0,1] to [-1,1]
-			vec2r_t from_pnc_to_nnc( vec2r_cref_t ndc )
-			{
-				return ndc * vec2r_t(2.0) - vec2r_t(1.0) ;
-			}
+            ~coord_transformator( void_t ){}
 
-			/// transforms from [-1,1] to [0,1]
-			vec2r_t from_nnc_to_pnc( vec2r_cref_t ndc )
-			{
-				return ndc * vec2r_t(0.5) + vec2r_t(0.5) ;
-			}
+        public:
 
-		public: // from source
+            this_ref_t operator = ( this_cref_t rhv )
+            {
+                _res = rhv._res ;
+                return *this ;
+            }
 
-			/// @point in source space coords
-			/// @return pndc
-			vec2r_t from_src_to_pnc( vec2ui_cref_t point )
-			{
-				return vec2r_t(point) / vec2r_t(_src_res)  ;
-			}
+        public: // transformation
 
-			/// @point in source space coords
-			vec2r_t from_src_to_nnc( vec2ui_cref_t point )
-			{
-				return from_pnc_to_nnc( from_src_to_pnc(point) )  ;
-			}
+            /// transforms from [0,1] to [-1,1]
+            vec2r_t pnc_to_nnc( vec2r_cref_t ndc )
+            {
+                return ndc * vec2r_t(2.0) - vec2r_t(1.0) ;
+            }
 
-			vec2ui_t from_src_to_dst( vec2ui_cref_t point )
-			{
-				return vec2ui_t(from_src_to_pnc( point ) * vec2r_t(_dst_res)) ;
-			}
+            /// transforms from [-1,1] to [0,1]
+            vec2r_t nnc_to_pnc( vec2r_cref_t ndc )
+            {
+                return ndc * vec2r_t(0.5) + vec2r_t(0.5) ;
+            }
 
-		public: // from dest
+        public: // from 
 
-			/// @point in destination space coords
-			/// @return pndc
-			vec2r_t from_dst_to_pnc( vec2ui_cref_t point )
-			{
-				return vec2r_t(point) / vec2r_t(_dst_res)  ;
-			}
+            /// @point in source space coords
+            /// @return pndc
+            vec2r_t to_pnc( vec2ui_cref_t point )
+            {
+                return vec2r_t(point) / vec2r_t(_res)  ;
+            }
 
-			/// @point in destination space coords
-			vec2r_t from_dst_to_nnc( vec2ui_cref_t point )
-			{
-				return from_pnc_to_nnc( from_dst_to_pnc(point) )  ;
-			}
-		};
+            /// @point in source space coords
+            vec2r_t to_nnc( vec2ui_cref_t point )
+            {
+                return pnc_to_nnc( to_pnc(point) )  ;
+            }
+        };
 
-		typedef coord_transformator< float_t > coord_transformatorf_t ;
-	}
+        so_typedefs( coord_transformator< float_t >, coord_transformatorf ) ;
+    }
 }
 
 #endif

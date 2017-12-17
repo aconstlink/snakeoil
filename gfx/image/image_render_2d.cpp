@@ -81,10 +81,16 @@ void_t image_render_2d::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-void_t image_render_2d::init( void_t )
+void_t image_render_2d::init( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
 {
     if( _t_rnd == so_gpx::technique_id_t(-1) )
         _t_rnd = _gpxr->register_technique( _fac_ptr ) ;
+
+    _proj = proj ;
+    _view = view ;
+
+    _sd_ptr->proj = proj ;
+    _sd_ptr->view = view ;
 }
 
 //************************************************************************************
@@ -114,7 +120,7 @@ image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img
 
         if( iter != _images.end() )
         {
-            size_t const iid = iter - _images.end() ;
+            size_t const iid = (_images.end() - iter)-1 ;
             iter->viewports.push_back( vp ) ;
 
             return this_t::image_id_t( iid, iter->viewports.size()-1 ) ;
@@ -192,6 +198,8 @@ so_gfx::result image_render_2d::draw_image( size_t const group, image_id_cref_t 
         if( iter == _gis.end() )
         {
             gptr = this_t::insert_group( group ) ;
+            gptr->proj = _proj ;
+            gptr->view = _view ;
         }
         else
         {
@@ -259,8 +267,8 @@ so_gfx::result image_render_2d::prepare_for_rendering( void_t )
                     pgi.group_id = p->group_id ;
                     pgi.num_images = idai->image_infos.size() ;
 
-                    //pgi.proj ;
-                    //pgi.view ;
+                    pgi.proj = p->proj ;
+                    pgi.view = p->view ;
 
                     _render_groups.push_back( p->group_id ) ;
                     _sd_ptr->per_group_infos.push_back( pgi ) ;
@@ -288,8 +296,8 @@ so_gfx::result image_render_2d::prepare_for_rendering( void_t )
                         sii.texcoords = texcoords ;
                         sii.pos = ii.pos ;
                         sii.rot = ii.rot ;
-                        sii.scale = ii.scale * texcoords.zw() ;
-
+                        sii.scale = ii.scale ;
+                        sii.color = ii.color ;
                         _sd_ptr->image_infos.push_back( sii ) ;
                     }
                 }

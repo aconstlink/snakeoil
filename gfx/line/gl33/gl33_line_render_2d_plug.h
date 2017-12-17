@@ -46,6 +46,8 @@ namespace so_gfx
                 uint32_ptr_t start_offset ;
                 so_math::mat4f_ptr_t proj ;
                 so_math::mat4f_ptr_t view ;
+
+                float_t line_width ;
             };
             so_typedef( per_group_data ) ;
 

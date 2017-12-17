@@ -404,7 +404,7 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_update( update_info_cref_t )
                 {
                     this_t::per_group_data_t pgd ;
                     pgd.group_id = gi.group_id ;
-                    
+
                     pgd.var_set = so_gpu::variable_set_t::create(
                         "[gl33_text_render_2d_plug::on_update] : variable_set") ;
 
@@ -424,13 +424,13 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_update( update_info_cref_t )
                         pgd.var_set->bind_data<so_math::vec2f_t>( "u_scale", &( _sd->dim_scale ) ) ;
                         
                         {
-                            pgd.proj= so_gpu::memory::alloc<so_math::mat4f_t>(
+                            pgd.proj = so_gpu::memory::alloc<so_math::mat4f_t>( gi.proj,
                                 "[gl33_text_render_2d_plug::on_update] : projection matrix" ) ;
                             pgd.var_set->bind_data<so_math::mat4f_t>( "u_proj", pgd.proj ) ;
                         }
 
                         {
-                            pgd.view = so_gpu::memory::alloc<so_math::mat4f_t>(
+                            pgd.view = so_gpu::memory::alloc<so_math::mat4f_t>( gi.view,
                                 "[gl33_text_render_2d_plug::on_update] : view matrix" ) ;
                             pgd.var_set->bind_data<so_math::mat4f_t>( "u_view", pgd.view ) ;
                         }

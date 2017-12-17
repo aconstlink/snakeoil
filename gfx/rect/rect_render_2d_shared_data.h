@@ -36,6 +36,9 @@ namespace so_gfx
 
     public:
 
+        so_math::mat4f_t proj ;
+        so_math::mat4f_t view ;
+
         /// known number of rects per group
         per_group_infos_t per_group_infos ;
 

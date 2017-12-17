@@ -18,190 +18,198 @@
 
 namespace so_math 
 {
-	template< typename type >
-	class vector2
-	{
-	public:
+    template< typename type >
+    class vector2
+    {
+        so_this_typedefs( vector2< type > ) ;
 
-		typedef type type_t ;
-		typedef type_t & type_ref_t ;
-		typedef type_t const & type_cref_t ;
+    public:
 
-		typedef vector2< type > vec2_t ;
-		typedef vector3< type > vec3_t ;
-		typedef vector4< type > vec4_t ;
+        so_typedef( type ) ;
 
-        typedef vector2b vecb_t ;
+        so_typedefs( vector2<type>, vec2 ) ;
+        so_typedefs( vector3<type>, vec3 ) ;
+        so_typedefs( vector4<type>, vec4 ) ;
 
-		typedef vec2_t this_t ;
-		typedef this_t & this_ref_t ;
-		typedef this_t const & this_cref_t ;
+        so_typedefs( vector2b, vecb ) ;
 
-	public:
+    public:
 
-	    //************************************************************************************
-	    vector2( void )
-		{
-		    _elem[0] = type_t(0) ;
-		    _elem[1] = type_t(0) ;
-	    }
+        //***************************************************
+        vector2( void )
+        {
+            _elem[0] = type_t(0) ;
+            _elem[1] = type_t(0) ;
+        }
 
-		//************************************************************************************
-	    vector2( type_t s )
-		{
+        //***************************************************
+        vector2( type_t s )
+        {
             _elem[0] = s ;
             _elem[1] = s ;
-	    }
+        }
 
-	    //************************************************************************************
-	    vector2( type_t x, type_t y )
-		{
-		    (*this)(x,y) ;
-	    }
+        //***************************************************
+        vector2( type_t x, type_t y )
+        {
+            (*this)(x,y) ;
+        }
 
-	    //************************************************************************************
-	    vector2( this_cref_t rhv ) 
-		{
-		    (*this)(rhv.x(),rhv.y()) ;
-	    }
+        //***************************************************
+        vector2( this_cref_t rhv ) 
+        {
+            (*this)(rhv.x(),rhv.y()) ;
+        }
 
-        //************************************************************************************
-	    template< typename other_t >
+        //***************************************************
+        template< typename other_t >
         vector2( vector2<other_t> const & rhv ) 
-		{
-		    (*this)(type_t(rhv.x()),type_t(rhv.y())) ;
-	    }
+        {
+            (*this)(type_t(rhv.x()),type_t(rhv.y())) ;
+        }
 
-	    //************************************************************************************
-	    vector2( vec3_t const & rhv ) 
-		{
-		    (*this)( rhv.x(), rhv.y() ) ;
-	    }
+        //***************************************************
+        vector2( vec3_t const & rhv ) 
+        {
+            (*this)( rhv.x(), rhv.y() ) ;
+        }
 
-	    //************************************************************************************
-	    vector2( vec4_t const & rhv ) {
-		    (*this)(rhv.x(),rhv.y()) ;
-	    }
+        //***************************************************
+        vector2( vec4_t const & rhv ) {
+            (*this)(rhv.x(),rhv.y()) ;
+        }
 
-		vector2( type_t angle, so_switch::cos_sin )
-		{
-			_elem[0] = std::cos( angle ) ;
-			_elem[1] = std::sin( angle ) ;
-		}
+        vector2( type_t angle, so_switch::cos_sin )
+        {
+            _elem[0] = std::cos( angle ) ;
+            _elem[1] = std::sin( angle ) ;
+        }
 
-		vector2( type_t angle, so_switch::sin_cos )
-		{
-			_elem[0] = std::sin( angle ) ;
-			_elem[1] = std::cos( angle ) ;
-		}
+        vector2( type_t angle, so_switch::sin_cos )
+        {
+            _elem[0] = std::sin( angle ) ;
+            _elem[1] = std::cos( angle ) ;
+        }
 
     public: // x,y,z accessor
 
-	    //************************************************************************************
-	    type_cref_t x( void ) const {
-		    return _elem[0] ;
-	    }
+        //***************************************************
+        type_cref_t x( void ) const {
+            return _elem[0] ;
+        }
 
-	    //************************************************************************************
-	    type_cref_t y( void ) const {
-		    return _elem[1] ;
-	    }
+        //***************************************************
+        type_cref_t y( void ) const {
+            return _elem[1] ;
+        }
 
-	    //************************************************************************************
-	    type_ref_t x( void ) {
-		    return _elem[0] ;
-	    }
+        //***************************************************
+        type_ref_t x( void ) {
+            return _elem[0] ;
+        }
 
-	    //************************************************************************************
-	    type_ref_t y( void ) {
-		    return _elem[1] ;
-	    }
+        //***************************************************
+        type_ref_t y( void ) {
+            return _elem[1] ;
+        }
 
-	    //************************************************************************************
-	    this_ref_t x( type_cref_t val ){
-		    _elem[0] = val ;
-			return *this ;
-	    }
+        //***************************************************
+        this_ref_t x( type_cref_t val ){
+            _elem[0] = val ;
+            return *this ;
+        }
 
-	    //************************************************************************************
-	    this_ref_t y( type_cref_t val ){
-		    _elem[1] = val ;
-			return *this ;
-	    }
+        //***************************************************
+        this_ref_t y( type_cref_t val ){
+            _elem[1] = val ;
+            return *this ;
+        }
+
+        //***************************************************
+        this_t xx( void_t ) const
+        {
+            return this_t( _elem[ 0 ], _elem[ 0 ] ) ;
+        }
+
+        //***************************************************
+        this_t yy( void_t ) const 
+        {
+            return this_t( _elem[ 1 ], _elem[ 1 ] ) ;
+        }
 
     public: // operator ()
 
-	    //************************************************************************************
-	    this_cref_t operator()( void ){
-		    _elem[0] = type_t(0);_elem[1] = type_t(0);
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator()( void ){
+            _elem[0] = type_t(0);_elem[1] = type_t(0);
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_cref_t operator()( type_t x, type_t y ){
-		    _elem[0]=x; _elem[1]=y;
-		    return *this ;
-	    }
+        //***************************************************
+        this_cref_t operator()( type_t x, type_t y ){
+            _elem[0]=x; _elem[1]=y;
+            return *this ;
+        }
 
     public: // operator [] // optimized
 
-	    //************************************************************************************
-	    type_cref_t operator[]( size_t index ) const{
-		    return _elem[index] ;
-	    }
+        //***************************************************
+        type_cref_t operator[]( size_t index ) const{
+            return _elem[index] ;
+        }
 
-	    //************************************************************************************
-	    type_ref_t operator[]( size_t index ) {
-		    return _elem[index] ;
-	    }
+        //***************************************************
+        type_ref_t operator[]( size_t index ) {
+            return _elem[index] ;
+        }
 
     public: // operator +
 
-	    //************************************************************************************
-	    this_cref_t operator += ( this_cref_t rhv ){
-		    _elem[0]+=rhv.x(); _elem[1]+=rhv.y(); 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator += ( this_cref_t rhv ){
+            _elem[0]+=rhv.x(); _elem[1]+=rhv.y(); 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator + ( this_cref_t rhv ) const{
-		    return this_t(_elem[0]+rhv.x(), _elem[1]+rhv.y()) ;
-	    }
+        //***************************************************
+        this_t operator + ( this_cref_t rhv ) const{
+            return this_t(_elem[0]+rhv.x(), _elem[1]+rhv.y()) ;
+        }
 
-	    //************************************************************************************
-	    this_cref_t operator += ( type_cref_t rhv ){
-		    _elem[0]+=rhv; _elem[1]+=rhv;
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator += ( type_cref_t rhv ){
+            _elem[0]+=rhv; _elem[1]+=rhv;
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator + ( type_cref_t rhv ) const{
-		    return this_t(_elem[0]+rhv, _elem[1]+rhv) ;
-	    }
+        //***************************************************
+        this_t operator + ( type_cref_t rhv ) const{
+            return this_t(_elem[0]+rhv, _elem[1]+rhv) ;
+        }
 
     public: // operator -
 
-	    //************************************************************************************
-	    this_cref_t operator -= ( this_cref_t rhv ){
-		    _elem[0]-=rhv.x(); _elem[1]-=rhv.y(); 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator -= ( this_cref_t rhv ){
+            _elem[0]-=rhv.x(); _elem[1]-=rhv.y(); 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator - ( this_cref_t rhv ) const{
-		    return this_t(_elem[0]-rhv.x(), _elem[1]-rhv.y()) ;
-	    }
+        //***************************************************
+        this_t operator - ( this_cref_t rhv ) const{
+            return this_t(_elem[0]-rhv.x(), _elem[1]-rhv.y()) ;
+        }
 
-	    //************************************************************************************
-	    this_cref_t operator -= ( type_cref_t rhv ){
-		    _elem[0]-=rhv; _elem[1]-=rhv; 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator -= ( type_cref_t rhv ){
+            _elem[0]-=rhv; _elem[1]-=rhv; 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator - ( type_cref_t rhv ) const{
-		    return this_t(_elem[0]-rhv, _elem[1]-rhv) ;
-	    }
+        //***************************************************
+        this_t operator - ( type_cref_t rhv ) const{
+            return this_t(_elem[0]-rhv, _elem[1]-rhv) ;
+        }
 
     public: // mult
 
@@ -211,77 +219,77 @@ namespace so_math
 
     public: // operator *
 
-	    //************************************************************************************
-	    this_cref_t operator *= ( this_cref_t rhv ){
-		    _elem[0]*=rhv.x(); _elem[1]*=rhv.y();
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator *= ( this_cref_t rhv ){
+            _elem[0]*=rhv.x(); _elem[1]*=rhv.y();
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator * ( this_cref_t rhv ) const{
-		    return this_t(_elem[0]*rhv.x(), _elem[1]*rhv.y()) ;
-	    }
+        //***************************************************
+        this_t operator * ( this_cref_t rhv ) const{
+            return this_t(_elem[0]*rhv.x(), _elem[1]*rhv.y()) ;
+        }
 
-	    //************************************************************************************
-	    this_cref_t operator *= ( type_cref_t rhv ){
-		    _elem[0]*=rhv; _elem[1]*=rhv;
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_cref_t operator *= ( type_cref_t rhv ){
+            _elem[0]*=rhv; _elem[1]*=rhv;
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator * ( type_cref_t rhv ) const{
-		    return this_t(_elem[0]*rhv, _elem[1]*rhv) ;
-	    }
+        //***************************************************
+        this_t operator * ( type_cref_t rhv ) const{
+            return this_t(_elem[0]*rhv, _elem[1]*rhv) ;
+        }
 
-        //************************************************************************************
-	    template< typename other_t >
+        //***************************************************
+        template< typename other_t >
         this_t operator * ( other_t rhv ) const{
-		    return this_t( type_t(_elem[0]*rhv), type_t(_elem[1]*rhv) ) ;
-	    }
+            return this_t( type_t(_elem[0]*rhv), type_t(_elem[1]*rhv) ) ;
+        }
 
-        //************************************************************************************
-	    template< typename other_t >
+        //***************************************************
+        template< typename other_t >
         this_t operator * ( vector2<other_t> rhv ) const{
-		    return this_t( type_t(_elem[0]*rhv.x()), type_t(_elem[1]*rhv.y()) ) ;
-	    }
+            return this_t( type_t(_elem[0]*rhv.x()), type_t(_elem[1]*rhv.y()) ) ;
+        }
 
     public: // operator /
 
-	    //************************************************************************************
-	    this_ref_t operator /= ( this_cref_t rhv ){
-		    _elem[0]/=rhv.x(); _elem[1]/=rhv.y(); 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_ref_t operator /= ( this_cref_t rhv ){
+            _elem[0]/=rhv.x(); _elem[1]/=rhv.y(); 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator / ( this_cref_t rhv ) const{
-		    return this_t(_elem[0]/rhv.x(), _elem[1]/rhv.y()) ;
-	    }
+        //***************************************************
+        this_t operator / ( this_cref_t rhv ) const{
+            return this_t(_elem[0]/rhv.x(), _elem[1]/rhv.y()) ;
+        }
 
-	    //************************************************************************************
-	    this_ref_t operator /= ( type_cref_t rhv ){
-		    _elem[0]/=rhv; _elem[1]/=rhv; 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_ref_t operator /= ( type_cref_t rhv ){
+            _elem[0]/=rhv; _elem[1]/=rhv; 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t operator / ( type_cref_t rhv ) const{
-		    return this_t(_elem[0]/rhv, _elem[1]/rhv) ;
-	    }
+        //***************************************************
+        this_t operator / ( type_cref_t rhv ) const{
+            return this_t(_elem[0]/rhv, _elem[1]/rhv) ;
+        }
 
     public: // operator =
 
-	    //************************************************************************************
-	    this_ref_t operator = ( this_cref_t rhv ){
-		    _elem[0] = rhv.x() ; _elem[1] = rhv.y() ; 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_ref_t operator = ( this_cref_t rhv ){
+            _elem[0] = rhv.x() ; _elem[1] = rhv.y() ; 
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_ref_t operator = ( vec4_t const & rhv ){
-		    _elem[0] = rhv.x() ; _elem[1] = rhv.y() ; 
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_ref_t operator = ( vec4_t const & rhv ){
+            _elem[0] = rhv.x() ; _elem[1] = rhv.y() ; 
+            return (*this) ;
+        }
 
     public: // bitwise
 
@@ -334,7 +342,7 @@ namespace so_math
     public: // min/max
 
         /// component-wise max operation
-		/// returns max of this or rhv.
+        /// returns max of this or rhv.
         this_ref_t max( this_cref_t rhv ) 
         {
             _elem[0] = rhv._elem[0] > _elem[0] ? rhv._elem[0] : _elem[0] ;
@@ -362,62 +370,62 @@ namespace so_math
 
     public: // common
 
-	    //************************************************************************************
-	    type_t dot( this_cref_t rhv ) const{
-		    return _elem[0]*rhv.x()+_elem[1]*rhv.y();
-	    }
+        //***************************************************
+        type_t dot( this_cref_t rhv ) const{
+            return _elem[0]*rhv.x()+_elem[1]*rhv.y();
+        }
 
-        //************************************************************************************
+        //***************************************************
         type_t det( this_cref_t rhv ) const
         {
             return _elem[0] * rhv._elem[1] - _elem[1] * rhv._elem[0] ;
         }
 
-	    //************************************************************************************
-	    this_ref_t normalize( void ){
-		    type_t len = this_t::length() ;
-		    if( std::abs(len) > std::numeric_limits<type_t>::epsilon() ) (*this) /= len ;
-		    return (*this) ;
-	    }
+        //***************************************************
+        this_ref_t normalize( void ){
+            type_t len = this_t::length() ;
+            if( std::abs(len) > std::numeric_limits<type_t>::epsilon() ) (*this) /= len ;
+            return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t normalized( void ) const {
-		    this_t vec( *this ) ;
-		    vec.normalize() ;
-		    return vec ;
-	    } 
-		
-	    //************************************************************************************
-	    type_t length2( void ) const {
-		    return _elem[0]*_elem[0]+_elem[1]*_elem[1] ;
-	    }
+        //***************************************************
+        this_t normalized( void ) const {
+            this_t vec( *this ) ;
+            vec.normalize() ;
+            return vec ;
+        } 
+        
+        //***************************************************
+        type_t length2( void ) const {
+            return _elem[0]*_elem[0]+_elem[1]*_elem[1] ;
+        }
 
-	    //************************************************************************************
-	    type_t length( void ) const {
-		    return sqrt(this_t::length2()) ;
-	    }
+        //***************************************************
+        type_t length( void ) const {
+            return sqrt(this_t::length2()) ;
+        }
 
-	    //************************************************************************************
-	    this_ref_t negate( void )
+        //***************************************************
+        this_ref_t negate( void )
             {
                 _elem[0] = -_elem[0] ;_elem[1] = -_elem[1] ;
-		return (*this) ;
-	    }
+        return (*this) ;
+        }
 
-	    //************************************************************************************
-	    this_t negated( void ) const
+        //***************************************************
+        this_t negated( void ) const
             {
                 this_t v(*this) ;
                 return v.negate() ;
-	    }
+        }
 
-        //************************************************************************************
-	    this_t sign( void ) const
+        //***************************************************
+        this_t sign( void ) const
             {
                 return this_t( so_math::fn<type_t>::sign(_elem[0]), so_math::fn<type_t>::sign(_elem[1]) ) ;
-	    }
+        }
 
-        //************************************************************************************
+        //***************************************************
         this_ref_t abs( void )
         {
             _elem[0] = type_t(std::abs(_elem[0])) ;
@@ -425,7 +433,7 @@ namespace so_math
             return *this ;
         }
 
-        //************************************************************************************
+        //***************************************************
         this_t absed( void ) const
         {
             return this_t(*this).abs() ;
@@ -451,7 +459,7 @@ namespace so_math
             return this_t(*this).dead_zone( threshold ) ;
         }
 
-        //************************************************************************************
+        //***************************************************
         this_ref_t clamp( this_cref_t min_val, this_cref_t max_val ) 
         {
             _elem[0] = std::min( std::max(_elem[0], min_val.x()), max_val.x()) ;
@@ -460,13 +468,13 @@ namespace so_math
             return *this ;
         }
 
-        //************************************************************************************
+        //***************************************************
         this_t clamped( this_cref_t min_val, this_cref_t max_val ) const
         {
             return this_t(*this).clamp( min_val, max_val ) ;
         }
 
-        //************************************************************************************
+        //***************************************************
         this_ref_t clamp( type_t min_val, type_t max_val ) 
         {
             _elem[0] = std::min( std::max(_elem[0], min_val), max_val) ;
@@ -475,19 +483,19 @@ namespace so_math
             return *this ;
         }
 
-        //************************************************************************************
+        //***************************************************
         this_t clamped( type_t min_val, type_t max_val ) const 
         {
             return this_t(*this).clamp( min_val, max_val ) ;
         }
 
-        //************************************************************************************
+        //***************************************************
         type_t cross_as_scalar( this_cref_t other ) const 
         {
             return this_t::x() * other.y() - this_t::y() * other.x() ;
         }
 
-        //************************************************************************************
+        //***************************************************
         vec3_t crossed( this_cref_t other ) const 
         {
             return vec3_t( type_t(0), type_t(0), this_t::cross_as_scalar(other) ) ;
@@ -508,6 +516,6 @@ namespace so_math
     so_typedefs( vector2< uint_t >, vec2ui ) ;
 
 }
-	
+    
 #endif
 

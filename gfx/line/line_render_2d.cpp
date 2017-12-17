@@ -87,6 +87,7 @@ void_t line_render_2d::prepare_for_rendering( void_t )
             pgi.num_lines = gptr->line_infos.size() ;
             //pgi.proj = 
             //pgi.view = 
+            pgi.width = gptr->line_width ;
 
             _sd_ptr->per_group_infos.push_back( pgi ) ;
         }
@@ -126,26 +127,49 @@ bool_t line_render_2d::need_to_render( size_t const gid ) const
 //************************************************************************************
 void_t line_render_2d::draw_lines( size_t const group_id, size_t const num_lines, draw_line_funk_t  f )
 {
+    group_info_ptr_t gi_ptr = this_t::find_or_create_group_info( group_id ) ;
+
+    // 2. generate user lines and insert into group's buffer
+    {
+        so_thread::lock_guard_t lk( gi_ptr->mtx ) ;
+        for( size_t i = 0; i < num_lines; ++i )
+        {
+            gi_ptr->line_infos.push_back( f( i ) ) ;
+        }
+    }
+}
+
+//************************************************************************************
+void_t line_render_2d::set_line_width( size_t const group_id, float_t const width )
+{
+    group_info_ptr_t gi_ptr = this_t::find_or_create_group_info( group_id ) ;
+
+    gi_ptr->line_width = width ;
+}
+
+//************************************************************************************
+line_render_2d::group_info_ptr_t line_render_2d::find_or_create_group_info( size_t const group_id )
+{
     group_info_ptr_t gi_ptr = nullptr ;
 
     // 1. find and/or insert group
     {
         so_thread::lock_guard_t lk( _mtx_group ) ;
-        auto iter = std::find_if( _group_infos.begin(), _group_infos.end(), [&]( group_info_ptr_t gi )
-        { 
+        auto iter = std::find_if( _group_infos.begin(), _group_infos.end(), [&] ( group_info_ptr_t gi )
+        {
             return gi->group_id == group_id ;
         } ) ;
 
         if( iter == _group_infos.end() )
         {
             this_t::group_info_t gi ;
-            
+
             gi.group_id = group_id ;
             //gi.proj = 
             //gi.view = 
 
             gi_ptr = so_gfx::memory::alloc( this_t::group_info_t( std::move( gi ) ),
-                "[line_render_2d::draw_lines] : group_infos" ) ;
+                "[line_render_2d::find_or_create_group_info] : group_infos" ) ;
 
             auto const lower_iter = std::lower_bound( _group_infos.begin(), _group_infos.end(), group_id,
                 [&] ( this_t::group_info_ptr_t li, size_t const val )
@@ -159,14 +183,7 @@ void_t line_render_2d::draw_lines( size_t const group_id, size_t const num_lines
             gi_ptr = *iter ;
     }
 
-    // 2. generate user lines and insert into group's buffer
-    {
-        so_thread::lock_guard_t lk( gi_ptr->mtx ) ;
-        for( size_t i = 0; i < num_lines; ++i )
-        {
-            gi_ptr->line_infos.push_back( f( i ) ) ;
-        }
-    }
+    return gi_ptr ;
 }
 
 //************************************************************************************

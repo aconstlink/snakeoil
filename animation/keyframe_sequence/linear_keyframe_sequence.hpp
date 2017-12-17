@@ -106,9 +106,9 @@ namespace so_ani
             _keyframes.insert( std::lower_bound( _keyframes.begin(), _keyframes.end(), kf ), kf ) ;
             
             // 3. rebuild splines
-            for( auto const & kf : _keyframes )
+            for( auto const & kf_ : _keyframes )
             {
-                _value_spline.push_back( kf.get_value() ) ;
+                _value_spline.push_back( kf_.get_value() ) ;
             }
 
             // 4. compute scalings
@@ -173,7 +173,7 @@ namespace so_ani
                 // need to do -2 because si++ adds one after 
                 // we found the keyframe index and since we need
                 // the segment index but searched for keyframe index.
-                si = std::min( si-2, ns - 1 ) ;
+                si = std::min( std::max( si, size_t(2) ) - 2, ns - 1 ) ;
                 t = _time_funks[ si ]( t ) ;
             }
 
@@ -182,6 +182,54 @@ namespace so_ani
             }
 
             return so_ani::evaluation_result::in_range ;
+        }
+
+        value_t operator () ( time_stamp_t const ts ) const
+        {
+            float_t t ;
+
+            // before we can evaluate the anything, we need to check if
+            // 1. the sequence has enough keyframes
+            // 2. the time stamp is in time range of the sequence
+            {
+                auto const res = this_t::is_in_range( ts, t ) ;
+
+                if( so_core::is_not( so_ani::is_value_usable( res ) ) )
+                    return value_t() ;
+
+                if( so_ani::is_out_of_range( res ) )
+                {
+                    value_t vo ;
+                    this_t::get_extreme_value( ts, vo ) ;
+                    return vo ;
+                }
+            }
+
+
+            // @note the segment index si can not be calculated
+            // by a simple multiplication like t*ns, because the
+            // time stamps are NOT equally distributed!
+            // So for now, we need to search it.
+            {
+                size_t si = 0 ;
+
+                // do linear search
+                while( _keyframes[ si++ ].get_time() < ts ) ;
+
+                size_t const ns = _keyframes.size() - 1 ;
+
+                // need to do -2 because si++ adds one after 
+                // we found the keyframe index and since we need
+                // the segment index but searched for keyframe index.
+                si = std::min( std::max( si, size_t( 2 ) ) - 2, ns - 1 ) ;
+                t = _time_funks[ si ]( t ) ;
+            }
+
+            
+            value_t vo ;
+            _value_spline( t, vo ) ;
+
+            return vo ;
         }
 
     public:

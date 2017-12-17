@@ -72,6 +72,22 @@ namespace so_collide
                 return test_max.all() && test_min.all() ;
             }
 
+            bool_t is_inside( this_cref_t other ) const
+            {
+                bool_t inside = false ;
+
+                vec2_t points[ 4 ] ;
+                other.get_points( points ) ;
+
+                for( size_t i = 0; i < 4; ++i )
+                {
+                    inside = this_t::is_inside( points[ i ] ) ;
+                    if( so_core::is_not( inside ) ) break ;
+                }
+
+                return inside ;
+            }
+
             /// computes the closest point to p on aabb.
             /// q will contain the closest point.
             /// @note only works if p is outside of aabb.
@@ -225,7 +241,20 @@ namespace so_collide
                 return this_t::get_extend().length2() ;
             }
 
+            // left bottom
+            // left top
+            // right top
+            // right bottom
+            void_t get_points( vec2_ptr_t points_out_ptr ) const
+            {
+                points_out_ptr[ 0 ] = vec2_t( _min.x(), _min.y() ) ;
+                points_out_ptr[ 1 ] = vec2_t( _min.x(), _max.y() ) ;
+                points_out_ptr[ 2 ] = vec2_t( _max.x(), _max.y() ) ;
+                points_out_ptr[ 3 ] = vec2_t( _max.x(), _min.y() ) ;
+            }
         };
+
+        so_typedefs( aabb< float_t >, aabbf ) ;
     }
 }
 

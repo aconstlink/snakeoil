@@ -26,6 +26,9 @@ text_render_2d::text_render_2d( so_gpx::render_system_ptr_t rsptr )
     _fac_ptr = so_gfx::text_render_2d_plug_factory_t::create( 
         so_gfx::text_render_2d_plug_factory_t( _sd_ptr ),
         "[text_render_2d::text_render_2d] : plug factory" ) ;
+
+    _proj = so_math::mat4f_t().identity() ;
+    _view = so_math::mat4f_t().identity() ;
 }
 
 //************************************************************************************
@@ -40,6 +43,9 @@ text_render_2d::text_render_2d( this_rref_t rhv )
     so_move_member_ptr( _fac_ptr, rhv ) ;
 
     _gis = std::move( rhv._gis ) ;
+
+    _proj = rhv._proj ;
+    _view = rhv._view ;
 }
 
 //************************************************************************************
@@ -71,6 +77,22 @@ void_t text_render_2d::destroy( this_ptr_t ptr )
 //************************************************************************************
 void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::path_t > const & paths )
 {
+    so_std::vector<so_font::utf32_t> cps ;
+    for( uint32_t i = 32; i < 127; ++i )
+        cps.push_back( i ) ;
+
+    for( uchar_t ch : "הצü" )
+    {
+        cps.push_back( so_font::utf32_t( ch ) ) ;
+    }
+
+    return this_t::init_fonts( point_size, paths, cps ) ;
+}
+
+//************************************************************************************
+void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::path_t > const & paths, 
+    so_std::vector<so_font::utf32_t> const & cps )
+{
     _point_size = point_size ;
 
     so_font::so_stb::glyph_atlas_creator_t::face_infos_t fis ;
@@ -86,16 +108,7 @@ void_t text_render_2d::init_fonts( size_t const point_size, std::vector< so_io::
         }
     }
 
-    so_std::vector<so_font::utf32_t> cps ;
-    for( uint32_t i = 32; i < 127; ++i )
-        cps.push_back( i ) ;
-    
-    for( uchar_t ch : "הצü" )
-    {
-        cps.push_back( so_font::utf32_t( ch ) ) ;
-    }
-
-    size_t const atlas_width = size_t(_glyph_atlas_size.x()) ;
+    size_t const atlas_width = size_t( _glyph_atlas_size.x() ) ;
     size_t const atlas_height = size_t( _glyph_atlas_size.y() );
 
     _gaptr = so_font::so_stb::glyph_atlas_creator_t::create_glyph_atlas( fis, point_size,
@@ -111,8 +124,8 @@ text_render_2d::group_infos_t::iterator text_render_2d::insert_group( size_t con
 {
     group_info_t li ;
     li.group_id = group ;
-    li.proj = so_math::mat4f_t().identity() ;
-    li.view = so_math::mat4f_t().identity() ;
+    li.proj = _proj; 
+    li.view = _view; 
 
     auto const lower_iter = std::lower_bound( _gis.begin(), _gis.end(), group,
         [&] ( this_t::group_info_cref_t li, size_t const val )
@@ -121,6 +134,14 @@ text_render_2d::group_infos_t::iterator text_render_2d::insert_group( size_t con
     } ) ;
 
     return _gis.insert( lower_iter, li ) ;
+}
+
+
+//************************************************************************************
+void_t text_render_2d::set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
+{
+    _proj = proj ;
+    _view = view ;
 }
 
 //************************************************************************************
@@ -211,10 +232,19 @@ so_gfx::result text_render_2d::draw_text( size_t const group, size_t const font_
         }
         else
         {
-            
-            adv = so_math::vec2f_t(
-                float_t( 20 ) / _ci.vp.get_width<float_t>(),
-                float_t( 20 ) / _ci.vp.get_height<float_t>() ) ;
+            so_font::glyph_atlas_t::glyph_info_t gi ;
+
+            auto const ires = _gaptr->find_glyph( font_id, so_font::utf32_t( '?' ),
+                buffer_offset, gi ) ;
+
+            so_log::global::error( so_core::is_not( ires ),
+                "[text_render_2d::draw_text] : glyph ? must be included" ) ;
+
+            adv = gi.dims * scale  ;
+
+            //adv = so_math::vec2f_t(
+              //  float_t( 20 ) / _ci.vp.get_width<float_t>(),
+               // float_t( 20 ) / _ci.vp.get_height<float_t>() ) ;
                 
             //adv = so_math::vec2f_t( float_t( 10 ), float_t( 10 )  ) ;
         }

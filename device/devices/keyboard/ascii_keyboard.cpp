@@ -104,3 +104,10 @@ bool_t ascii_keyboard::is_released( ascii_key const ak ) const
 }
 
 //**********************************************************************************************
+void_t ascii_keyboard::for_each_key( for_each_funk_t f ) const
+{
+    for( auto const i : _ascii_key_states )
+    {
+        f( i.first, i.second ) ;
+    }
+}

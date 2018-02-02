@@ -493,7 +493,7 @@ so_gpx::plug_result gl33_text_render_2d_plug::on_execute( so_gpx::iplug_t::execu
     this_t::api()->set_state( so_gpu::blend_factor::one, so_gpu::blend_factor::one_minus_src_alpha ) ;
     {
         this_t::api()->load_variable( iter->var_set ) ;
-        this_t::api()->execute( so_gpu::render_config_info( _config_text, iter->varset_id,
+        this_t::api()->execute( so_gpu::render_config_info( _config_text, iter->varset_id, 0,
             (iter->num_elements) * 6 ) ) ;
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;

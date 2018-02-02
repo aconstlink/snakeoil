@@ -21,6 +21,11 @@ namespace so_gfx
     so_class_proto_typedefs( rect_render_2d ) ;
     so_class_proto_typedefs( rect_render_2d_plug_factory ) ;
 
+    so_class_proto_typedefs( circle_render_2d ) ;
+    so_class_proto_typedefs( circle_render_2d_plug_factory ) ;
+
     so_class_proto_typedefs( image_render_2d ) ;
     so_class_proto_typedefs( image_render_2d_plug_factory ) ;
+
+    so_class_proto_typedefs( render_2d ) ;
 }

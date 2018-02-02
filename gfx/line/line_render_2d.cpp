@@ -56,6 +56,13 @@ void_t line_render_2d::init( void_t )
 }
 
 //************************************************************************************
+void_t line_render_2d::set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
+{
+    _sd_ptr->view = view ;
+    _sd_ptr->proj = proj ;
+}
+
+//************************************************************************************
 line_render_2d::this_ptr_t line_render_2d::create( this_rref_t rhv, so_memory::purpose_cref_t p )
 {
     return so_gfx::memory::alloc( std::move( rhv ), p ) ;

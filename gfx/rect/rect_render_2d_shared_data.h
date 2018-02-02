@@ -28,6 +28,7 @@ namespace so_gfx
             so_math::vec2f_t pos ;
             /// scaling
             so_math::vec2f_t scale ;
+            so_math::vec2f_t pivot ;
             /// per rect color
             so_math::vec4f_t color ;
         };

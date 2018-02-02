@@ -26,6 +26,7 @@ namespace so_gfx
         {
             so_math::vec2f_t pos ;
             so_math::vec2f_t scale ;
+            so_math::vec2f_t pivot ;
             float_t rot ;
             so_math::vec4f_t color ;
         };
@@ -118,8 +119,8 @@ namespace so_gfx
 
         void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
-        so_gfx::result draw_rect( size_t const group, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale, 
-            float_t const rot, so_math::vec4f_cref_t color ) ;
+        so_gfx::result draw_rect( size_t const group, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, 
+            so_math::vec2f_cref_t scale, float_t const rot, so_math::vec4f_cref_t color ) ;
 
         so_gfx::result prepare_for_rendering( void_t ) ;
         bool_t need_to_render( size_t const ) const ;

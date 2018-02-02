@@ -72,15 +72,6 @@ namespace so_ui
 
         public:
 
-            virtual so_ui::result visit( so_ui::so_node::render_state_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::render_state_ptr_t ) ;
-            virtual so_ui::result visit( so_ui::so_node::renderable_ptr_t ) ;
-
-            virtual so_ui::result visit( so_ui::so_node::layer_2d_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::layer_2d_ptr_t ) ;
-            virtual so_ui::result visit( so_ui::so_node::area_2d_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::area_2d_ptr_t ) ;
-
             virtual void_t destroy( void_t ) ;
         };
         so_typedef( rect_render_2d ) ;

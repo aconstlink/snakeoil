@@ -36,6 +36,7 @@ namespace so_device
 
             typedef std::pair< three_button_t, button_state_t> mouse_button_item_t ;
             typedef so_std::vector< mouse_button_item_t > mouse_button_items_t ;
+            typedef so_std::vector< int_t > scroll_items_t ;
 
             typedef so_std::vector< so_math::vec2f_t > pointer_coords_t ;
 
@@ -59,6 +60,7 @@ namespace so_device
             mouse_button_items_t _three_button_items ;
             pointer_coords_t _pointer_coords_global ;
             pointer_coords_t _pointer_coords_local ;
+            scroll_items_t _scroll_items ;
 
             ascii_keyboard_keys_t _ascii_keyboard_keys ;
 

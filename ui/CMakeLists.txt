@@ -12,6 +12,28 @@ set( SOURCES ${SOURCES}
     structs/mouse_event.h
     structs/inode_listener.h
 
+    component/icomponent.h
+    component/layout/row_layout.h
+    component/layout/row_layout.cpp
+    component/layout/column_layout.h
+    component/layout/column_layout.cpp
+    component/layout/layer.h
+    component/layout/layer.cpp
+    component/transform/rect_transform.h
+    component/transform/rect_transform.cpp
+    component/transform/size_requirement.h
+    component/transform/size_requirement.cpp
+    component/event/mouse_event.h
+    component/event/mouse_event.cpp
+    component/text/text.h
+    component/text/text.cpp
+    component/render/gfx_draw_2d.h
+    component/render/gfx_draw_2d.cpp
+    component/render/gfx_2d.h
+    component/render/gfx_2d.cpp
+    component/render/framebuffer_2d.h
+    component/render/framebuffer_2d.cpp
+
     node/node.h
     node/node.cpp
     node/group.h
@@ -32,37 +54,12 @@ set( SOURCES ${SOURCES}
 
     node/leaf/logic_leaf.h
     node/leaf/logic_leaf.cpp
-
-    node/render/renderable.h
-    node/render/renderable.cpp
-    node/render/render_state.h
-    node/render/render_state.cpp
-
-    node/transform/transform_2d.h
-    node/transform/transform_2d.cpp
-    node/transform/transform_3d.h
-    node/transform/transform_3d.cpp
     
     node/component/variable_node_component.h
     node/component/variable_node_component.cpp
-
-    node/layout/area_2d.h
-    node/layout/area_2d.cpp
-    node/layout/column_layout.h
-    node/layout/column_layout.cpp
-    node/layout/row_layout.h
-    node/layout/row_layout.cpp
-    node/layout/layer_2d.h
-    node/layout/layer_2d.cpp
-    node/content/fill_area_2d.h
-    node/content/fill_area_2d.cpp
-    node/content/image_2d.h
-    node/content/image_2d.cpp
-    node/content/text.h
-    node/content/text.cpp
-    node/event/input_event.h
-    node/event/input_event.cpp
-
+    node/component/components_component.h
+    node/component/components_component.cpp
+    
     visitor/ivisitor.h
     visitor/visitor.h
     visitor/visitor.cpp
@@ -78,8 +75,15 @@ set( SOURCES ${SOURCES}
     visitor/render/line_render_2d.cpp
     visitor/render/rect_render_2d.h
     visitor/render/rect_render_2d.cpp
+    visitor/render/render_2d.h
+    visitor/render/render_2d.cpp
+    visitor/render/gfx_draw_2d.h
+    visitor/render/gfx_draw_2d.cpp
+    
     visitor/event/mouse_event_tester.h
     visitor/event/mouse_event_tester.cpp
+    visitor/debug/draw_leafs.h
+    visitor/debug/draw_leafs.cpp
     )
 
 so_vs_src_dir( SOURCES )

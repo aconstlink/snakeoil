@@ -35,6 +35,7 @@ Build-in means that these libraries are shipped with the framework code and that
 [STB](https://github.com/nothings/stb)  
 [Ogg](https://www.xiph.org/ogg/)  
 [Vorbis](https://xiph.org/vorbis/)  
+[ImGui](https://github.com/ocornut/imgui/)  
 
 ## Contribution
 

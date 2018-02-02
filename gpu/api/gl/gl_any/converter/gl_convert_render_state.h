@@ -23,7 +23,8 @@ namespace so_gpu
                 0, // RS_FILLMODE
                 GL_BLEND, // RS_BLEND
                 GL_DEPTH_TEST, // RS_DEPTH_TEST
-                0 // RS_DEPTH_WRITE
+                0, // RS_DEPTH_WRITE
+                GL_SCISSOR_TEST, // RS_DEPTH_TEST
             } ;
 
             static const size_t num_convert_render_state_gl =

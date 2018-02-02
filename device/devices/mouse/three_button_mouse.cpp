@@ -69,6 +69,30 @@ void_t three_button_mouse::set_local_position( so_math::vec2f_cref_t v )
 }
 
 //*****************************************************************************************
+void_t three_button_mouse::scroll_down( void_t )
+{
+    --_scroll ;
+}
+
+//*****************************************************************************************
+void_t three_button_mouse::scroll_up( void_t )
+{
+    ++_scroll ;
+}
+
+//*****************************************************************************************
+void_t three_button_mouse::scroll_reset( void_t )
+{
+    _scroll = 0 ;
+}
+
+//*****************************************************************************************
+int_t three_button_mouse::get_scroll( void_t ) const
+{
+    return _scroll ;
+}
+
+//*****************************************************************************************
 so_math::vec2f_t three_button_mouse::get_global_position( void_t ) const
 {
     return _global_position ;
@@ -78,6 +102,12 @@ so_math::vec2f_t three_button_mouse::get_global_position( void_t ) const
 so_math::vec2f_t three_button_mouse::get_local_position( void_t ) const
 {
     return _local_position ;
+}
+
+//*****************************************************************************************
+so_math::vec2f_t three_button_mouse::get_local_position( so_math::vec2f_cref_t pivot ) const
+{
+    return _local_position - pivot ;
 }
 
 //*****************************************************************************************
@@ -123,6 +153,8 @@ void_t three_button_mouse::update( void_t )
 
         _three_button_history.push_back( *iter ) ;
     }
+
+    _scroll = 0 ;
 }
 
 //*****************************************************************************************

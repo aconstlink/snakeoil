@@ -123,7 +123,9 @@ so_gpu::result gl_33_api::execute( render_config_info_cref_t info )
             /// convert element's core type to a gpu type
             auto const gpu_type = so_gpu::convert_from( ib->get_buffer_layout_element(0).get_type() ) ;
         
-            so_gli::gl::glDrawElements( so_gl::convert( pt ), GLsizei(ne), so_gl::convert( gpu_type ), 0 ) ;
+            void_cptr_t offset = void_cptr_t( info.start_element * ib->get_buffer_layout_element( 0 ).get_sib() ) ;
+            auto const glt = so_gl::convert( gpu_type ) ;
+            so_gli::gl::glDrawElements( so_gl::convert( pt ), GLsizei(ne), glt, offset ) ;
         
             if( gl_log::error( "[gl_33_api::execute] : glDrawElements" ) ) 
                 return so_gpu::failed_gl_api ;
@@ -133,7 +135,7 @@ so_gpu::result gl_33_api::execute( render_config_info_cref_t info )
             size_t const max_elems = vb->get_num_elements() ;
             size_t ne = std::min( info.num_elements, max_elems ) ;
 
-            so_gli::gl::glDrawArrays( so_gl::convert( pt ), 0, GLsizei(ne) ) ;
+            so_gli::gl::glDrawArrays( so_gl::convert( pt ), GLint(info.start_element), GLsizei(ne) ) ;
 
             if( gl_log::error( "[gl_33_api::execute] : glDrawArrays" ) ) 
                 return so_gpu::failed_gl_api ;

@@ -53,12 +53,6 @@ so_ui::result logic_leaf::apply( so_ui::so_visitor::ivisitor_ptr_t vptr )
     {
         base_t::apply( vptr ) ;
     }
-    else
-    {
-        so_log::global::warning( so_ui::no_success( res ),
-            "[so_ui::logic_leaf::apply] : visit" ) ;
-    }
-    
 
     return vptr->post_visit( this ) ;
 }

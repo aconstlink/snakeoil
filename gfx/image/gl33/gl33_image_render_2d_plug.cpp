@@ -392,9 +392,9 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_update( update_info_cref_t )
                         auto const & ii = _sd->image_infos[ i ] ;
                         
                         _image_info_ptr->add_element( so_math::vec4f_t( ii.pos, ii.scale ) ) ;
-                        _image_info_ptr->add_element( so_math::vec4f_t( ii.color ) ) ;
+                        _image_info_ptr->add_element( so_math::vec4f_t( ii.rot, so_math::vec3f_t( ii.pivot, 0.0f ) ) ) ;
                         _image_info_ptr->add_element( so_math::vec4f_t( ii.texcoords ) ) ;
-                        _image_info_ptr->add_element( so_math::vec4f_t( ii.rot, so_math::vec3f_t() ) ) ;
+                        _image_info_ptr->add_element( so_math::vec4f_t( ii.color ) ) ;
                     }
 
                     // 2. create and store draw call
@@ -458,7 +458,7 @@ so_gpx::plug_result gl33_image_render_2d_plug::on_execute( so_gpx::iplug_t::exec
         {
             (*id.start_offset) = iter->offset ;
             this_t::api()->load_variable( id.var_set ) ;
-            this_t::api()->execute( so_gpu::render_config_info( _config, id.varset_id,
+            this_t::api()->execute( so_gpu::render_config_info( _config, id.varset_id, 0,
                 ( iter->num_elements ) * 6 ) ) ;
         }
         this_t::api()->disable( so_gpu::render_state::blend ) ;

@@ -69,13 +69,17 @@ namespace so_gpu
     struct render_config_info
     {
         render_config_info( so_gpu::config_ptr_t ptr, 
-            size_t variable_set_index_ = 0, size_t num_primitives_ = size_t(-1) ) :
-            config_ptr(ptr), variable_set_index(variable_set_index_), num_elements(num_primitives_)
+            size_t const variable_set_index_ = 0, size_t const start = 0, 
+            size_t const num_primitives_ = size_t(-1) ) :
+            config_ptr(ptr), variable_set_index(variable_set_index_), 
+            start_element(start), num_elements(num_primitives_)
         {}
 
         so_gpu::config_ptr_t config_ptr = nullptr ;
         size_t variable_set_index = 0 ;
             
+        size_t start_element = 0 ;
+
         /// num vertices if vertex buffer only is used.
         /// num indices if index buffer is used.
         size_t num_elements = size_t(-1) ;

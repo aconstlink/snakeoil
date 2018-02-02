@@ -16,7 +16,8 @@ namespace so_gpu
         depth,
         stencil,
         polygon,
-        viewport
+        viewport,
+        scissor
     };    
 
     class attribute_state_field

@@ -23,6 +23,8 @@
 #include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
+#include <array>
+
 using namespace so_appx ;
 
 //***********************************************************************
@@ -108,7 +110,11 @@ so_appx::result appx_application::create_window(
         return so_appx::invalid_window_name ;
 
     so_app::gl_window_ptr_t render_window = 
+#if defined( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
         so_app::gl_window_t::create( so_app::gl_window_t(gli, wi) ) ;
+#else
+        so_app::gl_window_t::create( "null_window for GL Api" ) ;
+#endif
     
     // 1. register normal window
     {
@@ -165,6 +171,13 @@ so_app::result appx_application::exec( void_t )
         
         update_data ud ;
         render_data rd ;
+
+        double_t const dts_max = 30.0 ;
+        
+        size_t dtsi = 0 ;
+        std::array< double_t, 30 > dts ;
+
+        for( size_t i = 0; i < dts.max_size(); ++i ) dts[ i ] = 0.0 ;
 
         while( thread_running )
         {
@@ -264,6 +277,18 @@ so_app::result appx_application::exec( void_t )
             ud.milliseconds = taken_milli ;
             ud.seconds = taken_secs ;
             ud.dt = dt ;
+            rd.dt = dt ;
+
+            {
+                dtsi = dtsi%dts.size() ;
+                double_t ldts = 0.0 ;
+                dts[ dtsi++ ] = dt ;
+                for( size_t i = 0; i < dts.size(); ++i ) ldts += dts[ i ] ;
+                ldts = ldts / dts_max ;
+
+                ud.dts = ldts ;
+                rd.dts = ldts ;
+            }
         }
 
         // perform the shutdown

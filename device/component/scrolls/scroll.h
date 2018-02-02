@@ -4,31 +4,22 @@
 //------------------------------------------------------------
 #pragma once
 
-#if 0
-
-#include "../comp.h"
+#include "../input_component.h"
 
 namespace so_device
 {
-    namespace so_component
+    namespace so_input
     {
-        /// we define a scroll component as something
-        /// that can scroll left/right or up/down
-        /// @note relative movement
-        struct scroll : public comp<scroll>
+        /// represents a vertical or horizontal scroll component
+        struct scroll : public input_component<scroll>
         {
-            size_t cid = size_t( -1 ) ;            
+            size_t cid = size_t( -1 ) ;
 
-            /// - : down, left scroll
-            /// + : up, right scroll
-            /// 0 : no scroll
-            float_t intensity = 0.0f ;
+            /// value < 0 : down/left
+            /// value > 0 : up/right
+            int_t value = 0 ;
         };
-        comp_type const comp<scroll>::ct = comp_type::scroll ;
 
         so_typedef( scroll ) ;
     }
 }
-
-#endif
-

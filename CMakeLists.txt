@@ -8,7 +8,7 @@ project(snakeoil CXX)
 
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 1 )
-set( SNAKEOIL_PATCH_VERSION 1 )
+set( SNAKEOIL_PATCH_VERSION 2 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake"
@@ -74,6 +74,12 @@ set_target_properties( vorbis PROPERTIES FOLDER "externals/xiph" )
 set_target_properties( vorbisenc PROPERTIES FOLDER "externals/xiph" )
 set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
 
+# imgui
+
+add_subdirectory( externals/imgui-0.0.0 )
+set( IMGUI_VERSION 0.0.0 )
+set_target_properties( imgui PROPERTIES FOLDER "externals" )
+set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-0.0.0/include" )
 
 #############################################
 
@@ -132,6 +138,7 @@ set( SUBDIRS
     "network"
     "device"
     "imex"
+    "imgui"
     "shade"
     #"gli" # depends on chosen graphics api
     "gpu"
@@ -206,7 +213,7 @@ foreach( _SUBDIR ${SUBDIRS} )
 endforeach()
 
 # do externals
-set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua )
+set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui )
 
 # do extensions
 set( TO_BE_EXPORTED ${TO_BE_EXPORTED} "${PROJECT_NAME}_project_cars" )

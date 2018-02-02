@@ -120,7 +120,7 @@ image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img
 
         if( iter != _images.end() )
         {
-            size_t const iid = (_images.end() - iter)-1 ;
+            size_t const iid = iter - _images.begin() ;
             iter->viewports.push_back( vp ) ;
 
             return this_t::image_id_t( iid, iter->viewports.size()-1 ) ;
@@ -177,7 +177,7 @@ void_t image_render_2d::set_view_projection( size_t const group, so_math::mat4f_
 
 //************************************************************************************
 so_gfx::result image_render_2d::draw_image( size_t const group, image_id_cref_t image_id, bool_t const dirty,
-    so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale, float_t const rot,
+    so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, so_math::vec2f_cref_t scale, float_t const rot,
     so_math::vec4f_cref_t color )
 {
     if( so_core::is_not( image_id.is_valid() ) )
@@ -231,6 +231,7 @@ so_gfx::result image_render_2d::draw_image( size_t const group, image_id_cref_t 
         ii.color = color ;
         ii.scale = scale ;
         ii.pos = pos ;
+        ii.pivot = pivot ;
         ii.dirty = dirty ;
         ii.rot = rot ;
         ii.image_id = image_id ;
@@ -296,6 +297,7 @@ so_gfx::result image_render_2d::prepare_for_rendering( void_t )
                         sii.texcoords = texcoords ;
                         sii.pos = ii.pos ;
                         sii.rot = ii.rot ;
+                        sii.pivot = ii.pivot ;
                         sii.scale = ii.scale ;
                         sii.color = ii.color ;
                         _sd_ptr->image_infos.push_back( sii ) ;

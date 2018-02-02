@@ -122,6 +122,8 @@ namespace so_gfx
 
         void_t init( void_t ) ;
 
+        void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+
     public: // draw
         
         void_t prepare_for_rendering( void_t ) ;

@@ -12,6 +12,14 @@ set( GL33_SOURCES
   image/gl33/gl33_image_render_2d_plug.cpp
   rect/gl33/gl33_rect_render_2d_plug.h
   rect/gl33/gl33_rect_render_2d_plug.cpp
+  circle/gl33/gl33_circle_render_2d_plug.h
+  circle/gl33/gl33_circle_render_2d_plug.cpp
+  plugs/framebuffer/gl33/gl33_framebuffer_begin_plug.h
+  plugs/framebuffer/gl33/gl33_framebuffer_begin_plug.cpp
+  plugs/framebuffer/gl33/gl33_framebuffer_end_plug.h
+  plugs/framebuffer/gl33/gl33_framebuffer_end_plug.cpp
+  plugs/common/gl33/gl33_map_texture_plug.h
+  plugs/common/gl33/gl33_map_texture_plug.cpp
 )
   
 set( SOURCES 
@@ -27,6 +35,9 @@ set( SOURCES
     camera/pinhole_lens.h
     camera/pinhole_lens.cpp
     
+    sprite/sprite_manager.h
+    sprite/sprite_manager.cpp
+
     text/text_render_2d.h
     text/text_render_2d.cpp
     text/text_render_2d_plug_factory.h
@@ -45,18 +56,42 @@ set( SOURCES
     rect/rect_render_2d_plug_factory.cpp
     rect/rect_render_2d_shared_data.h
 
+    circle/circle_render_2d.h
+    circle/circle_render_2d.cpp
+    circle/circle_render_2d_plug_factory.h
+    circle/circle_render_2d_plug_factory.cpp
+    circle/circle_render_2d_shared_data.h
+
     image/image_render_2d.h
     image/image_render_2d.cpp
     image/image_render_2d_plug_factory.h
     image/image_render_2d_plug_factory.cpp
     image/image_render_2d_shared_data.h
 
+    render/render_2d.h
+    render/render_2d.cpp
+
+    plugs/framebuffer/framebuffer_begin.h
+    plugs/framebuffer/framebuffer_begin.cpp
+    plugs/framebuffer/framebuffer_begin_plug_factory.h
+    plugs/framebuffer/framebuffer_begin_plug_factory.cpp
+    plugs/framebuffer/framebuffer_end.h
+    plugs/framebuffer/framebuffer_end.cpp
+    plugs/framebuffer/framebuffer_end_plug_factory.h
+    plugs/framebuffer/framebuffer_end_plug_factory.cpp
+    plugs/common/map_texture.h
+    plugs/common/map_texture.cpp
+    plugs/common/map_texture_plug_factory.h
+    plugs/common/map_texture_plug_factory.cpp
+    
     enums/align.h
     )
 
 set( SOURCES ${SOURCES} )
 
-set( SOURCES ${SOURCES} ${GL33_SOURCES} )
+if( SNAKEOIL_TARGET_GRAPHICS_OPENGL_33 )
+  set( SOURCES ${SOURCES} ${GL33_SOURCES} )
+endif()
 
 so_vs_src_dir( SOURCES )
 

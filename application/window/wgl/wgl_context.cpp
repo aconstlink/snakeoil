@@ -304,7 +304,11 @@ so_app::result wgl_context::create_the_context( gl_info_cref_t gli )
         {
             WGL_CONTEXT_MAJOR_VERSION_ARB, gli.version.major,
             WGL_CONTEXT_MINOR_VERSION_ARB, gli.version.minor,
-            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB, //WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+#if defined( SNAKEOIL_DEBUG )
+            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB | WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+#else
+            WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+#endif
             WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,// WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB, 
             0,        //End
         };

@@ -36,6 +36,7 @@ namespace so_gfx
             bool_t dirty ;
 
             so_math::vec2f_t pos ;
+            so_math::vec2f_t pivot ;
             so_math::vec2f_t scale ;
             so_math::vec4f_t color ;
             float_t rot ;

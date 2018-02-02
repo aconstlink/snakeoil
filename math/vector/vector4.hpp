@@ -72,6 +72,12 @@ namespace so_math
         }
 
         //************************************************************************************
+        vector4( float_t const x, vec3_t const & yzw )
+        {
+            ( *this )( x, yzw.x(), yzw.y(), yzw.z() ) ;
+        }
+
+        //************************************************************************************
         vector4( type_t s )
         {
             _elem[0] = s ;
@@ -505,7 +511,8 @@ namespace so_math
     so_typedefs( vector4< int >, vec4i ) ;
     so_typedefs( vector4< float >, vec4f ) ;
     so_typedefs( vector4< double >, vec4d ) ;
-    so_typedefs( vector4< unsigned int >, vec4ui ) ;
+    so_typedefs( vector4< uint_t >, vec4ui ) ;
+    so_typedefs( vector4< ushort_t>, vec4us ) ;
 }
     
 #endif

@@ -62,6 +62,12 @@ namespace so_gpu
         // missing
     };
 
+    struct scissor_state_set
+    {
+        bool_t scissor_test = false ;
+        so_math::vec4ui_t rect ;
+    };
+
     struct polygon_state_set
     {
         bool_t cull = false ;
@@ -90,6 +96,7 @@ namespace so_gpu
         stencil_state_set stencil_s ;
         polygon_state_set polygon_s ;
         viewport_state_set viewport_s ;
+        scissor_state_set scissor_s ;
 
         this_ref_t operator = ( this_cref_t rhv )
         {
@@ -99,6 +106,7 @@ namespace so_gpu
             stencil_s = rhv.stencil_s ;
             polygon_s = rhv.polygon_s ;
             viewport_s = rhv.viewport_s ;
+            scissor_s = rhv.scissor_s ;
 
             return *this ;
         }

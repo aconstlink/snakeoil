@@ -10,6 +10,18 @@ namespace so_ui
 {
     so_class_proto_typedefs( inode_listener ) ;
 
+    so_class_proto_typedefs( icomponent ) ;
+
+    namespace so_component
+    {
+        so_class_proto_typedefs( mouse_event ) ;
+        so_class_proto_typedefs( rect_transform ) ;
+        so_class_proto_typedefs( row_layout ) ;
+        so_class_proto_typedefs( column_layout ) ;
+        so_class_proto_typedefs( size_requirement ) ;
+        so_class_proto_typedefs( gfx_draw_2d ) ;
+    }
+
     namespace so_node
     {
         so_class_proto_typedefs( iparent ) ;
@@ -20,19 +32,6 @@ namespace so_ui
         so_class_proto_typedefs( leaf ) ;
         so_class_proto_typedefs( logic_group ) ;
         so_class_proto_typedefs( logic_decorator ) ;
-        so_class_proto_typedefs( layer_2d ) ;
-
-        so_class_proto_typedefs( transform_2d ) ;
-        so_class_proto_typedefs( renderable ) ;
-        so_class_proto_typedefs( render_state ) ;
-
-        so_class_proto_typedefs( area_2d ) ;
-        so_class_proto_typedefs( row_layout ) ;
-        so_class_proto_typedefs( column_layout ) ;
-
-        so_class_proto_typedefs( input_event ) ;
-
-        so_class_proto_typedefs( fill_area_2d ) ;
     }
 
     namespace so_visitor
@@ -43,6 +42,10 @@ namespace so_ui
         so_class_proto_typedefs( image_render_2d ) ;
         so_class_proto_typedefs( text_render_2d ) ;
         so_class_proto_typedefs( line_render_2d ) ;
+        so_class_proto_typedefs( draw_leafs ) ;
+
+        so_class_proto_typedefs( gfx_draw_2d ) ;
+        so_class_proto_typedefs( render_2d ) ;
     }
 }
 

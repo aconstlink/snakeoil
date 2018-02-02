@@ -241,7 +241,7 @@ namespace so_spline
 
         bool_t is_in_range( float_t const t ) const
         {
-            return t >= 0.0f || t <= 1.0f ;
+            return t >= 0.0f && t <= 1.0f ;
         }
 
         bool_t is_in_range( float_t const t, value_out_t vout ) const

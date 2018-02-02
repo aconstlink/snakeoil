@@ -9,9 +9,9 @@ endif()
 
 set( WIN81_SDK_FOUND FALSE )
 
-if( NOT SNAKEOIL_TARGET_OS_WIN81 )
-    return()
-endif()
+#if( NOT SNAKEOIL_TARGET_OS_WIN81 )
+ #   return()
+#endif()
 
 set( WIN81_SDK_BASE_PATH "C:/Program Files (x86)/Windows Kits/8.1" )
 

@@ -27,6 +27,10 @@ namespace so_gpu
         vec2ui,
         vec3ui,
         vec4ui,
+        vec1us,
+        vec2us,
+        vec3us,
+        vec4us,
         vec1b,
         vec2b,
         vec3b,
@@ -72,6 +76,10 @@ namespace so_gpu
             2, // svt_uint_vec2
             3, // svt_uint_vec3
             4, // svt_uint_vec4
+            1, // svt_ushort
+            2, // svt_ushort_vec2
+            3, // svt_ushort_vec3
+            4, // svt_ushort_vec4
             1, // svt_bool
             2, // svt_bool_vec2
             3, // svt_bool_vec3
@@ -114,6 +122,10 @@ namespace so_gpu
             sizeof (unsigned int)*2,
             sizeof (unsigned int)*3,
             sizeof (unsigned int)*4,
+            sizeof ( unsigned short ),
+            sizeof ( unsigned short ) * 2,
+            sizeof ( unsigned short ) * 3,
+            sizeof ( unsigned short ) * 4,
             sizeof (bool),
             sizeof (bool)*2,
             sizeof (bool)*3,
@@ -146,6 +158,7 @@ namespace so_gpu
             "undefined", "vec1f", "vec2f", "vec3f",
             "vec4f", "vec1i", "vec2i", "vec3i", "vec4i",
             "uint", "vec2ui", "vec3ui", "vec4ui",
+            "ushort", "vec2us", "vec3us", "vec4us",
             "vec1b", "vec2b", "vec3b", "vec4b", "mat2f",
             "mat3f", "mat4f", "sampler_1d", "sampler_2d", "sampler_3d",
             "sampler_1i", "sampler_2i", "sampler_3i", "sampler_1ui", "sampler_2ui", "sampler_3ui",

@@ -19,6 +19,10 @@ namespace so_device
     {
         so_this_typedefs( ascii_keyboard ) ;
 
+    public:
+
+        typedef std::function< void_t ( ascii_key const, key_state const ) > for_each_funk_t ;
+
     private:
 
         typedef so_std::map< ascii_key, key_state > __ascii_key_states_t ;
@@ -56,6 +60,8 @@ namespace so_device
         bool_t is_pressing( ascii_key const ) const ;
         bool_t is_released( ascii_key const ) const ;
 
+        void_t for_each_key( for_each_funk_t ) const ;
+        
     public:
 
         virtual void_t destroy( void_t ) ;

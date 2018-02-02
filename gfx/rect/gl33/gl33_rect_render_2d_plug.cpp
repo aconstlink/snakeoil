@@ -270,8 +270,10 @@ so_gpx::plug_result gl33_rect_render_2d_plug::on_update( update_info_cref_t )
                 so_math::vec4f_t const color = gi.color ;
                 so_math::vec2f_t const pos = gi.pos ;
                 so_math::vec2f_t const scale = gi.scale ;
+                so_math::vec2f_t const pivot = gi.pivot ;
 
                 _rect_info_ptr->add_element( so_math::vec4f_t( pos.x(), pos.y(), scale.x(), scale.y() ) ) ;
+                _rect_info_ptr->add_element( so_math::vec4f_t( pivot, so_math::vec2f_t() ) ) ;
                 _rect_info_ptr->add_element( color ) ;
             }
         }
@@ -389,7 +391,7 @@ so_gpx::plug_result gl33_rect_render_2d_plug::on_execute( execute_info_cref_t ri
     this_t::api()->set_state( so_gpu::blend_factor::one, so_gpu::blend_factor::one_minus_src_alpha ) ;
     {
         this_t::api()->load_variable( _var_sets[ iter->varset_id ] ) ;
-        this_t::api()->execute( so_gpu::render_config_info( _config, iter->varset_id,
+        this_t::api()->execute( so_gpu::render_config_info( _config, iter->varset_id, 0,
             ( iter->num_elements ) * 6 ) ) ;
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;

@@ -2,18 +2,21 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GPX_PLUG_PLUG_H_
-#define _SNAKEOIL_GPX_PLUG_PLUG_H_
+#pragma once
 
 #include "iplug.h"
 #include "../service/iglobal_service.h"
 #include "../service/ilocal_service.h"
+
+#include <snakeoil/gpu/api/null/inull_api.h>
 
 namespace so_gpx
 {
     template< typename A >
     class plug : public iplug
     {
+    public:
+
         so_typedefs( A, api ) ;
         so_this_typedefs( plug<A> ) ;
 
@@ -82,7 +85,7 @@ namespace so_gpx
 
     public:
 
-        virtual so_gpx::plug_result on_update( void_t ) {
+        virtual so_gpx::plug_result on_update( update_info_cref_t ) {
             return so_gpx::plug_result::ok ;
         }
 
@@ -91,6 +94,40 @@ namespace so_gpx
         virtual void_t destroy( void_t ) = 0 ;
     };
     so_typedef( iplug ) ;
-}
 
-#endif
+    namespace so_null
+    {
+        /// use this plug for the null api
+        class null_plug : public plug< so_gpu::so_null::inull_api >
+        {
+            so_this_typedefs( null_plug ) ;
+            so_typedefs( so_gpx::plug<so_gpu::so_null::inull_api>, base ) ;
+
+        public:
+
+            null_plug( base_t::api_ptr_t aptr ) : base_t( aptr )
+            {}
+
+            null_plug( this_cref_t ) = delete ;
+            null_plug( this_rref_t rhv ) : base_t( std::move( rhv ) )
+            {}
+
+            virtual ~null_plug( void_t ) {}
+
+        public:
+
+            static this_ptr_t create( this_rref_t rhv, so_memory::purpose_cref_t p ) {
+                return so_memory::global::alloc( std::move( rhv ), p ) ;
+            }
+
+            static void_t destroy( this_ptr_t ptr ) {
+                return so_memory::global::dealloc( ptr ) ;
+            }
+
+            virtual void_t destroy( void_t ) {
+                this_t::destroy( this ) ;
+            }
+        };
+        so_typedef( null_plug ) ;
+    }
+}

@@ -25,9 +25,10 @@ if( NOT snakeoil_FIND_COMPONENTS )
     snakeoil_gfx
     snakeoil_gpx
     snakeoil_gpu
-    snakeoil_gli
+    #snakeoil_gli
     snakeoil_shade
     snakeoil_imex
+    snakeoil_imgui
     snakeoil_device
     #snakeoil_utility
     snakeoil_network
@@ -50,6 +51,9 @@ if( NOT snakeoil_FIND_COMPONENTS )
     snakeoil_project_cars
     snakeoil_ui
    )
+ if( @SNAKEOIL_TARGET_GRAPHICS_OPENGL )
+   set( SNAKEOIL_LIBRARIES ${SNAKEOIL_LIBRARIES} snakeoil_gli )
+ endif()
 else()
     foreach( COMP ${snakeoil_FIND_COMPONENTS} )
         #message( ${COMP} )
@@ -97,6 +101,13 @@ if( LUA_ENABLE )
     set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS} 
     "${SNAKEOIL_INCLUDE_BASE}/externals/lua-@LUA_VERSION@/include" )
 endif()
+
+#
+# Imgui
+#
+set( SNAKEOIL_LIBRARIES ${SNAKEOIL_LIBRARIES} imgui )
+set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS}
+  "${SNAKEOIL_INCLUDE_BASE}/externals/imgui-@IMGUI_VERSION@/include" )
 
 ####################################################################
 # Find dependencies

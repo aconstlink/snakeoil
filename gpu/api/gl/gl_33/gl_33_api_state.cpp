@@ -57,6 +57,13 @@ so_gpu::result gl_33_api::enable( render_state rs )
             so_gli::gl::glEnable( state ) ;
         }
         break ;
+    case so_gpu::render_state::scissor_test:
+        if( !_the_state.scissor_s.scissor_test)
+        {
+            _the_state.scissor_s.scissor_test = true ;
+            so_gli::gl::glEnable( state ) ;
+        }
+        break ;
             
         default: break ;
     }
@@ -102,6 +109,13 @@ so_gpu::result gl_33_api::disable( render_state rs )
         if( _the_state.polygon_s.cull ) 
         {
             _the_state.polygon_s.cull = false ;
+            so_gli::gl::glDisable( state ) ;
+        }
+        break ;
+    case so_gpu::render_state::scissor_test:
+        if( _the_state.scissor_s.scissor_test )
+        {
+            _the_state.scissor_s.scissor_test = false ;
             so_gli::gl::glDisable( state ) ;
         }
         break ;
@@ -284,6 +298,12 @@ so_gpu::result gl_33_api::change_states(
         this->set_viewport( ss.viewport_s.vp ) ;
     }
 
+    if( af.has_set( so_gpu::attribute_state::scissor ) )
+    {
+        
+        // set scissor
+    }
+
     return so_gpu::ok ;
 }
 
@@ -295,4 +315,11 @@ float_t gl_33_api::line_width( float_t const w )
     so_gli::gl::glLineWidth( GLfloat( w ) ) ;
 
     return float_t( ret ) ;
+}
+
+//*****************************************************************************************************
+so_gpu::result gl_33_api::set_scissor( size_t const x, size_t const y, size_t const w, size_t const h )
+{
+    so_gli::gl::glScissor( GLint( x ), GLint( y ), GLsizei( w ), GLsizei( h ) ) ;
+    return so_gpu::ok ;
 }

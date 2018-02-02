@@ -9,6 +9,8 @@ in vec3 in_pos ;
 uniform samplerBuffer u_line_info ;
 
 uniform uint u_offset ;
+uniform mat4 u_proj ;
+uniform mat4 u_view ;
 
 out vertex_data
 {
@@ -34,5 +36,5 @@ void main( void )
   
   vso.color = line_info_01 ;
 
-  gl_Position = vec4(pos, 0.0, 1.0) ;
+  gl_Position = u_proj * u_view * vec4(pos, 0.0, 1.0) ;
 }

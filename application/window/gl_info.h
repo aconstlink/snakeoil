@@ -2,21 +2,19 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_APPLICATION_WINDOW_GL_INFO_H_
-#define _SNAKEOIL_APPLICATION_WINDOW_GL_INFO_H_
+#pragma once
 
-#include "../typedefs.h"
-#include <snakeoil/gli/gl/gl.h>
+#include "gapi_info.h"
 
 namespace so_app
 {
     struct gl_version
     {
-        GLint major = 4 ;
-        GLint minor = 0 ;
+        int_t major = 4 ;
+        int_t minor = 0 ;
     };
 
-    struct gl_info
+    struct gl_info : public gapi_info
     {
         gl_version version ;
 
@@ -35,6 +33,3 @@ namespace so_app
     };
     so_typedefs( gl_info, gl_info ) ;	
 }
-
-#endif
-

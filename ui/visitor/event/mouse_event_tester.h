@@ -10,6 +10,8 @@
 
 #include <snakeoil/device/protos.h>
 #include <snakeoil/math/vector/vector2.hpp>
+#include <snakeoil/math/vector/vector4.hpp>
+#include <snakeoil/std/container/stack.hpp>
 
 namespace so_ui
 {
@@ -21,30 +23,21 @@ namespace so_ui
 
         private:
 
-            class node_listener : public so_ui::inode_listener
-            {
-            public:
-                so_this_typedefs( node_listener ) ;
-                mouse_event_tester * _owner ;
-                node_listener( mouse_event_tester * o ) : _owner(o ){}
-                node_listener( this_cref_t ) = delete ;
-                node_listener( this_rref_t rhv ) { so_move_member_ptr( _owner, rhv ) ; }
-                virtual ~node_listener( void_t ) {}
-                void_t set_owner( mouse_event_tester * o ) { _owner = o ; }
-                virtual void_t on_move( so_ui::so_node::node_ptr_t nptr ) ;
-            };
-            so_typedef( node_listener ) ;
-            friend class node_listener ;
-
-            node_listener_ptr_t _listener = nullptr ;
+            typedef so_std::stack< so_math::vec4f_t, 10 > __area_stack_t ;
+            so_typedefs( __area_stack_t, area_stack ) ;
+            area_stack_t _area_stack ;
 
         private:
 
             so_math::vec2f_t _local_coords ;
-            so_ui::so_node::input_event_ptr_t _hit_old = nullptr ;
-            so_ui::so_node::input_event_ptr_t _hit_new = nullptr ;
+            so_math::vec2f_t _local_extend ;
+
+            so_ui::so_component::mouse_event_ptr_t _hit_old = nullptr ;
+            so_ui::so_component::mouse_event_ptr_t _hit_new = nullptr ;
 
             so_device::three_button_mouse_ptr_t _mptr = nullptr ;
+
+            so_math::vec2f_t _dims ;
 
         public:
 
@@ -61,13 +54,13 @@ namespace so_ui
 
         public:
 
-            virtual so_ui::result visit( so_ui::so_node::area_2d_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::area_2d_ptr_t ) ;
-            virtual so_ui::result visit( so_ui::so_node::input_event_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::input_event_ptr_t ) ;
+            so_ui::result visit( so_ui::so_node::node_ptr_t ) ;
+            so_ui::result post_visit( so_ui::so_node::node_ptr_t ) ;
+            
 
             void_t trigger_hit_node( void_t ) ;
 
+            void_t set_dimension( so_math::vec2f_cref_t ) ;
             void_t set_mouse( so_device::three_button_mouse_ptr_t ) ;
 
         public:

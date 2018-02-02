@@ -18,7 +18,7 @@ node::node( iparent_ptr_t parent_ptr ) : _parent(parent_ptr)
 {}
 
 //*******************************************************************
-node::node( this_rref_t rhv ) : variable_node_component_t( std::move(rhv) )
+node::node( this_rref_t rhv ) : variable_node_component_t( std::move(rhv) ), components_component( std::move(rhv) )
 {
     so_move_member_ptr( _parent, rhv ) ;
 
@@ -32,7 +32,9 @@ node::node( this_rref_t rhv ) : variable_node_component_t( std::move(rhv) )
 //*******************************************************************
 node::this_ref_t node::operator = ( this_rref_t rhv ) 
 {
-    variable_node_component_t::operator=( std::move(rhv) ) ;
+    variable_node_component_t::operator=( std::move( rhv ) ) ;
+    components_component_t::operator=( std::move( rhv ) ) ;
+
     so_move_member_ptr( _parent, rhv ) ;
 
     _listeners = std::move( rhv._listeners ) ;
@@ -111,4 +113,10 @@ bool_t node::reconnect_flow_node( void_t )
 bool_t node::bind_variable( so_std::string_in_t bp, so_flow::ivariable_ptr_t ptr ) 
 {
     return variable_node_component_t::bind_variable( bp, ptr ) ;
+}
+
+//*******************************************************************
+bool_t node::add_component( so_ui::icomponent_ptr_t cptr )
+{
+    return components_component::add_component( cptr ) ;
 }

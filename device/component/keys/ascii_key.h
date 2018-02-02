@@ -121,6 +121,26 @@ namespace so_device
         num_keys
     };
 
+    static bool_t convert_key_to_ascii_char( so_device::ascii_key const k, char_ref_t c )
+    {
+        if( k >= so_device::ascii_key::a && k <= so_device::ascii_key::z )
+        {
+            c = 'a' + char_t( k ) - char_t( so_device::ascii_key::a ) ;
+            return true ;
+        }
+        return false ; ;
+    }
+
+    static bool_t convert_key_to_ascii_number( so_device::ascii_key const k, char_ref_t c )
+    {
+        if( k >= so_device::ascii_key::k_0 && k <= so_device::ascii_key::k_9 )
+        {
+            c = '0' + char_t( k ) - char_t( so_device::ascii_key::k_0 ) ;
+            return true ;
+        }
+        return false ;
+    }
+
     static so_device::ascii_key convert_ascii_number_keys( size_t const delta )
     {
         bool_t const cond = delta <= ( size_t( ascii_key::k_9 ) - size_t( ascii_key::k_0 ) ) ;

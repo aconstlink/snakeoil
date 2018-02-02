@@ -101,6 +101,7 @@ namespace so_gfx
         {
             image_id_t image_id ;
             so_math::vec2f_t pos ;
+            so_math::vec2f_t pivot ;
             so_math::vec2f_t scale ;
             float_t rot ;
             so_math::vec4f_t color ;
@@ -220,7 +221,7 @@ namespace so_gfx
         void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         so_gfx::result draw_image( size_t const group, image_id_cref_t image_id, bool_t const dirty,
-            so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale, float_t const rot,
+            so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, so_math::vec2f_cref_t scale, float_t const rot,
             so_math::vec4f_cref_t color ) ;
 
         

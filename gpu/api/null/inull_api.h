@@ -13,6 +13,7 @@ namespace so_gpu
     {
         class SNAKEOIL_GPU_API inull_api : public iapi
         {};
+        so_typedef( inull_api ) ;
     }
 }
 

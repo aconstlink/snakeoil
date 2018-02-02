@@ -20,6 +20,7 @@ namespace so_ui
     {
         mouse_event_type me_type ;
         so_math::vec2f_t local_coords ;
+        so_math::vec2f_t local_extend ;
         so_device::three_button_mouse_ptr_t mptr ;
     };
     so_typedef( mouse_event ) ;

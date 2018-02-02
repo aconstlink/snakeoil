@@ -42,6 +42,10 @@ namespace so_gfx
 
         /// all lines to be rendered in a linear buffer
         line_infos_t line_infos ;
+
+
+        so_math::mat4f_t proj ;
+        so_math::mat4f_t view ;
     };
     so_typedef( line_render_2d_shared_data ) ;
 }

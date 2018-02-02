@@ -11,7 +11,8 @@ namespace so_appx
 {
     struct render_data
     {
-        
+        double_t dt ;
+        double_t dts ;
     };
     so_typedef( render_data ) ;
 }

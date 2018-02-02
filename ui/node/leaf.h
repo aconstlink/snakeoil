@@ -21,7 +21,7 @@ namespace so_ui
             leaf( iparent_ptr_t ) ;
             leaf( this_rref_t ) ;
             virtual ~leaf( void_t ) ;
-
+            
         public:
 
             virtual so_ui::result apply( so_ui::so_visitor::ivisitor_ptr_t ptr ) ;

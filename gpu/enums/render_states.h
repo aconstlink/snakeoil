@@ -18,7 +18,8 @@ namespace so_gpu
         fillmode,
         blend,
         depth_test,
-        depth_write
+        depth_write,
+        scissor_test
     } ;
 
     namespace so_internal
@@ -26,7 +27,7 @@ namespace so_gpu
         static std::string const render_state_strings[] = 
         {
             "undefined","clearscreen", "cullmode", "frontface", "fillmode",
-            "blend","depth_test","depth_write"
+            "blend","depth_test","depth_write", "scissor_test"
         } ;
     }
 

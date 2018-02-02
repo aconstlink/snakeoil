@@ -34,6 +34,8 @@ namespace so_device
         so_math::vec2f_t _global_position ;
         so_math::vec2f_t _local_position ;
 
+        int_t _scroll = 0 ;
+
     public:
 
         three_button_mouse( void_t ) ;
@@ -51,11 +53,22 @@ namespace so_device
         void_t add_mouse_event( so_device::three_button const, so_device::button_state const ) ;
         void_t set_global_position( so_math::vec2f_cref_t ) ;
         void_t set_local_position( so_math::vec2f_cref_t ) ;
+        
+        void_t scroll_down( void_t ) ;
+        void_t scroll_up( void_t ) ;
+        void_t scroll_reset( void_t ) ;
+        int_t get_scroll( void_t ) const ;
 
     public:
 
         so_math::vec2f_t get_global_position( void_t ) const ;
         so_math::vec2f_t get_local_position( void_t ) const ;
+
+        /// with pivot
+        /// (0.0, 0.0) : bottom left
+        /// (0.5, 0.5) : middle
+        /// (1.0, 1.0) : top right
+        so_math::vec2f_t get_local_position( so_math::vec2f_cref_t ) const ;
 
         bool_t is_pressed( so_device::three_button const ) const ;
         bool_t is_pressing( so_device::three_button const ) const ;

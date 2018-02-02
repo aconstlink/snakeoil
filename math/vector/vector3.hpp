@@ -618,8 +618,10 @@ namespace so_math
     so_typedefs( vector3<uchar_t>, vec3uc ) ;
     so_typedefs( vector3<int_t>, vec3i ) ;
     so_typedefs( vector3<uint_t>, vec3ui ) ;
+    so_typedefs( vector3<ushort_t>, vec3us ) ;
     so_typedefs( vector3<float_t>, vec3f ) ;
     so_typedefs( vector3<double_t>, vec3d ) ;
+    
 }
 
 #endif

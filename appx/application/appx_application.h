@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_APPX_APPLICATION_WINDOW_APPLICATION_H_
-#define _SNAKEOIL_APPX_APPLICATION_WINDOW_APPLICATION_H_
+#pragma once
 
 #include "../protos.h"
 #include "../typedefs.h"
@@ -133,6 +132,3 @@ namespace so_appx
     };
     so_typedef( appx_application ) ;
 }
-    
-#endif
-

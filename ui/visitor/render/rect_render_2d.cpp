@@ -4,13 +4,6 @@
 //------------------------------------------------------------
 #include "rect_render_2d.h"
 
-#include "../../node/layout/area_2d.h"
-#include "../../node/layout/layer_2d.h"
-
-
-#include "../../node/render/renderable.h"
-#include "../../node/render/render_state.h"
-
 using namespace so_ui ;
 using namespace so_ui::so_visitor ;
 
@@ -76,61 +69,6 @@ so_math::vec4f_cref_t rect_render_2d::get_top_area( void_t ) const
 size_t rect_render_2d::get_top_layer( void_t ) const
 {
     return _layer_stack.top() ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::visit( so_ui::so_node::render_state_ptr_t nptr )
-{
-    this_t::render_state_data rsd ;
-    rsd.attr = nptr->get_attributes() ;
-    rsd.ss = nptr->get_states() ;
-
-    _render_state_stack.push( rsd ) ;
-    return so_ui::ok ;
-}
-
-
-//****************************************************************************
-so_ui::result rect_render_2d::post_visit( so_ui::so_node::render_state_ptr_t )
-{
-    return so_ui::ok ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::visit( so_ui::so_node::renderable_ptr_t nptr )
-{
-    nptr->on_draw( this ) ;
-    return so_ui::ok ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::visit( so_ui::so_node::layer_2d_ptr_t lptr )
-{
-    _layer_stack.push( lptr->get_layer() ) ;
-    return so_ui::ok ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::post_visit( so_ui::so_node::layer_2d_ptr_t )
-{
-    _layer_stack.pop() ;
-    return so_ui::ok ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::visit( so_ui::so_node::area_2d_ptr_t aptr )
-{
-    _astack.push( aptr->get_area() ) ;
-
-    return so_ui::ok ;
-}
-
-//****************************************************************************
-so_ui::result rect_render_2d::post_visit( so_ui::so_node::area_2d_ptr_t )
-{
-    _astack.pop() ;
-
-    return so_ui::ok ;
 }
 
 //****************************************************************************

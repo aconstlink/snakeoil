@@ -226,9 +226,14 @@ namespace so_collide
                 return (this_t::get_max() - this_t::get_min()) * type_t(0.5) + this_t::get_min() ;
             }
 
+            vec2_t get_dimensions( void_t ) const
+            {
+                return this_t::get_max() - this_t::get_min() ;
+            }
+
             vec2_t get_extend( void_t ) const 
             {
-                return ((this_t::get_max() - this_t::get_min()) * type_t(0.5)) ;
+                return this_t::get_dimensions() * type_t(0.5) ;
             }
 
             type_t get_radius( void_t ) const
@@ -252,6 +257,15 @@ namespace so_collide
                 points_out_ptr[ 2 ] = vec2_t( _max.x(), _max.y() ) ;
                 points_out_ptr[ 3 ] = vec2_t( _max.x(), _min.y() ) ;
             }
+
+        public:
+
+            typename this_t::vec2_t compute_relative( typename this_t::vec2_cref_t point ) const
+            {
+                return (point - _min) / this_t::get_dimensions() ;
+            }
+
+
         };
 
         so_typedefs( aabb< float_t >, aabbf ) ;

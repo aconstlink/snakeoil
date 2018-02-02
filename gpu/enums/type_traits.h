@@ -23,6 +23,54 @@ namespace so_gpu
     } ;
 
     template<>
+    class type_traits< ushort_t >
+    {
+    public:
+
+        static const so_gpu::type gfx_type = type::tushort ;
+        static const so_gpu::type_struct gfx_type_struct = type_struct::vec1 ;
+        static const so_gpu::shader_variable_type gfx_shader_variable_type = shader_variable_type::vec1us ;
+        static const so_gpu::color_type gfx_color_type = color_type::intensity ;
+        static const so_gpu::data_buffer_format gfx_data_buffer_format = data_buffer_format::intensity16ui ;
+    } ;
+
+    template<>
+    class type_traits< so_math::vec2us_t >
+    {
+    public:
+
+        static const so_gpu::type gfx_type = type::tushort ;
+        static const so_gpu::type_struct gfx_type_struct = type_struct::vec2 ;
+        static const so_gpu::shader_variable_type gfx_shader_variable_type = shader_variable_type::vec2us ;
+        static const so_gpu::color_type gfx_color_type = color_type::undefined ;
+        static const so_gpu::data_buffer_format gfx_data_buffer_format = data_buffer_format::undefined ;
+    } ;
+
+    template<>
+    class type_traits< so_math::vec3us_t >
+    {
+    public:
+
+        static const so_gpu::type gfx_type = type::tushort ;
+        static const so_gpu::type_struct gfx_type_struct = type_struct::vec3 ;
+        static const so_gpu::shader_variable_type gfx_shader_variable_type = shader_variable_type::vec3us ;
+        static const so_gpu::color_type gfx_color_type = color_type::rgb ;
+        static const so_gpu::data_buffer_format gfx_data_buffer_format = data_buffer_format::undefined ;
+    } ;
+
+    template<>
+    class type_traits< so_math::vec4us_t >
+    {
+    public:
+
+        static const so_gpu::type gfx_type = type::tushort ;
+        static const so_gpu::type_struct gfx_type_struct = type_struct::vec4 ;
+        static const so_gpu::shader_variable_type gfx_shader_variable_type = shader_variable_type::vec4us ;
+        static const so_gpu::color_type gfx_color_type = color_type::rgba ;
+        static const so_gpu::data_buffer_format gfx_data_buffer_format = data_buffer_format::undefined ;
+    } ;
+
+    template<>
     class type_traits< uint_t >
     {
     public:

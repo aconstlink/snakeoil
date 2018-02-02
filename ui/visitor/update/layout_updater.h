@@ -21,13 +21,15 @@ namespace so_ui
 
             typedef so_std::stack< so_math::vec4f_t, 10 > __area_stack_t ;
             so_typedefs( __area_stack_t, area_stack ) ;
-
-            /// stores positive normalized coords
+            
             area_stack_t _astack ;
+            area_stack_t _rstack ;
 
         public:
 
             layout_updater( void_t ) ;
+            layout_updater( float_t const x, float_t const y, float_t const w, float_t const h ) ;
+            layout_updater( so_math::vec4f_cref_t ) ;
             layout_updater( this_cref_t ) ;
             layout_updater( this_rref_t ) ;
             virtual ~layout_updater( void_t ) ;
@@ -40,12 +42,9 @@ namespace so_ui
 
         public:
 
-            virtual so_ui::result visit( so_ui::so_node::row_layout_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::row_layout_ptr_t ) ;
-            virtual so_ui::result visit( so_ui::so_node::column_layout_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::column_layout_ptr_t ) ;
-            virtual so_ui::result visit( so_ui::so_node::area_2d_ptr_t ) ;
-            virtual so_ui::result post_visit( so_ui::so_node::area_2d_ptr_t ) ;
+            virtual so_ui::result visit( so_ui::so_node::group_ptr_t ) ;
+            virtual so_ui::result post_visit( so_ui::so_node::group_ptr_t ) ;
+            virtual so_ui::result visit( so_ui::so_node::leaf_ptr_t ) ;
 
             virtual void_t destroy( void_t ) ;
         };

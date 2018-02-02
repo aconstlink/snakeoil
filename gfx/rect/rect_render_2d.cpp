@@ -109,6 +109,7 @@ so_gfx::result rect_render_2d::prepare_for_rendering( void_t )
                 ri.color = l.color ;
                 ri.pos = l.pos;
                 ri.scale = l.scale ;
+                ri.pivot = l.pivot ;
 
                 _sd_ptr->rect_infos.push_back( ri ) ;
             }
@@ -128,8 +129,8 @@ so_gfx::result rect_render_2d::prepare_for_rendering( void_t )
 }
 
 //************************************************************************************
-so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t scale,
-    float_t const rot, so_math::vec4f_cref_t color )
+so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, 
+    so_math::vec2f_cref_t scale, float_t const rot, so_math::vec4f_cref_t color )
 {
     group_info_ptr_t gi_ptr = nullptr ;
 
@@ -170,6 +171,7 @@ so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_
         ri.color = color ;
         ri.pos = pos ;
         ri.rot = rot ;
+        ri.pivot = pivot ;
         ri.scale = scale ;
 
         so_thread::lock_guard_t lk( gi_ptr->mtx ) ;

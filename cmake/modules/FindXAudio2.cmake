@@ -40,7 +40,7 @@ if( SNAKEOIL_TARGET_OS_WIN )
         
     elseif( SNAKEOIL_TARGET_OS_WIN8 )
     
-    elseif( SNAKEOIL_TARGET_OS_WIN81 )
+    elseif( SNAKEOIL_TARGET_OS_WIN81 OR SNAKEOIL_TARGET_OS_WIN10 )
         
         find_package( Windows81Sdk )
         
@@ -60,6 +60,8 @@ if( SNAKEOIL_TARGET_OS_WIN )
         
         set( XAUDIO2_LIBRARIES winmm.lib ole32.lib ${XAUDIO2_LIB_GENERAL} )
         
+    else()
+      message( FATAL_ERROR "XAudio2 Path required" )
     endif()
     
 endif()

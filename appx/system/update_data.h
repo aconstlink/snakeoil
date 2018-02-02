@@ -22,6 +22,10 @@ namespace so_appx
 
         /// the delta time in seconds, with fractional
         double_t dt = 0.0 ;
+
+        /// smoothed delta time in seconds
+        double_t dts = 0.0 ;
+
     };
     so_typedef( update_data ) ;
 }

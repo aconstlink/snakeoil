@@ -221,11 +221,19 @@ void_t rawinput_api::update_mouse( void_t )
 
         if( _pointer_coords_local.size() > 0 )
             kptr->set_local_position( _pointer_coords_local.back() ) ;
+        
+        if( _scroll_items.size() > 0 )
+        {
+            if( _scroll_items.back() == 65416 ) kptr->scroll_down() ;
+            else if( _scroll_items.back() == 120 ) kptr->scroll_up() ;
+            else kptr->scroll_reset() ;
+        }
     }
 
     _three_button_items.clear() ;
     _pointer_coords_global.clear() ;
     _pointer_coords_local.clear() ;
+    _scroll_items.clear() ;
 }
 
 //*****************************************************************************************
@@ -374,6 +382,17 @@ bool_t rawinput_api::handle_input_event( HWND hwnd, UINT msg, WPARAM wParam, LPA
                 const three_button tb = map_raw_button_middle_to_three_button( bflags ) ;
 
                 _three_button_items.push_back( mouse_button_item_t( tb, lbs ) ) ;
+            }
+
+            // wheel
+            {
+                const USHORT bflags = raw->data.mouse.usButtonFlags ;
+                if( bflags == RI_MOUSE_WHEEL )
+                {
+                    //so_log::global_t::status( std::to_string( short_t(raw->data.mouse.usButtonData) ) ) ;
+                    auto const v = raw->data.mouse.usButtonData ;
+                    _scroll_items.push_back( v ) ;
+                }
             }
         }
 

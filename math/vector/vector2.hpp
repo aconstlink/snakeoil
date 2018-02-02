@@ -514,6 +514,7 @@ namespace so_math
     so_typedefs( vector2< float_t >, vec2f ) ;
     so_typedefs( vector2< double_t >, vec2d ) ;
     so_typedefs( vector2< uint_t >, vec2ui ) ;
+    so_typedefs( vector2< ushort_t >, vec2us ) ;
 
 }
     

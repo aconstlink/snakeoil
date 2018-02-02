@@ -61,6 +61,7 @@ set( SOURCES
         
     window/irender_context.h
     window/gl_info.h
+    window/gapi_info.h
     window/gl_window.h
     window/iwindow_handle.h
     window/window.h
@@ -83,6 +84,7 @@ if( SNAKEOIL_WINDOW_SYSTEM_WIN32 )
     if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
         set( SOURCES ${SOURCES} ${WGL_SOURCES} )
     endif()
+
     
     set( SOURCES ${SOURCES} ${WIN32_SOURCES} )
     

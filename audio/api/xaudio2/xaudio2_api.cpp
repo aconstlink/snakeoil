@@ -8,7 +8,7 @@
 #include "../../buffer/audio_buffer.h"
 #include "../../buffer/pcm/pcm_buffer.hpp"
 
-#include <snakeoil/log/log.h>
+#include <snakeoil/log/global.h>
 
 using namespace so_audio ;
 using namespace so_audio::so_win32 ;
@@ -30,7 +30,7 @@ xaudio2_api::xaudio2_api( this_rref_t rhv )
 //*************************************************************************************
 xaudio2_api::~xaudio2_api( void_t )
 {
-    so_log::log::error_and_exit( so_core::is_not_nullptr(_xeng_ptr), 
+    so_log::global_t::error_and_exit( so_core::is_not_nullptr(_xeng_ptr), 
         "[xaudio2_api::~xaudio2_api] : xaudio2 not released" ) ;
 }
 
@@ -56,7 +56,7 @@ bool_t xaudio2_api::initialize( void_t )
         auto const res = CoInitializeEx( NULL, COINIT_MULTITHREADED );
         if( res != S_OK )
         {
-            so_log::log::error( "[xaudio2_api::initialize] : CoInitializeEx" ) ;
+            so_log::global_t::error( "[xaudio2_api::initialize] : CoInitializeEx" ) ;
             return false ;
         }
 
@@ -69,14 +69,14 @@ bool_t xaudio2_api::initialize( void_t )
 
     {
         auto const res = XAudio2Create( &_xeng_ptr, flags, XAUDIO2_DEFAULT_PROCESSOR ) ;
-        so_log::log::error( res != S_OK, "[xaudio2_engine::xaudio2_engine] : XAudio2Create" ) ;
+        so_log::global_t::error( res != S_OK, "[xaudio2_engine::xaudio2_engine] : XAudio2Create" ) ;
 
         if( res != S_OK ) return false ;
     }
 
     {
         auto const res = _xeng_ptr->CreateMasteringVoice( &_dest_ptr ) ;
-        so_log::log::error( res != S_OK, "[xaudio2_engine::xaudio2_engine] : CreateMasteringVoice" ) ;
+        so_log::global_t::error( res != S_OK, "[xaudio2_engine::xaudio2_engine] : CreateMasteringVoice" ) ;
         if( res != S_OK ) return false ;
     }
 
@@ -210,7 +210,7 @@ so_audio::result xaudio2_api::create( so_audio::audio_buffer_ptr_t pb, so_xaudio
         auto const res = _xeng_ptr->CreateSourceVoice( &srcv, ( WAVEFORMATEX* ) &fmt ) ;
         if( res != S_OK )
         {
-            so_log::log::error( "[xaudio2_api::create] : CreateSourceVoice" ) ;
+            so_log::global_t::error( "[xaudio2_api::create] : CreateSourceVoice" ) ;
             return so_audio::failed ;
         }
     }
@@ -242,7 +242,7 @@ so_audio::result xaudio2_api::release( so_audio::audio_buffer_ptr_t pb )
 
     if( so_core::is_nullptr( apio ) )
     {
-        so_log::log::error( "[xaudio2_api::release] : play buffer has the wrong api object" ) ;
+        so_log::global_t::error( "[xaudio2_api::release] : play buffer has the wrong api object" ) ;
         return so_audio::failed ;
     }
 
@@ -268,7 +268,7 @@ so_audio::result xaudio2_api::play( so_audio::audio_buffer_ptr_t ab )
     auto const res = apio->src_ptr->Start( 0 ) ;
     if( res != S_OK )
     {
-        so_log::log::error( "[xaudio2_api::play] : Start" ) ;
+        so_log::global_t::error( "[xaudio2_api::play] : Start" ) ;
         return so_audio::failed ;
     }
 
@@ -290,7 +290,7 @@ so_audio::result xaudio2_api::stop( so_audio::audio_buffer_ptr_t ab )
     auto const res = apio->src_ptr->Stop() ;
     if( res != S_OK )
     {
-        so_log::log::error( "[xaudio2_api::play] : Start" ) ;
+        so_log::global_t::error( "[xaudio2_api::play] : Start" ) ;
         return so_audio::failed ;
     }
 
@@ -335,7 +335,7 @@ so_audio::result xaudio2_api::submit( so_audio::audio_buffer_ptr_t ab, so_audio:
             auto const res = source_voice_ptr->SubmitSourceBuffer( &xbuffer );
             if( res != S_OK )
             {
-                so_log::log::error( "submit source buffer failed" ) ;
+                so_log::global_t::error( "submit source buffer failed" ) ;
                 return so_audio::failed ;
             }
         }
@@ -361,7 +361,7 @@ so_audio::result xaudio2_api::submit( so_audio::audio_buffer_ptr_t ab, so_audio:
             auto const res = source_voice_ptr->SubmitSourceBuffer( &xbuffer );
             if( res != S_OK )
             {
-                so_log::log::error( "submit source buffer failed" ) ;
+                so_log::global_t::error( "submit source buffer failed" ) ;
                 return so_audio::failed ;
             }
         }
@@ -391,7 +391,7 @@ so_audio::result xaudio2_api::submit( so_audio::audio_buffer_ptr_t ab, so_audio:
                 XAUDIO2_VOICE_STATE state;
                 source_voice_ptr->GetState( &state );
 
-                so_log::log::error( "submit source buffer failed" ) ;
+                so_log::global_t::error( "submit source buffer failed" ) ;
                 return so_audio::failed ;
             }
         }

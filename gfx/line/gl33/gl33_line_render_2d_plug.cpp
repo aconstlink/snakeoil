@@ -328,8 +328,13 @@ so_gpx::plug_result gl33_line_render_2d_plug::on_update( update_info_cref_t )
                 {
                     iter->num_elements = uint32_t( gi.num_lines ) ;
                     ( *iter->start_offset ) = offset ;
-                    ( *iter->proj ) = gi.proj ;
-                    ( *iter->view ) = gi.view ;
+                    //( *iter->proj ) = gi.proj ;
+                    //( *iter->view ) = gi.view ;
+                    
+                    // overwrite with global matrices
+                    ( *iter->proj ) = _sd->proj ;
+                    ( *iter->view ) = _sd->view ;
+
                     iter->line_width = gi.width ;
                     offset += iter->num_elements ;
                 }
@@ -375,7 +380,7 @@ so_gpx::plug_result gl33_line_render_2d_plug::on_execute( execute_info_cref_t ri
     this_t::api()->set_state( so_gpu::blend_factor::one, so_gpu::blend_factor::one_minus_src_alpha ) ;
     {
         this_t::api()->load_variable( _var_sets[ iter->varset_id ] ) ;
-        this_t::api()->execute( so_gpu::render_config_info( _config, iter->varset_id,
+        this_t::api()->execute( so_gpu::render_config_info( _config, iter->varset_id, 0,
             (iter->num_elements) * 2 ) ) ;
     }
     this_t::api()->disable( so_gpu::render_state::blend ) ;

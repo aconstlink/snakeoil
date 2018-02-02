@@ -6,6 +6,7 @@
 
 #include "iparent.h"
 #include "component/variable_node_component.h"
+#include "component/components_component.h"
 
 #include <snakeoil/std/container/vector.hpp>
 
@@ -13,7 +14,7 @@ namespace so_ui
 {
     namespace so_node
     {
-        class SNAKEOIL_UI_API node : private variable_node_component
+        class SNAKEOIL_UI_API node : private variable_node_component, private components_component
         {
             so_this_typedefs( node ) ;
 
@@ -59,6 +60,22 @@ namespace so_ui
             bool_t reconnect_flow_node( void_t ) ;
 
             bool_t bind_variable( so_std::string_in_t, so_flow::ivariable_ptr_t ) ;
+
+        public: // components_component
+
+            bool_t add_component( so_ui::icomponent_ptr_t ) ;
+
+            template< typename comp_t >
+            bool_t find_component( comp_t * & ptr_out )
+            {
+                return components_component::find<comp_t>( ptr_out ) ;
+            }
+
+            template< typename comp_t >
+            bool_t has_component( void_t ) const
+            {
+                return components_component::has<comp_t>() ;
+            }
 
         public:
 

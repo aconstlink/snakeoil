@@ -4,8 +4,11 @@
 //------------------------------------------------------------
 #include "text_render_2d_plug_factory.h"
 
+#if SNAKEOIL_TARGET_GRAPHICS_OPENGL_33
 #include "gl33/gl33_text_render_2d_plug.h"
+#endif
 
+#include <snakeoil/gpx/plug/plug.h>
 #include <snakeoil/gpu/api/gl/igl_33_api.h>
 #include <snakeoil/log/global.h>
 
@@ -47,20 +50,27 @@ so_gpx::iplug_ptr_t text_render_2d_plug_factory::create_plug( so_gpu::api_type c
 {
     switch( t )
     {
+    case so_gpu::api_type::null:
+        break ;
+
+#if SNAKEOIL_TARGET_GRAPHICS_OPENGL_33
     case so_gpu::api_type::gl_33:
 
         return so_gfx::so_gl33::gl33_text_render_2d_plug_t::create(
             so_gfx::so_gl33::gl33_text_render_2d_plug_t( _sd,
                 static_cast< so_gpu::so_gl::igl_33_api_ptr_t >( aptr ) ),
                 "[text_render_2d_plug_factory::create_plug]" ) ;
-
+#endif
     default:
         
         so_log::global::error( "[text_render_2d_plug_factory::create_plug] : "
             "can not create plug for api: " + so_gpu::to_string(t) ) ;
+        break ;
     }
 
-    return nullptr ;
+    return so_gpx::so_null::null_plug_t::create(
+        so_gpx::so_null::null_plug_t( static_cast< so_gpu::so_null::inull_api_ptr_t >( aptr ) ),
+        "[text_render_2d_plug_factory::create_plug]" ) ;
 }
 
 //************************************************************************************

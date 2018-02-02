@@ -32,13 +32,15 @@ if( CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" )
 
     set( SNAKEOIL_HOST_OS_WIN ON )
    
-   
+    message( ${CMAKE_SYSTEM_VERSION} )
     if( ${CMAKE_SYSTEM_VERSION} EQUAL 6.1 )
         set( SNAKEOIL_HOST_OS_WIN7 ON )
         
     # no windows 8. Only windows 8.1
     elseif( ${CMAKE_SYSTEM_VERSION} EQUAL 6.3 )
         set( SNAKEOIL_HOST_OS_WIN81 ON )
+    elseif( ${CMAKE_SYSTEM_VERSION} GREATER 9 )
+        set( SNAKEOIL_HOST_OS_WIN10 ON )
     endif()
     ## Determine Win7, Win8, Win8.1, Win10
 
@@ -76,6 +78,8 @@ if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
         set( SNAKEOIL_TARGET_OS_WIN_NAME_ "Windows 7" )
     elseif( SNAKEOIL_HOST_OS_WIN81 )
         set( SNAKEOIL_TARGET_OS_WIN_NAME_ "Windows 8.1" )
+    elseif( SNAKEOIL_HOST_OS_WIN10 )
+        set( SNAKEOIL_TARGET_OS_WIN_NAME_ "Windows 10" )
     endif() 
     
     set( SNAKEOIL_WINDOWS_NAMES "Windows 7" "Windows 8.1" "Windows 10" )
@@ -90,6 +94,8 @@ if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
         message( FATAL_ERROR "Windows 8 not supported at the moment. Please use Windows 8.1" )
     elseif( ${SNAKEOIL_TARGET_OS_WIN_NAME} STREQUAL "Windows 8.1" )
         set( SNAKEOIL_TARGET_OS_WIN81 ON )
+    elseif( ${SNAKEOIL_TARGET_OS_WIN_NAME} STREQUAL "Windows 10" )
+      set( SNAKEOIL_TARGET_OS_WIN10 ON )
     else()
         message( FATAL_ERROR "Unknown Windows target" )
     endif()
@@ -134,6 +140,11 @@ if( SNAKEOIL_TARGET_OS_WIN )
         add_definitions( -DWINVER=0x0602 )
         add_definitions( -D_WIN32_WINNT=0x0602 )
         add_definitions( -DSNAKEOIL_TARGET_OS_WIN81 )
+    elseif( SNAKEOIL_TARGET_OS_WIN10 )
+      # _WIN32_WINNT_WIN10 (10) = 0x0A00 
+        add_definitions( -DWINVER=0x0A00 )
+        add_definitions( -D_WIN32_WINNT=0x0A00 )
+        add_definitions( -DSNAKEOIL_TARGET_OS_WIN10 )
     endif()
 
 elseif( SNAKEOIL_TARGET_OS_LIN )
@@ -155,6 +166,8 @@ if( SNAKEOIL_TARGET_OS_WIN )
         message( STATUS "Windows Target: Windows 8")
     elseif( SNAKEOIL_TARGET_OS_WIN81 )
         message( STATUS "Windows Target: Windows 8.1")
+    elseif( SNAKEOIL_TARGET_OS_WIN10 )
+      message( STATUS "Windows Target: Windows 10" )
     endif()
 
 elseif( SNAKEOIL_TARGET_OS_LIN )

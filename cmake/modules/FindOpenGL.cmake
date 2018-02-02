@@ -18,7 +18,7 @@ if( SNAKEOIL_TARGET_OS_WIN )
             "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.0A/Lib/x64"
             "C:/Program Files (x86)/Microsoft SDKs/Windows/v7.1A/Lib/x64"    )
 
-    elseif( SNAKEOIL_TARGET_OS_WIN81 )
+    elseif( SNAKEOIL_TARGET_OS_WIN81 OR SNAKEOIL_TARGET_OS_WIN10 )
 
         set( OPENGL_SEARCH_LIB_PATHS 
             "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64"    )

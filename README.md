@@ -24,8 +24,6 @@ A C++11 Compiler is required
 - Windows 7/8/10 64 bit
 - Linux 64 bit (only low level library support) (tested on Fedora 25)  
 
-Windows 10 is not tested. The compilation is based on Windows OS SDKs and I did not have the opportunity to use Windows 10 privatly in order to support this OS. But it should be possible to install the Windows 8.1 SDK and set the SNAKEOIL_TARGET_OS_WIN_NAME to Windows 8.1.
-
 ## Build-In External Libraries
 
 Build-in means that these libraries are shipped with the framework code and that you have access to it during development. These libraries are stored in the /externals directory.
@@ -39,7 +37,7 @@ Build-in means that these libraries are shipped with the framework code and that
 
 ## Contribution
 
-At the moment, this is a mirror repository and I only accept bug fixes.
+TBD
 
 ## Examples
 

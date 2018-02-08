@@ -23,6 +23,12 @@ variable_set::variable_set( variable_set && rhv ) : base_t( std::move( rhv ) )
 //*****************************************************************************************************
 variable_set::~variable_set( void_t ) 
 {
+    this_t::clear() ;
+}
+
+//*****************************************************************************************************
+void_t variable_set::clear( void_t )
+{
     for( auto item : _data_variables )
     {
         so_gpu::memory::dealloc( item.first ) ;
@@ -37,6 +43,9 @@ variable_set::~variable_set( void_t )
     {
         so_gpu::memory::dealloc( item.first ) ;
     }
+    _data_variables.clear() ;
+    _texture_variables.clear() ;
+    _data_buffer_variables.clear() ;
 }
 
 //*****************************************************************************************************

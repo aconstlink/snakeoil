@@ -66,6 +66,8 @@ so_gpu::result gl_33_api::release_variable( so_gpu::variable_set_ptr_t ptr )
     so_gpu::memory::dealloc( api_obj ) ;
     api_object_helper_t::set_driver_object( ptr, nullptr ) ;
 
+    ptr->clear() ;
+
     return so_gpu::ok ;
 }
 

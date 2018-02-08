@@ -87,12 +87,13 @@ void_t config::add_variable_set( variable_set_ptr_t ptr )
         return ptr == item.ptr ;
     } ) ;
 
-    if( iter != _variable_sets.end() ) return ;
+    if( iter == _variable_sets.end() )
+    {
+        variable_set_info vsi ;
+        vsi.ptr = ptr ;
 
-    variable_set_info vsi ;
-    vsi.ptr = ptr ;
-
-    _variable_sets.push_back( vsi ) ;
+        _variable_sets.push_back( vsi ) ;
+    }
 
     this_t::validate_varset_change( ptr ) ;
 }

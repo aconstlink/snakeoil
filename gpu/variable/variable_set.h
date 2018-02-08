@@ -167,6 +167,8 @@ namespace so_gpu
             return _data_buffer_variables ;
         }
 
+        void_t clear( void_t )  ;
+
     public: // interface
 
         virtual void_t destroy( void_t ) ;

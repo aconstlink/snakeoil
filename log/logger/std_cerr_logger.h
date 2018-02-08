@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_LOG_STD_CERR_LOGGER_H_
-#define _SNAKEOIL_LOG_STD_CERR_LOGGER_H_
+#pragma once
 
 #include "logger.h"
 
@@ -12,7 +11,7 @@
 
 namespace so_log
 {
-    class std_cerr_logger : public logger
+    class std_cerr_logger : public so_log::ilogger
     {
         so_thread::mutex_t _mtx ;
 
@@ -26,6 +25,3 @@ namespace so_log
         virtual so_log::result log( so_log::log_level ll, std::string const & msg ) ;
     };
 }
-
-#endif
-

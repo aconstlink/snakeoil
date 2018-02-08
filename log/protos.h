@@ -2,21 +2,15 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_LOG_PROTOS_H_
-#define _SNAKEOIL_LOG_PROTOS_H_
+#pragma once
+
+#include "typedefs.h"
 
 namespace so_log
 {
-	class system ;
-	class logger ;
-	class system ;
-	class std_cerr_logger ;
-
-	typedef system * system_ptr_t ;
-	typedef logger * logger_ptr_t ;
-	typedef system * default_system_ptr_t ;
-	typedef std_cerr_logger * std_cerr_logger_ptr_t ;
+    so_class_proto_typedefs( system ) ;
+    so_class_proto_typedefs( ilogger ) ;
+    so_class_proto_typedefs( std_cerr_logger ) ;
+    so_class_proto_typedefs( store_logger ) ;
+    so_class_proto_typedefs( system ) ;
 }
-
-#endif
-

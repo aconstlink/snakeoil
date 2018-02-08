@@ -2,9 +2,9 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_LOG_LOGGER_H_
-#define _SNAKEOIL_LOG_LOGGER_H_
+#pragma once
 
+#include "../api.h"
 #include "../typedefs.h"
 #include "../result.h"
 #include "../protos.h"
@@ -12,19 +12,10 @@
 
 namespace so_log
 {
-    class logger
+    class SNAKEOIL_LOG_API ilogger
     {
-
-        public:
-            
-            logger( void_t ) {}
-            virtual ~logger( void_t ) {}
-            
     public:
 
         virtual so_log::result log( so_log::log_level ll, std::string const & msg ) = 0 ;
     };
 }
-
-#endif
-

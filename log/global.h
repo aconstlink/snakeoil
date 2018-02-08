@@ -45,6 +45,9 @@ namespace so_log
 
         static this_ptr_t get( void_t ) ;
 
+        static void_t add_logger( so_log::ilogger_ptr_t ) ;
+        static so_log::store_logger_cptr_t get_store( void_t ) ;
+
     public:
 
         static void_t message( log_level level, string_cref_t msg ) ;

@@ -20,6 +20,8 @@ set( SOURCES
     "logger/logger.h"
     "logger/std_cerr_logger.h"
     "logger/std_cerr_logger.cpp"
+    "logger/store_logger.h"
+    "logger/store_logger.cpp"
     )
 
 so_vs_src_dir( SOURCES )

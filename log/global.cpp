@@ -68,6 +68,18 @@ global::this_ptr_t global::get( void_t )
 }
 
 //*************************************************************************************
+void_t global::add_logger( so_log::ilogger_ptr_t ptr )
+{
+    this_t::get()->__default_log_system->add_logger( ptr ) ;
+}
+
+//*************************************************************************************
+so_log::store_logger_cptr_t global::get_store( void_t )
+{
+    return this_t::get()->__default_log_system->get_store() ;
+}
+
+//*************************************************************************************
 void_t global::message( log_level level, string_cref_t msg )
 {
     this_t::get()->__default_log_system->log( level, msg ) ;

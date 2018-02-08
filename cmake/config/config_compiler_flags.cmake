@@ -12,6 +12,7 @@ endif()
 if( SNAKEOIL_COMPILER_MSC )
     
     # cherry-picking
+    # C4005 : macro redefinition. Error within 3rd parties
     # C4100 : unreferenced local variable. Got error within 3rd parties
     # C4127 : conditional expression is constant. silence too inconvenient warnings.
     # C4251 : exporting stl container when building dlls
@@ -19,7 +20,7 @@ if( SNAKEOIL_COMPILER_MSC )
     # C4702 : unreachable code hit in 3rd parties.
     # C4706 : assignment within conditional expression
     set( SNAKEOIL_UNWANTED_COMPILER_OPTIONS 
-	"/wd4100 /wd4127 /wd4251 /wd4505 /wd4702 /wd4706" )
+	"/wd4005 /wd4100 /wd4127 /wd4251 /wd4505 /wd4702 /wd4706" )
 
     # Wall : all warnings!
     # W4 : Warning level 4, e.g. nearly all warnings

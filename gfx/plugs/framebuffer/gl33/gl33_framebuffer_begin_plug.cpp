@@ -41,7 +41,7 @@ void_t gl33_framebuffer_begin_plug::destroy( this_ptr_t ptr )
 }
 
 //*************************************************************************************
-so_gpx::plug_result gl33_framebuffer_begin_plug::on_load( void_t )
+so_gpx::plug_result gl33_framebuffer_begin_plug::on_load( load_info_cref_t )
 {
     return so_gpx::plug_result::ok ;
 }

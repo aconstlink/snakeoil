@@ -12,6 +12,8 @@
 #include <snakeoil/gpx/technique/technique_id.h>
 
 #include <snakeoil/device/protos.h>
+#include <snakeoil/std/string/string.hpp>
+#include <snakeoil/std/container/map.hpp>
 
 #include <imgui/imgui.h>
 
@@ -23,7 +25,13 @@ namespace so_imgui
 
     public:
 
-        typedef std::function< void_t ( ImGuiContext * ) > imgui_funk_t ;
+        typedef std::function< void_t ( ImGuiContext *, this_ptr_t ) > imgui_funk_t ;
+
+        struct imgui_texture_data
+        {
+            so_std::string_t name ;
+        };
+        so_typedef( imgui_texture_data ) ;
 
     private:
 
@@ -33,6 +41,13 @@ namespace so_imgui
         so_device::three_button_mouse_ptr_t _mouse = nullptr ;
         so_device::ascii_keyboard_ptr_t _keyboard = nullptr ;
 
+    private:
+
+        typedef so_std::map< so_std::string_t, imgui_texture_data_ptr_t > __name_to_texdata_t ;
+        so_typedefs( __name_to_texdata_t, name_to_texdata ) ;
+
+        name_to_texdata_t _name_to_texdata ;
+        
     public:
 
         system( so_gpx::render_system_ptr_t ) ;
@@ -49,9 +64,15 @@ namespace so_imgui
 
         void_t init( void_t ) ;
         void_t release( void_t ) ;
+        void_t check_status( imgui_funk_t ) ;
         void_t begin_draw( double_t const dt, size_t const dw, size_t const dh, size_t const fbw, size_t const fbh ) ;
         void_t draw( imgui_funk_t ) ;
         void_t render( void_t ) ;
+
+    public:
+
+        ImTextureID create_texture_id( so_std::string_cref_t ) ;
+
     };
     so_typedef( system ) ;
 }

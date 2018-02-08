@@ -34,6 +34,24 @@ namespace drv = so_gpu::so_gl ;
 using gl_log = so_gpu::so_gl::log ;
 
 //**********************************************************************************************
+so_gpu::result gl_33_api::detatach_shaders( GLuint program_id )
+{
+    GLsizei count = 0 ;
+    GLuint shaders[ 10 ] ;
+    
+    so_gli::gl::glGetAttachedShaders( program_id, 10, &count, shaders ) ;
+    if( gl_log::error( "[gl_33_api::detatach_shaders] : glGetAttachedShaders" ) )
+        return so_gpu::failed_gl_api ;
+
+    for( GLsizei i = 0; i < count; ++i )
+    {
+        so_gli::gl::glDetachShader( program_id, shaders[ i ] ) ;
+    }
+    
+    return so_gpu::ok ;
+}
+
+//**********************************************************************************************
 so_gpu::result gl_33_api::prepare_vertex_shader( GLuint program_id, so_gpu::program_ptr_t program_ptr ) 
 {
     if( so_log::global::error( program_ptr->has_no_vertex_shader(), "[gl_33_api::prepare_vertex_shader] : vertex shader required." ) ) 
@@ -43,8 +61,8 @@ so_gpu::result gl_33_api::prepare_vertex_shader( GLuint program_id, so_gpu::prog
     if( so_log::global::error( api_object_helper_t::has_no_driver_object(shd_ptr), "[gl_33_api::prepare_vertex_shader] : no driver object in shader" ) ) 
         return so_gpu::failed ;
 
-    so_gli::gl::glAttachShader( program_id, api_object_helper_t::get_cast_api_object<drv::vertex_shader>(shd_ptr)->id ) ;
-    if( gl_log::error("[gl_33_api::prepare_vertex_shader] : glAttachShader") ) 
+    so_gli::gl::glAttachShader( program_id, api_object_helper_t::get_cast_api_object<drv::vertex_shader>( shd_ptr )->id ) ;
+    if( gl_log::error( "[gl_33_api::prepare_vertex_shader] : glAttachShader" ) )
         return so_gpu::failed_gl_api ;
 
     return so_gpu::ok ;
@@ -277,6 +295,8 @@ so_gpu::result gl_33_api::link( so_gpu::program_ptr_t ptr )
     auto * api_obj = api_object_helper_t::get_cast_api_object<drv::program>(ptr) ;
     
     GLuint program_id = api_obj->id ; 
+
+    this_t::detatach_shaders( program_id ) ;
 
     this_t::prepare_vertex_shader( program_id, ptr ) ;
     this_t::prepare_geometry_shader( program_id, ptr ) ;

@@ -106,7 +106,7 @@ namespace so_gfx
 
         public:
 
-            virtual so_gpx::plug_result on_load( void_t ) ;
+            virtual so_gpx::plug_result on_load( load_info_cref_t ) ;
             virtual so_gpx::plug_result on_unload( void_t ) ;
             virtual so_gpx::plug_result on_initialize( init_info_cref_t ) ;
             virtual so_gpx::plug_result on_release( void_t ) ;

@@ -95,8 +95,14 @@ void_t gl33_circle_render_2d_plug::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-so_gpx::plug_result gl33_circle_render_2d_plug::on_load( void_t )
+so_gpx::plug_result gl33_circle_render_2d_plug::on_load( load_info_cref_t li )
 {
+    if( li.reload )
+    {
+        so_log::global_t::warning("[gl33_circle_render_2d_plug::on_load] : reload not supported") ;
+        return so_gpx::plug_result::ok ;
+    }
+
     so_std::string_t const base( so_std::string_t( GFX_SOURCE_DIR ) + "/circle/gl33/shader" ) ;
 
     // text render shader

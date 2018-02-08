@@ -95,8 +95,14 @@ void_t gl33_line_render_2d_plug::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-so_gpx::plug_result gl33_line_render_2d_plug::on_load( void_t )
+so_gpx::plug_result gl33_line_render_2d_plug::on_load( load_info_cref_t li )
 {
+    if( li.reload )
+    {
+        so_log::global_t::warning( "[gl33_line_render_2d_plug::on_load] : reload not supported" ) ;
+        return so_gpx::plug_result::failed ;
+    }
+
     so_std::string_t const base( so_std::string_t( GFX_SOURCE_DIR ) + "/line/gl33/shader" ) ;
 
     // text render shader

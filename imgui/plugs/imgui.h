@@ -33,6 +33,9 @@ namespace so_imgui
             ImDrawData * dd ;
         };
         so_typedef( shared_data ) ;
+
+    private:
+
         shared_data_ptr_t _sd ;
 
         so_gpx::technique_id_t _tid ;
@@ -55,6 +58,8 @@ namespace so_imgui
         void_t init( void_t ) ;
         void_t deinit( void_t ) ;
         void_t schedule( ImDrawData * ) ;
+
+        void_t add_texture( so_std::string_cref_t ) ;
     };
     so_typedef( imgui ) ;
 }

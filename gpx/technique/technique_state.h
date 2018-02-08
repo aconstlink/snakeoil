@@ -12,6 +12,7 @@ namespace so_gpx
         offline, 
         online,
         loaded,
+        reloaded,
         unloaded,
         initialized,
         released
@@ -22,6 +23,7 @@ namespace so_gpx
         none,
         failed,
         loading,
+        reloading,
         unloading,
         initializing,
         releasing,
@@ -34,6 +36,7 @@ namespace so_gpx
     enum class technique_schedule_goal
     {
         none,
+        for_reload,
         for_online,
         for_exec,
         for_shutdown

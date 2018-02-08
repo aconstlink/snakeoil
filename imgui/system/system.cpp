@@ -30,13 +30,19 @@ system::system( this_rref_t rhv )
     so_move_member_ptr( _rs, rhv ) ;
     so_move_member_ptr( _imgui, rhv ) ;
 
-    ImGui::Shutdown();
+    _name_to_texdata = std::move( _name_to_texdata ) ;
 }
 
 //************************************************************************************
 system::~system( void_t )
 {
+    ImGui::Shutdown();
     imgui_t::destroy( _imgui ) ;
+
+    for( auto item : _name_to_texdata )
+    {
+        so_imgui::memory::dealloc( item.second ) ;
+    }
 }
 
 //************************************************************************************
@@ -86,6 +92,12 @@ void_t system::init( void_t )
 void_t system::release( void_t )
 {
     _imgui->deinit() ;
+}
+
+//************************************************************************************
+void_t system::check_status( imgui_funk_t funk )
+{
+    funk( ImGui::GetCurrentContext(), this ) ;
 }
 
 //************************************************************************************
@@ -185,8 +197,6 @@ void_t system::begin_draw( double_t const dt,
             
             if( io.KeyShift ) io.MouseWheelH = s ;
             else io.MouseWheel = s ;
-
-            
         }
     }
     
@@ -197,7 +207,7 @@ void_t system::begin_draw( double_t const dt,
 //************************************************************************************
 void_t system::draw( imgui_funk_t funk )
 {
-    funk( ImGui::GetCurrentContext() ) ;
+    funk( ImGui::GetCurrentContext(), this ) ;
 }
 
 //************************************************************************************
@@ -206,4 +216,23 @@ void_t system::render( void_t )
     ImGui::Render() ;
 
     _imgui->schedule( ImGui::GetDrawData() ) ;
+}
+
+//************************************************************************************
+ImTextureID system::create_texture_id( so_std::string_cref_t name_in )
+{
+    {
+        auto const iter = _name_to_texdata.find( name_in ) ;
+        if( iter != _name_to_texdata.end() )
+        {
+            return iter->second ;
+        }
+    }
+
+    auto * ptr = so_imgui::memory::alloc( imgui_texture_data_t { name_in }, 
+        "[system::create_texture_id] : texture_data" ) ;
+
+    _name_to_texdata[ name_in ] = ptr ;
+
+    return ptr ;
 }

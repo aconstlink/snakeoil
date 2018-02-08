@@ -40,9 +40,16 @@ namespace so_gpx
 
         struct init_info
         {
+            bool_t reinit = false ;
             so_gpu::gpu_manager_ptr_t mgr = nullptr ;
         };
         so_typedef( init_info ) ;
+
+        struct load_info
+        {
+            bool_t reload = false ;
+        };
+        so_typedef( load_info ) ;
 
     public:
 
@@ -52,7 +59,7 @@ namespace so_gpx
     public:
 
         /// load required assets
-        virtual so_gpx::plug_result on_load( void_t ) = 0 ;
+        virtual so_gpx::plug_result on_load( load_info_cref_t ) = 0 ;
 
         /// unload assets
         virtual so_gpx::plug_result on_unload( void_t ) = 0 ;

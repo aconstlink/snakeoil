@@ -4,6 +4,8 @@
 //------------------------------------------------------------
 #include "gl33_imgui_plug.h"
 
+#include "../../system/system.h"
+
 #include <snakeoil/gpu/api/gl/igl_33_api.h>
 #include <snakeoil/gpu/framebuffer/framebuffer_2d.h>
 #include <snakeoil/gpu/image/color_image_2d.hpp>
@@ -52,6 +54,7 @@ gl33_imgui_plug::gl33_imgui_plug( this_rref_t rhv ) :
     so_move_member_ptr( _config, rhv ) ;
 
     _render_datas = std::move( rhv._render_datas ) ;
+    _tname_to_id = std::move( rhv._tname_to_id ) ;
 }
 
 //*************************************************************************************
@@ -79,10 +82,16 @@ gl33_imgui_plug::~gl33_imgui_plug( void_t )
     {
         if( so_core::is_not_nullptr( d.vars ) )
             d.vars->destroy() ;
+
+        // at the moment, if the image is nullptr, the
+        // texture is a reference
         if( so_core::is_not_nullptr( d.image_ptr ) )
-            d.image_ptr->destroy() ;
-        if( so_core::is_not_nullptr( d.tx_ptr) )
-            d.tx_ptr->destroy() ;
+        {
+            if( so_core::is_not_nullptr( d.image_ptr ) )
+                d.image_ptr->destroy() ;
+            if( so_core::is_not_nullptr( d.tx_ptr ) )
+                d.tx_ptr->destroy() ;
+        }
     }
 }
 
@@ -100,8 +109,14 @@ void_t gl33_imgui_plug::destroy( this_ptr_t ptr )
 }
 
 //*************************************************************************************
-so_gpx::plug_result gl33_imgui_plug::on_load( void_t )
+so_gpx::plug_result gl33_imgui_plug::on_load( load_info_cref_t li )
 {
+    if( li.reload )
+    {
+        so_log::global_t::warning( "[gl33_imgui_plug::on_load] : reload not supported" ) ;
+        return so_gpx::plug_result::failed ;
+    }
+
     {
         const so_std::string_t vs = so_std::string_t(
             "#version 150\n"
@@ -278,6 +293,8 @@ so_gpx::plug_result gl33_imgui_plug::on_initialize( init_info_cref_t ii )
         _render_datas.push_back( rd ) ;
     }
 
+    _gpu_mgr = ii.mgr ;
+
     return so_gpx::plug_result::ok ;
 }
 
@@ -355,6 +372,9 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
 
     dd->ScaleClipRects( io.DisplayFramebufferScale );
     
+    bool_t vb_gpu_alloc = true ;
+    bool_t ib_gpu_alloc = true ;
+
     // copy data
     {
         size_t num_vertices = 0 ;
@@ -370,6 +390,10 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
                 num_indices += size_t( cmd_list->IdxBuffer.Size ) ;
                 num_drawc += size_t( cmd_list->CmdBuffer.Size ) ;
             }
+
+            vb_gpu_alloc = _vb->get_num_elements() < num_vertices ;
+            ib_gpu_alloc = _ib->get_num_elements() < num_indices ;
+
             _dcs.resize( num_drawc ) ;
             _vb->resize( num_vertices ) ;
             _ib->resize( num_indices ) ;
@@ -428,6 +452,60 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
                         _dcs[ dc_index] = dc ;
                         ++dc_index ;
                     }
+                    else
+                    {
+                        size_t rd_id = 0 ;
+                        so_imgui::system_t::imgui_texture_data_ptr_t tdp =
+                            so_imgui::system_t::imgui_texture_data_ptr_t(pcmd->TextureId) ;
+                        {
+                            auto const iter = _tname_to_id.find( tdp->name ) ;
+                            if( iter == _tname_to_id.end() )
+                            {
+                                so_resource::handle<so_gpu::texture_2d_t> hnd ;
+                                bool_t tvalid = _gpu_mgr->get_tx2d_mgr()->acquire( tdp->name,
+                                    "[gl33_imgui_plug::on_update]", hnd ) ;
+
+                                this_t::render_data_t rd = _render_datas[0] ;
+                                if( tvalid )
+                                {
+                                    rd.image_ptr = nullptr ;
+                                    rd.tx_ptr = hnd.get_ptr() ;
+                                    
+                                    rd.vars = so_gpu::variable_set_t::create( 
+                                        "[gl33_imgui_plug] : varset" ) ;
+                                    this_t::api()->create_variable( rd.vars ) ;
+                                    rd.vars->bind_data<so_math::mat4f_t>( "u_proj", &_proj/*&_sd->proj*/ ) ;
+                                    rd.vars->bind_texture( "u_tex", rd.tx_ptr ) ;
+
+                                    _config->add_variable_set( rd.vars ) ;
+                                }
+
+                                so_log::global_t::error( so_core::is_not(tvalid) , 
+                                    "[gl33_imgui_plug::on_update] : "
+                                    "texture name does not exist: " + tdp->name ) ;
+                               
+                                _render_datas.push_back( rd ) ;
+                                _tname_to_id[ tdp->name ] = _render_datas.size() - 1 ;
+
+                                rd_id = _render_datas.size() - 1 ;
+                            }
+                            else
+                            {
+                                rd_id = iter->second ;
+                            }
+                        }
+
+                        this_t::draw_command_t dc ;
+                        dc.index_offset = offset  ;
+                        dc.num_elems = pcmd->ElemCount  ;
+                        dc.render_data_id = rd_id ;
+                        dc.scissor = so_math::vec4ui_t(
+                            uint_t( pcmd->ClipRect.x ), uint_t( fb_height - pcmd->ClipRect.w ),
+                            uint_t( pcmd->ClipRect.z - pcmd->ClipRect.x ),
+                            uint_t( pcmd->ClipRect.w - pcmd->ClipRect.y ) ) ;
+                        _dcs[ dc_index ] = dc ;
+                        ++dc_index ;
+                    }
                     
                     offset += pcmd->ElemCount ;
                 }
@@ -437,13 +515,26 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
         }
     }
 
+    if( vb_gpu_alloc )
     {
         auto const res = this_t::api()->alloc_buffer_memory( _vb,
             so_gpu::memory_alloc_info( true ) ) ;
     }
+    else
+    {
+        this_t::api()->load_buffer_memory( _vb, 
+            so_gpu::memory_load_info() ) ;
+    }
+
+    if( ib_gpu_alloc )
     {
         auto const res = this_t::api()->alloc_buffer_memory( _ib,
             so_gpu::memory_alloc_info( true ) ) ;
+    }
+    else
+    {
+        this_t::api()->load_buffer_memory( _ib,
+            so_gpu::memory_load_info() ) ;
     }
 
     // copy changed gpu buffer data if required here

@@ -185,6 +185,8 @@ namespace so_gpx
         so_gpx::result schedule_for_init( so_gpx::technique_id_t, so_gpx::window_id_t ) ;
         so_gpx::result schedule_for_release( so_gpx::technique_id_t ) ;
         so_gpx::result schedule_for_release( so_gpx::technique_id_t, so_gpx::window_id_t ) ;
+        so_gpx::result schedule_for_reload( so_gpx::technique_id_t ) ;
+        so_gpx::result schedule_for_reload( so_gpx::technique_id_t, so_gpx::window_id_t ) ;
 
         so_gpx::result schedule_for_init_and_wait( so_gpx::technique_id_t ) ;
         so_gpx::result wait_for_init( so_gpx::technique_id_t ) ;

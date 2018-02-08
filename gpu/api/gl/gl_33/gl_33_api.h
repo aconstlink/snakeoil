@@ -223,6 +223,7 @@ namespace so_gpu
             so_gpu::result commit_uniforms( config_ptr_t, size_t ) ;
             so_gpu::result commit_textures( config_ptr_t, size_t, GLuint & ) ;
 
+            so_gpu::result detatach_shaders( GLuint program_id ) ;
             so_gpu::result compile( GLuint shader_id, so_gpu::shader_ptr_t shd_ptr ) ;
             so_gpu::result prepare_vertex_shader( GLuint program_id, so_gpu::program_ptr_t program_ptr ) ;
             so_gpu::result prepare_geometry_shader( GLuint program_id, so_gpu::program_ptr_t program_ptr ) ;

@@ -92,6 +92,12 @@ namespace so_imgui
 
             so_math::mat4f_t _proj ;
 
+            typedef so_std::map< so_std::string_t, size_t > __name_to_id_t ;
+            so_typedefs( __name_to_id_t, name_to_id ) ;
+            name_to_id_t _tname_to_id ;
+
+            so_gpu::gpu_manager_ptr_t _gpu_mgr ;
+
         public:
 
             gl33_imgui_plug( imgui_t::shared_data_ptr_t,
@@ -107,7 +113,7 @@ namespace so_imgui
 
         public:
 
-            virtual so_gpx::plug_result on_load( void_t ) ;
+            virtual so_gpx::plug_result on_load( load_info_cref_t ) ;
             virtual so_gpx::plug_result on_unload( void_t ) ;
             virtual so_gpx::plug_result on_initialize( init_info_cref_t ) ;
             virtual so_gpx::plug_result on_release( void_t ) ;

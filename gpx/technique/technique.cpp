@@ -162,6 +162,33 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
             pd->ts = so_gpx::technique_transition_state::executing ;
             // on_execute will be called in part_01 i.e. after the sync point
         }
+        else if( goal == so_gpx::technique_schedule_goal::for_reload )
+        {
+            pd->ts = so_gpx::technique_transition_state::reloading ;
+
+            so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=] ( void_t )
+            {
+                iplug_t::load_info_t li ;
+                li.reload = true ;
+                auto const res = pd->plug_ptr->on_load( li ) ;
+                if( res != so_gpx::plug_result::ok )
+                {
+                    // if the operation fails, just go back to the previous state.
+                    pd->rs = so_gpx::technique_rest_state::online ;
+                    pd->ts = so_gpx::technique_transition_state::none ;
+
+                    so_log::global::warning( "[technique::part_00] : technique reload failed for wid : " +
+                        std::to_string( wid ) + "in rest state online" ) ;
+
+                    return ;
+                }
+
+                pd->rs = so_gpx::technique_rest_state::reloaded ;
+                pd->ts = so_gpx::technique_transition_state::none ;
+
+            }, "[technique::part_00] : loading task" ) ) ;
+        }
+
         break ;
 
     case so_gpx::technique_rest_state::offline:
@@ -173,7 +200,8 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
 
             so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
             {
-                auto const res = pd->plug_ptr->on_load() ;
+                iplug_t::load_info_t li ;
+                auto const res = pd->plug_ptr->on_load( li ) ;
                 if( res != so_gpx::plug_result::ok )
                 {
                     pd->rs = so_gpx::technique_rest_state::offline ;
@@ -196,19 +224,47 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
 
         if( goal == so_gpx::technique_schedule_goal::for_shutdown )
         {
-        pd->ts = so_gpx::technique_transition_state::unloading ;
+            pd->ts = so_gpx::technique_transition_state::unloading ;
 
-        pd->plug_ptr->on_unload() ;
+            pd->plug_ptr->on_unload() ;
 
-        pd->rs = so_gpx::technique_rest_state::unloaded ;
-        pd->ts = so_gpx::technique_transition_state::none ;
-        }
+            pd->rs = so_gpx::technique_rest_state::unloaded ;
+            pd->ts = so_gpx::technique_transition_state::none ;
+        }        
         else if( goal == so_gpx::technique_schedule_goal::for_online ||
             goal == so_gpx::technique_schedule_goal::for_exec )
         {
             pd->ts = so_gpx::technique_transition_state::initializing ;
 
             so_gpx::iplug_t::init_info_t ii ;
+            ii.mgr = gpu_mgr_ptr ;
+
+            pd->plug_ptr->on_initialize( ii ) ;
+
+            pd->rs = so_gpx::technique_rest_state::initialized ;
+            pd->ts = so_gpx::technique_transition_state::none ;
+        }
+
+        break ;
+
+    case so_gpx::technique_rest_state::reloaded:
+
+        if( goal == so_gpx::technique_schedule_goal::for_shutdown )
+        {
+            pd->ts = so_gpx::technique_transition_state::releasing ;
+
+            pd->plug_ptr->on_release() ;
+
+            pd->rs = so_gpx::technique_rest_state::released ;
+            pd->ts = so_gpx::technique_transition_state::none ;
+        }        
+        else if( goal == so_gpx::technique_schedule_goal::for_online ||
+            goal == so_gpx::technique_schedule_goal::for_exec )
+        {
+            pd->ts = so_gpx::technique_transition_state::initializing ;
+
+            so_gpx::iplug_t::init_info_t ii ;
+            ii.reinit = true ;
             ii.mgr = gpu_mgr_ptr ;
 
             pd->plug_ptr->on_initialize( ii ) ;
@@ -231,7 +287,8 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
             pd->ts = so_gpx::technique_transition_state::none ;
         }
         else if( goal == so_gpx::technique_schedule_goal::for_online ||
-            goal == so_gpx::technique_schedule_goal::for_exec )
+            goal == so_gpx::technique_schedule_goal::for_exec || 
+            goal == so_gpx::technique_schedule_goal::for_reload )
         {
             pd->rs = so_gpx::technique_rest_state::online ;
             pd->ts = so_gpx::technique_transition_state::none ;
@@ -253,7 +310,8 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
 
             so_thread::global::task_scheduler()->async_now( so_thread::void_funk_task_t::create( [=]( void_t )
             {
-                auto const res = pd->plug_ptr->on_load() ;
+                iplug_t::load_info_t li ;
+                auto const res = pd->plug_ptr->on_load( li ) ;
                 if( res != so_gpx::plug_result::ok )
                 {
                     pd->rs = so_gpx::technique_rest_state::offline ;

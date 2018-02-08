@@ -57,7 +57,7 @@ namespace so_gpx
             return so_gpx::plug_result::ok ;
         }
 
-        virtual so_gpx::plug_result on_load( void_t ) {
+        virtual so_gpx::plug_result on_load( load_info_cref_t ) {
             return so_gpx::plug_result::ok ;
         }
 

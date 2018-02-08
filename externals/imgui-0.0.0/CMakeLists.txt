@@ -7,6 +7,9 @@
 cmake_minimum_required( VERSION 3.0 )
 project( imgui CXX )
 
+# we need the math library
+include_directories( "${CMAKE_CURRENT_LIST_DIR}/../../.." )
+
 if( MSVC )
 #set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4324 /wd4310" )
 endif()
@@ -34,6 +37,7 @@ set( SOURCES
     "src/imgui_draw.cpp"
 )
 
+add_definitions( -DIMGUI_DEFINE_MATH_OPERATORS )
 include_directories( "./include/imgui" "./include/imgui/internal" ) 
 
 add_library( imgui STATIC ${SOURCES} )

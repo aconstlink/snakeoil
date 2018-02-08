@@ -437,6 +437,18 @@ so_gpx::result render_system::schedule_for_release( so_gpx::technique_id_t tid )
 }
 
 //**********************************************************************************************
+so_gpx::result render_system::schedule_for_reload( so_gpx::technique_id_t tid )
+{
+    return this_t::schedule_for( tid, window_id_t( 0 ), technique_schedule_goal::for_reload ) ;
+}
+
+//**********************************************************************************************
+so_gpx::result render_system::schedule_for_reload( so_gpx::technique_id_t tid, so_gpx::window_id_t wid )
+{
+    return this_t::schedule_for( tid, wid, technique_schedule_goal::for_reload ) ;
+}
+
+//**********************************************************************************************
 so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::window_id_t wid,
     so_gpx::technique_schedule_goal goal )
 {
@@ -460,15 +472,40 @@ so_gpx::result render_system::schedule_for( so_gpx::technique_id_t tid, so_gpx::
 
         tptr = iter->second.tptr ;
     }
-
+    
     {
         schedule_data_t sd ;
         sd.ts = goal ;
         sd.tptr = tptr ;
         sd.si = si ;
 
-        so_thread::lock_guard_t lk( _wis[ wid ].shared_ptr->mtx_scheduled ) ;
-        _wis[ wid ].shared_ptr->write_buffer().push_back( sd ) ;
+        if( goal != technique_schedule_goal::for_reload )
+        {
+            so_thread::lock_guard_t lk( _wis[ wid ].shared_ptr->mtx_scheduled ) ;
+            _wis[ wid ].shared_ptr->write_buffer().push_back( sd ) ;
+        }
+
+        // the reload goal replaced the first occurrence of the technique in the queue,
+        // so it will not interfere with execution.
+        else
+        {
+            so_thread::lock_guard_t lk( _wis[ wid ].shared_ptr->mtx_scheduled ) ;
+            auto iter = std::find_if( _wis[ wid ].shared_ptr->write_buffer().begin(),
+                _wis[ wid ].shared_ptr->write_buffer().end(), [&] ( schedule_data_cref_t d ) 
+            { 
+                return d.tptr == tptr ;
+            } ) ;
+            if( iter != _wis[ wid ].shared_ptr->write_buffer().end() )
+            {
+                iter->ts = goal ;
+                iter->si = si ;
+            }
+            else
+            {
+                _wis[ wid ].shared_ptr->write_buffer().push_back( sd ) ;
+            }
+        }
+        
     }
 
     return so_gpx::ok ;

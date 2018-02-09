@@ -35,6 +35,8 @@ imgui::~imgui( void_t )
 {
     if( _tid != size_t(-1) && so_core::is_not_nullptr(_rs) )
         _rs->schedule_for_release( _tid ) ;
+
+    so_imgui::memory::dealloc( _sd ) ;
 }
 
 //*************************************************************************************
@@ -75,11 +77,11 @@ void_t imgui::deinit( void_t )
 }
 
 //*************************************************************************************
-void_t imgui::schedule( ImDrawData * dd )
+void_t imgui::schedule( so_gpx::window_id_t wid, ImDrawData * dd )
 {
     _sd->dd = dd ;
 
-    _rs->schedule( _tid ) ;
+    _rs->schedule( _tid, wid ) ;
 }
 
 //*************************************************************************************

@@ -57,7 +57,7 @@ namespace so_imgui
 
         void_t init( void_t ) ;
         void_t deinit( void_t ) ;
-        void_t schedule( ImDrawData * ) ;
+        void_t schedule( so_gpx::window_id_t, ImDrawData * ) ;
 
         void_t add_texture( so_std::string_cref_t ) ;
     };

@@ -211,11 +211,11 @@ void_t system::draw( imgui_funk_t funk )
 }
 
 //************************************************************************************
-void_t system::render( void_t )
+void_t system::render( so_gpx::window_id_t wid )
 {
     ImGui::Render() ;
 
-    _imgui->schedule( ImGui::GetDrawData() ) ;
+    _imgui->schedule( wid, ImGui::GetDrawData() ) ;
 }
 
 //************************************************************************************

@@ -9,6 +9,7 @@
 #include "../typedefs.h"
 
 #include <snakeoil/gpx/protos.h>
+#include <snakeoil/gpx/window/window_id.h>
 #include <snakeoil/gpx/technique/technique_id.h>
 
 #include <snakeoil/device/protos.h>
@@ -67,7 +68,7 @@ namespace so_imgui
         void_t check_status( imgui_funk_t ) ;
         void_t begin_draw( double_t const dt, size_t const dw, size_t const dh, size_t const fbw, size_t const fbh ) ;
         void_t draw( imgui_funk_t ) ;
-        void_t render( void_t ) ;
+        void_t render( so_gpx::window_id_t ) ;
 
     public:
 

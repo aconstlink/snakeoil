@@ -175,6 +175,8 @@ HWND win32_window::create_window( window_info const & wi )
             ws_style = WS_POPUP | SW_SHOWNORMAL;
         else
             ws_style = WS_OVERLAPPEDWINDOW ; // | WS_CLIPSIBLINGS | WS_CLIPCHILDREN ;
+
+        height += GetSystemMetrics( SM_CYCAPTION ) ;
     }
 
     hwnd = CreateWindowEx( ws_ex_style,

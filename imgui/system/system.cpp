@@ -20,6 +20,8 @@ system::system( so_gpx::render_system_ptr_t rs ) : _rs( rs )
     so_log::global_t::critical( so_core::is_nullptr( rs ), 
         "[system::system] : render system must not be nullptr" ) ;
 
+    _ctx = ImGui::CreateContext() ;
+
     _imgui = so_imgui::imgui_t::create( so_imgui::imgui_t( "", _rs ), 
         "[so_imgui::system::system] : imgui" ) ;
 }
@@ -29,6 +31,8 @@ system::system( this_rref_t rhv )
 {
     so_move_member_ptr( _rs, rhv ) ;
     so_move_member_ptr( _imgui, rhv ) ;
+    so_move_member_ptr( _ctx, rhv ) ;
+    ImGui::SetCurrentContext( _ctx ) ;
 
     _name_to_texdata = std::move( _name_to_texdata ) ;
 }
@@ -36,7 +40,9 @@ system::system( this_rref_t rhv )
 //************************************************************************************
 system::~system( void_t )
 {
-    ImGui::Shutdown();
+    if( so_core::is_not_nullptr( _ctx ) )
+        ImGui::DestroyContext( _ctx ) ;
+
     imgui_t::destroy( _imgui ) ;
 
     for( auto item : _name_to_texdata )
@@ -86,6 +92,8 @@ void_t system::init( void_t )
     io.KeyMap[ ImGuiKey_X ] = size_t( so_device::ascii_key::x );
     io.KeyMap[ ImGuiKey_Y ] = size_t( so_device::ascii_key::y );
     io.KeyMap[ ImGuiKey_Z ] = size_t( so_device::ascii_key::z );
+
+    ImGui::StyleColorsClassic();
 }
 
 //************************************************************************************

@@ -42,6 +42,8 @@ namespace so_imgui
         so_device::three_button_mouse_ptr_t _mouse = nullptr ;
         so_device::ascii_keyboard_ptr_t _keyboard = nullptr ;
 
+        ImGuiContext * _ctx = nullptr ;
+
     private:
 
         typedef so_std::map< so_std::string_t, imgui_texture_data_ptr_t > __name_to_texdata_t ;

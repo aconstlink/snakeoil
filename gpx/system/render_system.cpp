@@ -185,6 +185,8 @@ bool_t render_system::register_window( so_std::string_cref_t name, so_gpx::iwind
 
     std::thread( [shared_ptr, wid, wnd, service_ptr]( void_t )
     {
+        so_log::global_t::status( "[render_system] : render thread online" ) ;
+
         wnd->render_thread_begin() ;
 
         so_std::vector< schedule_data_t > stage_00_0 ;

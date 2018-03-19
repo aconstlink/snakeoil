@@ -298,7 +298,7 @@ so_gfx::result image_render_2d::prepare_for_rendering( void_t )
                         sii.pos = ii.pos ;
                         sii.rot = ii.rot ;
                         sii.pivot = ii.pivot ;
-                        sii.scale = ii.scale ;
+                        sii.scale = ii.scale * so_math::vec2f_t( iw, ih ) ;
                         sii.color = ii.color ;
                         _sd_ptr->image_infos.push_back( sii ) ;
                     }

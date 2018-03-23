@@ -162,7 +162,7 @@ void_t system::begin_draw( double_t const dt,
     {
         // 1. mouse position
         {
-            if( io.WantMoveMouse )
+            if( io.WantSetMousePos )
             {
                 // @todo set mouse cursor
             }

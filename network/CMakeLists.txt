@@ -80,3 +80,11 @@ target_link_libraries( ${CUR_LIB_NAME}
 )
 
 target_link_libraries( ${CUR_LIB_NAME} ${OS_LIBS} ) 
+
+
+###########################################################
+# SECTION: Install
+###########################################################
+
+install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install_library( ${CUR_LIB_NAME} )

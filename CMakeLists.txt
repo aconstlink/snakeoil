@@ -26,7 +26,9 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_LIST_DIR}/cmake/macros/"
     "${CMAKE_CURRENT_LIST_DIR}/cmake/functions/"
     )
-    
+
+set( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/snakeoil-${SNAKEOIL_MAJOR_VERSION}.${SNAKEOIL_MINOR_VERSION}.${SNAKEOIL_PATCH_VERSION}" CACHE STRING "Install prefix" FORCE )    
+
 include( config_operating_system )
 include( config_compiler )
 include( config_compiler_flags )
@@ -45,6 +47,7 @@ include( config_output_directory )
 
 include( so_visual_studio_src_dir )
 include( install_headers )
+include( install_library )
 
 ################################################################
 # SECTION : Build in and compilable externals

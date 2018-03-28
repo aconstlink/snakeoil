@@ -43,14 +43,6 @@ endif()
 ###########################################################
 
 install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install_library( ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-    install( TARGETS ${CUR_LIB_NAME} 
-        RUNTIME DESTINATION "bin"
-        LIBRARY DESTINATION "lib" 
-        ARCHIVE DESTINATION "lib" )
-else()
-    install( TARGETS ${CUR_LIB_NAME} 
-        DESTINATION "lib" )
-endif()
 

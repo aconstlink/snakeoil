@@ -97,3 +97,10 @@ so_vs_src_dir( SOURCES )
 #add_custom_target( ${CUR_LIB_NAME} SOURCES ${SOURCES} )
 add_library( ${CUR_LIB_NAME} STATIC ${SOURCES} )
 set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+
+###########################################################
+# SECTION: Install
+###########################################################
+
+install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+

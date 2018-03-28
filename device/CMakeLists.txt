@@ -245,4 +245,5 @@ endif()
 ###########################################################
 
 install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install_library( ${CUR_LIB_NAME} )
 

@@ -65,3 +65,9 @@ target_link_libraries( ${CUR_LIB_NAME}
     ${OPENGL_LIBRARIES}
 )
 
+###########################################################
+# SECTION: Install
+###########################################################
+
+install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install_library( ${CUR_LIB_NAME} )

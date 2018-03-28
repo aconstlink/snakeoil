@@ -83,3 +83,9 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
 endif()
 
+###########################################################
+# SECTION: Install
+###########################################################
+
+install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install_library( ${CUR_LIB_NAME} )

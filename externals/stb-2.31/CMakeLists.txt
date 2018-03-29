@@ -10,7 +10,6 @@ set( SOURCES
 # SECTION: Install
 ###########################################################
 
-set( FOLDER_NAME "stb-2.29")
-set( BASE_INSTALL_DIR "${STB_INSTALL_HEADER_BASE}/${FOLDER_NAME}" )
+set( BASE_INSTALL_DIR "${STB_INSTALL_HEADER_BASE}" )
 
 install_headers( "${SOURCES}" "${BASE_INSTALL_DIR}" )

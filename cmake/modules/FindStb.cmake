@@ -15,7 +15,7 @@
 set( STB_FOUND False )
 
 if( NOT STB_PATH_HINT )
-    set( STB_PATH_HINT "${CMAKE_CURRENT_LIST_DIR}/../../externals/stb-2.29/include" )
+    set( STB_PATH_HINT "${CMAKE_CURRENT_LIST_DIR}/../../externals/stb-2.31/include" )
 endif()
 
 find_path( STB_INCLUDE_DIRECTORY 

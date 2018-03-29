@@ -68,12 +68,14 @@ set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/khronos )
 
 # rapidxml
+# also see find_package
 set( RAPIDXML_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/rapidxml-1.13 )
 
 # stb
-set( STB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/stb-2.29 )
+# also see find_package
+set( STB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals/stb-2.31" )
+add_subdirectory( externals/stb-2.31 )
 
 # ogg
 set( OGG_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )

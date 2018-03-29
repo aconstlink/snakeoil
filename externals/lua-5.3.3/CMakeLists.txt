@@ -7,6 +7,10 @@
 cmake_minimum_required( VERSION 3.0 )
 project( lua C )
 
+if( NOT LUA_INSTALL_HEADER_BASE )
+  set( INSTALL_HEADER_BASE "" )
+endif()
+
 if( MSVC )
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4324 /wd4310" )
 endif()
@@ -123,17 +127,8 @@ endif()
 ###########################################################
 
 set( FOLDER_NAME "${PROJECT_NAME}-${LUA_MAJOR_VERSION}.${LUA_MINOR_VERSION}.${LUA_PATCH_VERSION}")
-set( BASE_INSTALL_DIR "externals/${FOLDER_NAME}" )
+set( BASE_INSTALL_DIR "${LUA_INSTALL_HEADER_BASE}/${FOLDER_NAME}" )
 install_headers( "${SOURCES}" "${BASE_INSTALL_DIR}" )
+install_library( lua )
 
-#message( ${LUA_BUILD_TYPE} )
-if( ${LUA_BUILD_TYPE} STREQUAL "SHARED" )
-    install( TARGETS lua 
-        RUNTIME DESTINATION "${BASE_INSTALL_DIR}/bin"
-        LIBRARY DESTINATION "${BASE_INSTALL_DIR}/lib" 
-        ARCHIVE DESTINATION "${BASE_INSTALL_DIR}/lib" )
-else()
-    install( TARGETS lua 
-        DESTINATION "${BASE_INSTALL_DIR}/lib" )
-endif()
 

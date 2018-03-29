@@ -14,8 +14,8 @@ if( MSVC )
 #set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4324 /wd4310" )
 endif()
 
-set( IMGUI_MAJOR_VERSION 0 )
-set( IMGUI_MINOR_VERSION 0 )
+set( IMGUI_MAJOR_VERSION 1 )
+set( IMGUI_MINOR_VERSION 6 )
 set( IMGUI_PATCH_VERSION 0 )
 set( IMGUI_VERSION "${IMGUI_MAJOR_VERSION}.${IMGUI_MINOR_VERSION}.${IMGUI_PATCH_VERSION}" )
 
@@ -48,9 +48,8 @@ set_target_properties( imgui PROPERTIES LINKER_LANGUAGE CXX )
 ###########################################################
 
 set( FOLDER_NAME "${PROJECT_NAME}-${IMGUI_MAJOR_VERSION}.${IMGUI_MINOR_VERSION}.${IMGUI_PATCH_VERSION}")
-set( BASE_INSTALL_DIR "externals/${FOLDER_NAME}" )
+set( BASE_INSTALL_DIR "${IMGUI_INSTALL_HEADER_BASE}/${FOLDER_NAME}" )
+
 install_headers( "${SOURCES}" "${BASE_INSTALL_DIR}" )
-
-
-install( TARGETS imgui DESTINATION "${BASE_INSTALL_DIR}/lib" )
+install_library( imgui )
 

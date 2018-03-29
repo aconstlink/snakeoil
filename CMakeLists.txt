@@ -57,28 +57,41 @@ include( install_library )
 
 # lua
 
+set( LUA_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/lua-5.3.3 )
 set( LUA_VERSION 5.3.3 )
 set( LUA_ENABLE ON )
 set_target_properties( lua PROPERTIES FOLDER "externals" )
 
-# ogg
+# khronos
+set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+add_subdirectory( externals/khronos )
 
+# rapidxml
+set( RAPIDXML_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+add_subdirectory( externals/rapidxml-1.13 )
+
+# stb
+set( STB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+add_subdirectory( externals/stb-2.29 )
+
+# ogg
+set( OGG_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 set( OGG_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
 add_subdirectory( externals/ogg-1.3.1 )
 set_target_properties( ogg PROPERTIES FOLDER "externals/xiph" )
 
-
 # vorbis
-
+set( VORBIS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 set( VORBIS_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
+
 add_subdirectory( externals/vorbis-1.3.5 )
 set_target_properties( vorbis PROPERTIES FOLDER "externals/xiph" )
 set_target_properties( vorbisenc PROPERTIES FOLDER "externals/xiph" )
 set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
 
 # imgui
-
+set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/imgui-1.6.0 )
 set( IMGUI_VERSION 1.6.0 )
 set_target_properties( imgui PROPERTIES FOLDER "externals" )

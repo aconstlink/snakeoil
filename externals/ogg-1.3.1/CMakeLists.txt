@@ -48,3 +48,13 @@ include_directories( include )
 add_library( ogg ${LIBRARY_BUILD_TYPE} ${OGG_HEADERS} ${OGG_SOURCES} )
 
 target_include_directories( ogg PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include )
+
+###########################################################
+# SECTION: Install
+###########################################################
+
+set( FOLDER_NAME "${PROJECT_NAME}-${OGG_MAJOR_VERSION}.${OGG_MINOR_VERSION}.${OGG_PATCH_VERSION}")
+set( BASE_INSTALL_DIR "${OGG_INSTALL_HEADER_BASE}/${FOLDER_NAME}" )
+
+install_headers( "${OGG_HEADERS}" "${BASE_INSTALL_DIR}" )
+install_library( ogg )

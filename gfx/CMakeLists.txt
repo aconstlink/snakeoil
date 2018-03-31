@@ -26,7 +26,7 @@ set( SOURCES
     api.h
     result.h
     typedefs.h
-    protos.h
+    protos.h    
 
     camera/icamera.h
     camera/generic_camera.h
@@ -94,6 +94,18 @@ if( SNAKEOIL_TARGET_GRAPHICS_OPENGL_33 )
 endif()
 
 so_vs_src_dir( SOURCES )
+
+##########################################################
+# configure config.h
+configure_file( "${CMAKE_SOURCE_DIR}/gfx/gfx_config.build.in.h"
+  "${CMAKE_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
+
+set( SOURCES ${SOURCES} 
+  ${CMAKE_BINARY_DIR}/gfx/config.h 
+)
+
+include_directories( "${CMAKE_BINARY_DIR}/gfx" )
+##########################################################
 
 set( SNAKEOIL_GFX_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE STRING "Gfx shader root" )
 add_definitions( -DGFX_SOURCE_DIR="${SNAKEOIL_GFX_DIR}" )

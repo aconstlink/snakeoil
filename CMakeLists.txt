@@ -47,6 +47,7 @@ include( config_output_directory )
 
 include( so_visual_studio_src_dir )
 include( install_headers )
+include( install_shaders )
 include( install_library )
 
 ################################################################

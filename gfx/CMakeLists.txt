@@ -3,6 +3,19 @@
 #. Distributed under the MIT license
 #.............................................................
 
+set( GL33_SHADERS
+  circle/gl33/shader/circle_render_2d.vs.glsl
+  circle/gl33/shader/circle_render_2d.ps.glsl
+  image/gl33/shader/image_render_2d.vs.glsl
+  image/gl33/shader/image_render_2d.ps.glsl
+  line/gl33/shader/line_render_2d.vs.glsl
+  line/gl33/shader/line_render_2d.ps.glsl
+  rect/gl33/shader/rect_render_2d.vs.glsl
+  rect/gl33/shader/rect_render_2d.ps.glsl
+  text/gl33/shader/text_render_2d.vs.glsl
+  text/gl33/shader/text_render_2d.ps.glsl
+)
+
 set( GL33_SOURCES 
   text/gl33/gl33_text_render_2d_plug.h
   text/gl33/gl33_text_render_2d_plug.cpp
@@ -91,6 +104,7 @@ set( SOURCES ${SOURCES} )
 
 if( SNAKEOIL_TARGET_GRAPHICS_OPENGL_33 )
   set( SOURCES ${SOURCES} ${GL33_SOURCES} )
+  set( SOURCES ${SOURCES} ${GL33_SHADERS} )
 endif()
 
 so_vs_src_dir( SOURCES )
@@ -100,14 +114,12 @@ so_vs_src_dir( SOURCES )
 configure_file( "${CMAKE_SOURCE_DIR}/gfx/gfx_config.build.in.h"
   "${CMAKE_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
 
-set( SOURCES ${SOURCES} 
-  ${CMAKE_BINARY_DIR}/gfx/config.h 
-)
+set( SOURCES_CONFIG ${CMAKE_BINARY_DIR}/gfx/config.h )
 
 include_directories( "${CMAKE_BINARY_DIR}/gfx" )
 ##########################################################
 
-add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
+add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} ${SOURCES_CONFIG} )
 set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 if( SNAKEOIL_LIBRARY_BUILD_SHARED )
@@ -138,5 +150,7 @@ endif()
 # SECTION: Install
 ###########################################################
 
+install_shaders( "${GL33_SHADERS}" "bin/${CUR_LIB_NAME_SHORT}" )
 install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install( FILES ${CMAKE_BINARY_DIR}/gfx/config.h DESTINATION "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
 install_library( ${CUR_LIB_NAME} )

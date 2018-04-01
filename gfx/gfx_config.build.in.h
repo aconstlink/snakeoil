@@ -13,7 +13,7 @@ namespace so_gfx
     {
         so_std::string_t const __shader_search_path_base[] = 
         {
-            ".",
+            "./gfx",
             "@CMAKE_CURRENT_SOURCE_DIR@"
         } ;
     }

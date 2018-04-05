@@ -80,7 +80,8 @@ set( SNAKEOIL_CONFIGS_DIR
 
 set( SNAKEOIL_MODULES_DIR 
     "${SNAKEOIL_INCLUDE_BASE}/cmake/modules"
-    "${SNAKEOIL_INCLUDE_BASE}/cmake/macros"    )
+    "${SNAKEOIL_INCLUDE_BASE}/cmake/macros"
+    "${SNAKEOIL_INCLUDE_BASE}/cmake/functions")
 
 set( SNAKEOIL_INCLUDE_DIRS
     "${SNAKEOIL_INCLUDE_BASE}/.."
@@ -113,7 +114,7 @@ set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS}
 # Find dependencies
 ####################################################################
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
-    "${SNAKEOIL_MODULES_DIR}" )
+    "${SNAKEOIL_MODULES_DIR}")
     
 # OpenCtm
 set( OPENCTM_ENABLE @OPENCTM_ENABLE@ )

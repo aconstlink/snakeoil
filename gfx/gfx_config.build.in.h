@@ -1,7 +1,7 @@
-
-// configured by cmake
-// this file defines a build tree configuration
-
+//------------------------------------------------------------
+// snakeoil (c) Alexis Constantin Link
+// Distributed under the MIT license
+//------------------------------------------------------------
 #include <snakeoil/gfx/typedefs.h>
 
 #include <snakeoil/io/typedefs.h>

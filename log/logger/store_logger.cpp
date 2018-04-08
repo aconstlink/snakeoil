@@ -1,4 +1,7 @@
-
+//------------------------------------------------------------
+// snakeoil (c) Alexis Constantin Link
+// Distributed under the MIT license
+//------------------------------------------------------------
 #include "store_logger.h"
 
 using namespace so_log ;

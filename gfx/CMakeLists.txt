@@ -114,7 +114,7 @@ so_vs_src_dir( SOURCES )
 configure_file( "${CMAKE_SOURCE_DIR}/gfx/gfx_config.build.in.h"
   "${CMAKE_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
 
-set( SOURCES_CONFIG ${CMAKE_BINARY_DIR}/gfx/config.h )
+set( SOURCES_CONFIG ${CMAKE_BINARY_DIR}/gfx/gfx_config.h )
 
 include_directories( "${CMAKE_BINARY_DIR}/gfx" )
 ##########################################################

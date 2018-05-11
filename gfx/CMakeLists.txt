@@ -14,6 +14,10 @@ set( GL33_SHADERS
   rect/gl33/shader/rect_render_2d.ps.glsl
   text/gl33/shader/text_render_2d.vs.glsl
   text/gl33/shader/text_render_2d.ps.glsl
+  plugs/post_process/gl33/shader/gl33_simple_post.vs.glsl
+  plugs/post_process/gl33/shader/gl33_simple_post.ps.glsl
+  plugs/post_process/gl33/shader/gl33_toscreen_post.vs.glsl
+  plugs/post_process/gl33/shader/gl33_toscreen_post.ps.glsl
 )
 
 set( GL33_SOURCES 
@@ -31,8 +35,12 @@ set( GL33_SOURCES
   plugs/framebuffer/gl33/gl33_framebuffer_begin_plug.cpp
   plugs/framebuffer/gl33/gl33_framebuffer_end_plug.h
   plugs/framebuffer/gl33/gl33_framebuffer_end_plug.cpp
-  plugs/common/gl33/gl33_map_texture_plug.h
-  plugs/common/gl33/gl33_map_texture_plug.cpp
+  plugs/post_process/gl33/gl33_simple_post_plug.h
+  plugs/post_process/gl33/gl33_simple_post_plug.cpp
+  plugs/post_process/gl33/gl33_singlepass_post_plug.h
+  plugs/post_process/gl33/gl33_singlepass_post_plug.cpp
+  plugs/post_process/gl33/gl33_toscreen_post_plug.h
+  plugs/post_process/gl33/gl33_toscreen_post_plug.cpp
 )
   
 set( SOURCES 
@@ -92,11 +100,19 @@ set( SOURCES
     plugs/framebuffer/framebuffer_end.cpp
     plugs/framebuffer/framebuffer_end_plug_factory.h
     plugs/framebuffer/framebuffer_end_plug_factory.cpp
-    plugs/common/map_texture.h
-    plugs/common/map_texture.cpp
-    plugs/common/map_texture_plug_factory.h
-    plugs/common/map_texture_plug_factory.cpp
+    plugs/post_process/simple_post.h
+    plugs/post_process/simple_post.cpp
+    plugs/post_process/simple_post_plug_factory.h
+    plugs/post_process/simple_post_plug_factory.cpp
     
+    plugs/post_process/generic_post.h
+    plugs/post_process/generic_post.cpp
+    plugs/post_process/predef_post_type.h
+    plugs/post_process/predef_post.h
+    plugs/post_process/predef_post.cpp
+    plugs/post_process/predef_post_plug_factory.h
+    plugs/post_process/predef_post_plug_factory.cpp
+
     enums/align.h
     )
 
@@ -126,12 +142,12 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     add_definitions( 
         -DSNAKEOIL_GFX_EXPORT
-        -DSNAKEOIL_FONT_IMPORT
-        -DSNAKEOIL_GPX_IMPORT
-        -DSNAKEOIL_GPU_IMPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
+        #-DSNAKEOIL_FONT_IMPORT
+        #-DSNAKEOIL_GPX_IMPORT
+        #-DSNAKEOIL_GPU_IMPORT
+        #-DSNAKEOIL_THREAD_IMPORT
+        #-DSNAKEOIL_LOG_IMPORT
+        #-DSNAKEOIL_MEMORY_IMPORT
         )
 
     # snakeoil
@@ -142,6 +158,7 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
       snakeoil_log
       snakeoil_memory
       snakeoil_thread
+      snakeoil_flow
       snakeoil_gpu
     )
 endif()

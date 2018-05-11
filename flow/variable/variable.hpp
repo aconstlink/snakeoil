@@ -26,6 +26,9 @@ namespace so_flow
 
     public:
         
+        variable( void_t )
+        {}
+
         variable( type_cref_t data ) : _data(data)
         {}
 

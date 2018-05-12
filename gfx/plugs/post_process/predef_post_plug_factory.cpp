@@ -7,6 +7,7 @@
 
 #if SNAKEOIL_TARGET_GRAPHICS_OPENGL_33
 #include "gl33/gl33_toscreen_post_plug.h"
+#include "gl33/gl33_vignette_post_plug.h"
 #endif
 
 #include <snakeoil/gpx/plug/plug.h>
@@ -64,6 +65,12 @@ so_gpx::iplug_ptr_t predef_post_plug_factory::create_plug( so_gpu::api_type cons
         case so_gfx::predef_post_type::toscreen:
             return so_gfx::so_gl33::gl33_toscreen_post_plug_t::create(
                 so_gfx::so_gl33::gl33_toscreen_post_plug_t( _sd,
+                    static_cast< so_gpu::so_gl::igl_33_api_ptr_t >( aptr ) ),
+                "[map_texture_plug_factory::create_plug]" ) ;
+            break ;
+        case so_gfx::predef_post_type::vignette:
+            return so_gfx::so_gl33::gl33_vignette_post_plug_t::create(
+                so_gfx::so_gl33::gl33_vignette_post_plug_t( _sd,
                     static_cast< so_gpu::so_gl::igl_33_api_ptr_t >( aptr ) ),
                 "[map_texture_plug_factory::create_plug]" ) ;
             break ;

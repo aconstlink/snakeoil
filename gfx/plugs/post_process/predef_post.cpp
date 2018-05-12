@@ -40,6 +40,18 @@ predef_post::predef_post( predef_post_type t, so_gpx::render_system_ptr_t rs )
             _sd->vs.add( "source_color_tx", so_flow::variable<so_std::string_t>::create(
                 so_std::string_t(), "[predef_post::predef_post] : source_color_tx" ) ) ;
             break ;
+
+        case so_gfx::predef_post_type::vignette:
+            _sd->vs.add( "source_rect", so_flow::variable<so_math::vec4f_t>::create(
+                so_math::vec4f_t(), "[predef_post::predef_post] : source_rect" ) ) ;
+            _sd->vs.add( "dest_rect", so_flow::variable<so_math::vec4f_t>::create(
+                so_math::vec4f_t(), "[predef_post::predef_post] : dest_rect" ) ) ;
+            _sd->vs.add( "source_color_tx", so_flow::variable<so_std::string_t>::create(
+                so_std::string_t(), "[predef_post::predef_post] : source_color_tx" ) ) ;
+            _sd->vs.add( "dest_fb", so_flow::variable<so_std::string_t>::create(
+                so_std::string_t(), "[predef_post::predef_post] : source_color_tx" ) ) ;
+            break ;
+
         default:
             break ;
         }

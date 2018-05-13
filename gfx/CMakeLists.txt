@@ -41,6 +41,8 @@ set( GL33_SOURCES
   plugs/post_process/gl33/gl33_toscreen_post_plug.cpp
   plugs/post_process/gl33/gl33_vignette_post_plug.h
   plugs/post_process/gl33/gl33_vignette_post_plug.cpp
+  plugs/framebuffer/gl33/gl33_predef_framebuffer_plug.h
+  plugs/framebuffer/gl33/gl33_predef_framebuffer_plug.cpp
 )
   
 set( SOURCES 
@@ -101,8 +103,12 @@ set( SOURCES
     plugs/framebuffer/framebuffer_end_plug_factory.h
     plugs/framebuffer/framebuffer_end_plug_factory.cpp    
     
-    plugs/post_process/generic_post.h
-    plugs/post_process/generic_post.cpp
+    plugs/framebuffer/predef_framebuffer.h
+    plugs/framebuffer/predef_framebuffer.cpp
+    plugs/framebuffer/predef_framebuffer_plug_factory.h
+    plugs/framebuffer/predef_framebuffer_plug_factory.cpp
+    plugs/framebuffer/predef_framebuffer_types.h
+
     plugs/post_process/predef_post_type.h
     plugs/post_process/predef_post.h
     plugs/post_process/predef_post.cpp

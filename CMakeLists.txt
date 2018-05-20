@@ -95,10 +95,10 @@ set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
 
 # imgui
 set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/imgui-1.6.1 )
-set( IMGUI_VERSION 1.6.1 )
+add_subdirectory( externals/imgui-1.6.2 )
+set( IMGUI_VERSION 1.6.2 )
 set_target_properties( imgui PROPERTIES FOLDER "externals" )
-set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.1/include" )
+set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.2/include" )
 
 #############################################
 

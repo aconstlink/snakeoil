@@ -54,8 +54,6 @@ include( install_library )
 # SECTION : Build in and compilable externals
 ################################################################
 
-#include( config_externals_output_directory )
-
 # lua
 
 set( LUA_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
@@ -72,6 +70,9 @@ add_subdirectory( externals/khronos )
 # also see find_package
 set( RAPIDXML_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/rapidxml-1.13 )
+
+# rapidjson
+# todo
 
 # stb
 # also see find_package
@@ -100,6 +101,9 @@ set( IMGUI_VERSION 1.6.2 )
 set_target_properties( imgui PROPERTIES FOLDER "externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.2/include" )
 
+#zlib
+# todo
+
 #############################################
 
 ################################################################
@@ -110,7 +114,7 @@ set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.2/include
 # build-in header only
 find_package( Stb REQUIRED )
 find_package( RapidXml REQUIRED )
-#find_package( RapidJson REQUIRED )
+find_package( RapidJson REQUIRED )
 
 #
 # optionals

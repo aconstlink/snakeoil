@@ -1,0 +1,19 @@
+
+<spritesheet uri="">
+
+  <sequences>
+
+    <sequence id="unique name" speed="float">
+      <frame rect="x y w h" duration="milli">
+        <hit_zones>
+          <rect values="x y w h" />
+          <circle values="x y r r" /> 
+        </hit_zones>
+      </frame>
+    </sequence>
+
+    <!-- more sequence tags -->
+
+  </sequences>
+
+</spritesheet>

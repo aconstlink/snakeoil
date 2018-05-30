@@ -1,5 +1,7 @@
-
-
+//------------------------------------------------------------
+// snakeoil (c) Alexis Constantin Link
+// Distributed under the MIT license
+//------------------------------------------------------------
 #pragma once
 
 #include <snakeoil/std/string/string.hpp>

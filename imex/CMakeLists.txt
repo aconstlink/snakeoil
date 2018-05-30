@@ -18,10 +18,13 @@ elseif( SNAKEOIL_COMPILER_GNU )
 endif()
 
 set( SNAKEOIL_SOURCES
-    "snakeoil/fragment/ifragment_file_parser.h"
-    "snakeoil/fragment/fragment_file_content.h"
-    "snakeoil/fragment/xml/xml_fragment_file_parser.h"
-    "snakeoil/fragment/xml/xml_fragment_file_parser.cpp"
+    snakeoil/fragment/ifragment_file_parser.h
+    snakeoil/fragment/fragment_file_content.h
+    snakeoil/fragment/xml/xml_fragment_file_parser.h
+    snakeoil/fragment/xml/xml_fragment_file_parser.cpp
+    snakeoil/spritesheet/spritesheet_loader.h
+    snakeoil/spritesheet/spritesheet_loader.cpp
+    snakeoil/spritesheet/spritesheet.h
 )
 
 set( SOURCES

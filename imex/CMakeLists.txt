@@ -22,8 +22,8 @@ set( SNAKEOIL_SOURCES
     snakeoil/fragment/fragment_file_content.h
     snakeoil/fragment/xml/xml_fragment_file_parser.h
     snakeoil/fragment/xml/xml_fragment_file_parser.cpp
-    snakeoil/spritesheet/spritesheet_loader.h
-    snakeoil/spritesheet/spritesheet_loader.cpp
+    snakeoil/spritesheet/spritesheet_parser.h
+    snakeoil/spritesheet/spritesheet_parser.cpp
     snakeoil/spritesheet/spritesheet.h
 )
 

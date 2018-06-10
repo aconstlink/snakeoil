@@ -27,7 +27,7 @@ namespace so_imex
 
 
             type t ;
-            so_math::vec4f_t values ;
+            so_math::vec4ui_t values ;
         };
         so_typedef( spritesheet_hitzone ) ;
 

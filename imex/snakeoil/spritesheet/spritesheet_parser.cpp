@@ -10,6 +10,10 @@
 #include <snakeoil/core/execute_if.hpp>
 
 #include <rapidxml/rapidxml.hpp>
+#include <rapidxml/rapidxml_print.hpp>
+
+#include <iostream>
+#include <sstream>
 
 using namespace so_imex ;
 using namespace so_imex::so_snakeoil ;
@@ -223,7 +227,118 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
 }
 
 //***********************************************************************
-so_std::string_t spritesheet_parser::from_data( spritesheet_in_t ) 
+so_std::string_t spritesheet_parser::from_data( spritesheet_in_t ssi ) 
 {
-    return so_std::string_t() ;
+
+    rapidxml::xml_document<> doc;
+    
+    /*rapidxml::xml_node<> *node = doc.allocate_node( rapidxml::node_element, "a", "Google" );
+
+    doc.append_node( node );
+     rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "href", "google.com" );
+    node->append_attribute( attr );*/
+
+    rapidxml::xml_node<> * spritesheet_node = doc.allocate_node( rapidxml::node_element, "spritesheet" );
+    doc.append_node( spritesheet_node );
+
+    // ATTR: uri
+    {
+        char * s = doc.allocate_string( ssi.uri.string().c_str() ) ;
+        rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "uri", s );
+        spritesheet_node->append_attribute( attr );
+    }
+
+    // NODE: sequences
+    {
+        rapidxml::xml_node<> * sequences_node = doc.allocate_node( rapidxml::node_element, "sequences" );
+        for( auto & seq : ssi.sequences )
+        {
+            rapidxml::xml_node<> * sequence_node = doc.allocate_node( rapidxml::node_element, "sequence" );
+
+            // ATTR: id
+            {
+                char * s = doc.allocate_string( seq.id.c_str() ) ;
+                rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "id", s ) ;
+                sequence_node->append_attribute( attr );
+            }
+
+            // ATTR: speed
+            {
+                char * s = doc.allocate_string( std::to_string(seq.speed).c_str() ) ;
+                rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "speed", s ) ;
+                sequence_node->append_attribute( attr );
+            }
+
+            // NODE: frame
+            for( auto & frame : seq.frames )
+            {
+                rapidxml::xml_node<> * frame_node = doc.allocate_node( rapidxml::node_element, "frame" ) ;
+
+                // ATTR: rect
+                {
+                    char * s = doc.allocate_string( 
+                        (std::to_string( frame.rect.x() )+" "+std::to_string( frame.rect.y() )+ " " +
+                            std::to_string( frame.rect.z() )+" "+std::to_string( frame.rect.w() )).c_str() ) ;
+                    rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "rect", s ) ;
+                    frame_node->append_attribute( attr );
+                }
+
+                // ATTR: duration
+                {
+                    char * s = doc.allocate_string( std::to_string(frame.duration).c_str() ) ;
+                    rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "duration", s ) ;
+                    frame_node->append_attribute( attr );
+                }
+
+                // NODE: hit_zones
+                {
+                    rapidxml::xml_node<> * hitzones_node = doc.allocate_node( rapidxml::node_element, "hit_zones" ) ;
+
+                    for( auto & hz : frame.hitzones )
+                    {
+                        rapidxml::xml_node<> * hz_node = nullptr ;
+
+                        so_std::string_t values ;
+
+                        if( hz.t == so_imex::so_snakeoil::spritesheet_hitzone::type::rect )
+                        {
+                            hz_node = doc.allocate_node( rapidxml::node_element, "rect" ) ;
+                            values = std::to_string( hz.values.x() ) + " " + std::to_string(  hz.values.y() ) + " " +
+                                std::to_string(  hz.values.z() ) + " " + std::to_string(  hz.values.w() ) ;
+                        }
+                        else if( hz.t == so_imex::so_snakeoil::spritesheet_hitzone::type::circle )
+                        {
+                            hz_node = doc.allocate_node( rapidxml::node_element, "circle" ) ;
+                            values = std::to_string( hz.values.x() ) + " " + std::to_string( hz.values.y() ) + " " +
+                                std::to_string( hz.values.z() ) + " " + std::to_string( hz.values.w() ) ;
+                        }
+
+                        if( so_core::is_not_nullptr(hz_node) )
+                        {
+                            // ATTR: values
+                            {
+                                char * s = doc.allocate_string( values.c_str() ) ;
+                                rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "values", s ) ;
+                                hz_node->append_attribute( attr );
+                            }
+
+                            hitzones_node->append_node( hz_node ) ;
+                        }
+                    }
+
+                    frame_node->append_node( hitzones_node ) ;
+                }
+
+                sequence_node->append_node( frame_node ) ;
+            }
+
+            sequences_node->append_node( sequence_node ) ;
+        }
+        spritesheet_node->append_node( sequences_node ) ;
+    }
+
+    std::stringstream ss ;
+    ss << doc ;
+
+    return ss.str() ;
 }

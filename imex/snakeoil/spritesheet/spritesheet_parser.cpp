@@ -62,10 +62,10 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
         rapidxml::xml_node<> * node = root->first_node( "sequences" ) ;
         if( so_core::is_nullptr( node ) )
         {
-            so_log::global_t::error( "[spritesheet_parser::from_string] : "
-                "<spritesheet> requires <sequences>" ) ;
+            so_log::global_t::warning( "[spritesheet_parser::from_string] : "
+                "<spritesheet> has no <sequences>" ) ;
 
-            return spritesheet_t() ;
+            return std::move( sso ) ;
         }
 
         spritesheet_t::sequences_t seqs ;

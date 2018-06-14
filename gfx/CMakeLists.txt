@@ -31,10 +31,6 @@ set( GL33_SOURCES
   rect/gl33/gl33_rect_render_2d_plug.cpp
   circle/gl33/gl33_circle_render_2d_plug.h
   circle/gl33/gl33_circle_render_2d_plug.cpp
-  plugs/framebuffer/gl33/gl33_framebuffer_begin_plug.h
-  plugs/framebuffer/gl33/gl33_framebuffer_begin_plug.cpp
-  plugs/framebuffer/gl33/gl33_framebuffer_end_plug.h
-  plugs/framebuffer/gl33/gl33_framebuffer_end_plug.cpp
   plugs/post_process/gl33/gl33_singlepass_post_plug.h
   plugs/post_process/gl33/gl33_singlepass_post_plug.cpp
   plugs/post_process/gl33/gl33_toscreen_post_plug.h
@@ -94,15 +90,6 @@ set( SOURCES
     render/render_2d.h
     render/render_2d.cpp
 
-    plugs/framebuffer/framebuffer_begin.h
-    plugs/framebuffer/framebuffer_begin.cpp
-    plugs/framebuffer/framebuffer_begin_plug_factory.h
-    plugs/framebuffer/framebuffer_begin_plug_factory.cpp
-    plugs/framebuffer/framebuffer_end.h
-    plugs/framebuffer/framebuffer_end.cpp
-    plugs/framebuffer/framebuffer_end_plug_factory.h
-    plugs/framebuffer/framebuffer_end_plug_factory.cpp    
-    
     plugs/framebuffer/predef_framebuffer.h
     plugs/framebuffer/predef_framebuffer.cpp
     plugs/framebuffer/predef_framebuffer_plug_factory.h

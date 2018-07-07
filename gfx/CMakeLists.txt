@@ -39,6 +39,8 @@ set( GL33_SOURCES
   plugs/post_process/gl33/gl33_vignette_post_plug.cpp
   plugs/framebuffer/gl33/gl33_predef_framebuffer_plug.h
   plugs/framebuffer/gl33/gl33_predef_framebuffer_plug.cpp
+  plugs/resource_bridge/gl33/gl33_resource_bridge_plug.h
+  plugs/resource_bridge/gl33/gl33_resource_bridge_plug.cpp
 )
   
 set( SOURCES 
@@ -101,6 +103,11 @@ set( SOURCES
     plugs/post_process/predef_post.cpp
     plugs/post_process/predef_post_plug_factory.h
     plugs/post_process/predef_post_plug_factory.cpp
+
+    plugs/resource_bridge/resource_bridge.h
+    plugs/resource_bridge/resource_bridge.cpp
+    plugs/resource_bridge/resource_bridge_plug_factory.h
+    plugs/resource_bridge/resource_bridge_plug_factory.cpp
 
     enums/align.h
     )

@@ -38,4 +38,7 @@ namespace so_gfx
 
     so_class_proto_typedefs( predef_framebuffer ) ;
     so_class_proto_typedefs( predef_framebuffer_plug_factory ) ;
+
+    so_class_proto_typedefs( resource_bridge ) ;
+    so_class_proto_typedefs( resource_bridge_plug_factory ) ;
 }

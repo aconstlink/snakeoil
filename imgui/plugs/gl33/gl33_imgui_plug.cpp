@@ -465,6 +465,11 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
                                 bool_t tvalid = _gpu_mgr->get_tx2d_mgr()->acquire( tdp->name,
                                     "[gl33_imgui_plug::on_update]", hnd ) ;
 
+                                if( so_core::is_not(tvalid) )
+                                {
+                                    // load texture from imex system
+                                }
+
                                 this_t::render_data_t rd = _render_datas[0] ;
                                 if( tvalid )
                                 {

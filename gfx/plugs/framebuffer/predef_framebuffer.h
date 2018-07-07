@@ -61,6 +61,9 @@ namespace so_gfx
             ~shared_data( void_t ) {}
         };
         so_typedef( shared_data ) ;
+
+    private:
+
         shared_data_ptr_t _sd ;
 
         so_gfx::predef_framebuffer_plug_factory_ptr_t _fac_ptr = nullptr ;

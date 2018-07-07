@@ -365,7 +365,8 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
 
         bool_t const res2 =
             ( goal == so_gpx::technique_schedule_goal::for_exec ) &&
-            ( pd->rs == so_gpx::technique_rest_state::online );
+            ( pd->rs == so_gpx::technique_rest_state::online ) && 
+            ( pd->ts == so_gpx::technique_transition_state::executing ) ;
 
         bool_t const res3 =
             ( goal == so_gpx::technique_schedule_goal::for_shutdown ) &&
@@ -396,7 +397,8 @@ so_gpx::technique_transition_result technique::check_part_00_finished(
 
         bool_t const res2 =
             ( goal == so_gpx::technique_schedule_goal::for_exec ) &&
-            ( pd->rs == so_gpx::technique_rest_state::online );
+            ( pd->rs == so_gpx::technique_rest_state::online ) &&
+            ( pd->ts == so_gpx::technique_transition_state::executing ) ;
 
         bool_t const res3 =
             ( goal == so_gpx::technique_schedule_goal::for_shutdown ) &&

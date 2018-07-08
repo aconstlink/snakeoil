@@ -28,7 +28,8 @@ A C++11 Compiler is required
 
 Build-in means that these libraries are shipped with the framework code and that you have access to it during development. These libraries are stored in the /externals directory.
 
-[RapidXML](http://rapidxml.sourceforge.net/)  
+[RapidXML](http://rapidxml.sourceforge.net/) 
+[RapidJSON](https://github.com/Tencent/rapidjson) 
 [LUA](https://www.lua.org/)  
 [STB](https://github.com/nothings/stb)  
 [Ogg](https://www.xiph.org/ogg/)  

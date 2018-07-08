@@ -268,7 +268,8 @@ bool_t render_system::register_window( so_std::string_cref_t name, so_gpx::iwind
             {
                 for( auto & sd : shared_ptr->read_buffer() )
                 {
-                    sd.tptr->part_01_render( wid, sd.si, wnd->get_api() ) ;
+                    sd.tptr->part_01_render( wid, sd.si, 
+                        wnd->get_api(), shared_ptr->gpu_mgr_ptr ) ;
                 }
 
                 for( auto & sd : shared_ptr->read_buffer() )

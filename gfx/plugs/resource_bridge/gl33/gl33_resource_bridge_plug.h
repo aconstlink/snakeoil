@@ -56,6 +56,11 @@ namespace so_gfx
             virtual so_gpx::plug_result on_update( update_info_cref_t ) final;
 
             virtual void_t destroy( void_t ) ;
+
+        private:
+
+            void_t upload_image( so_std::string_cref_t imex_name, so_std::string_cref_t gpu_name,
+                execute_info_cref_t) ;
         } ;
         so_typedef( gl33_resource_bridge_plug ) ;
     }

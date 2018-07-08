@@ -465,34 +465,32 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
                                 bool_t tvalid = _gpu_mgr->get_tx2d_mgr()->acquire( tdp->name,
                                     "[gl33_imgui_plug::on_update]", hnd ) ;
 
-                                if( so_core::is_not(tvalid) )
-                                {
-                                    // load texture from imex system
-                                }
-
-                                this_t::render_data_t rd = _render_datas[0] ;
                                 if( tvalid )
                                 {
-                                    rd.image_ptr = nullptr ;
-                                    rd.tx_ptr = hnd.get_ptr() ;
-                                    
-                                    rd.vars = so_gpu::variable_set_t::create( 
-                                        "[gl33_imgui_plug] : varset" ) ;
-                                    this_t::api()->create_variable( rd.vars ) ;
-                                    rd.vars->bind_data<so_math::mat4f_t>( "u_proj", &_proj/*&_sd->proj*/ ) ;
-                                    rd.vars->bind_texture( "u_tex", rd.tx_ptr ) ;
+                                    this_t::render_data_t rd = _render_datas[ 0 ] ;
+                                    if( tvalid )
+                                    {
+                                        rd.image_ptr = nullptr ;
+                                        rd.tx_ptr = hnd.get_ptr() ;
 
-                                    _config->add_variable_set( rd.vars ) ;
+                                        rd.vars = so_gpu::variable_set_t::create(
+                                            "[gl33_imgui_plug] : varset" ) ;
+                                        this_t::api()->create_variable( rd.vars ) ;
+                                        rd.vars->bind_data<so_math::mat4f_t>( "u_proj", &_proj/*&_sd->proj*/ ) ;
+                                        rd.vars->bind_texture( "u_tex", rd.tx_ptr ) ;
+
+                                        _config->add_variable_set( rd.vars ) ;
+                                    }
+
+                                    so_log::global_t::error( so_core::is_not( tvalid ),
+                                        "[gl33_imgui_plug::on_update] : "
+                                        "texture name does not exist: " + tdp->name ) ;
+
+                                    _render_datas.push_back( rd ) ;
+                                    _tname_to_id[ tdp->name ] = _render_datas.size() - 1 ;
+
+                                    rd_id = _render_datas.size() - 1 ;
                                 }
-
-                                so_log::global_t::error( so_core::is_not(tvalid) , 
-                                    "[gl33_imgui_plug::on_update] : "
-                                    "texture name does not exist: " + tdp->name ) ;
-                               
-                                _render_datas.push_back( rd ) ;
-                                _tname_to_id[ tdp->name ] = _render_datas.size() - 1 ;
-
-                                rd_id = _render_datas.size() - 1 ;
                             }
                             else
                             {

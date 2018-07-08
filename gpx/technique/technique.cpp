@@ -416,7 +416,7 @@ so_gpx::technique_transition_result technique::check_part_00_finished(
 
 //***************************************************************
 void_t technique::part_01_render( so_gpx::window_id_t wid, 
-    so_gpx::schedule_instance_cref_t si, so_gpu::iapi_ptr_t api_ptr )
+    so_gpx::schedule_instance_cref_t si, so_gpu::iapi_ptr_t api_ptr, so_gpu::gpu_manager_ptr_t gpu_mgr )
 {
     plug_data_ptr_t pd = _plugs[ wid ] ;
     if( so_core::is_nullptr( pd ) ) return ;
@@ -427,7 +427,7 @@ void_t technique::part_01_render( so_gpx::window_id_t wid,
     {
         so_gpx::iplug_t::execute_info ei ;
         ei.rnd_id = si.render_id ;
-
+        ei.mgr = gpu_mgr ;
         pd->plug_ptr->on_execute( ei ) ;
     }
 }

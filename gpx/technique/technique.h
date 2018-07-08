@@ -107,7 +107,7 @@ namespace so_gpx
             so_gpx::window_id_t ) ;
 
         void_t part_01_render( so_gpx::window_id_t, so_gpx::schedule_instance_cref_t,
-            so_gpu::iapi_ptr_t ) ;
+            so_gpu::iapi_ptr_t, so_gpu::gpu_manager_ptr_t ) ;
         void_t part_01_render_end( so_gpx::window_id_t, so_gpx::schedule_instance_cref_t ) ;
 
 

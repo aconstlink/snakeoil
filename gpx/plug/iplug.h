@@ -30,6 +30,7 @@ namespace so_gpx
         struct execute_info
         {
             size_t rnd_id ;
+            so_gpu::gpu_manager_ptr_t mgr = nullptr ;
         };
         so_typedef( execute_info ) ;
 

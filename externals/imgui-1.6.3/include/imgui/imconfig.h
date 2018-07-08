@@ -13,6 +13,9 @@
 
 #pragma once
 
+#include <snakeoil/math/vector/vector2.hpp>
+#include <snakeoil/math/vector/vector4.hpp>
+
 //---- Define assertion handler. Defaults to calling assert().
 //#define IM_ASSERT(_EXPR)  MyAssert(_EXPR)
 //#define IM_ASSERT(_EXPR)  ((void)(_EXPR))     // Disable asserts
@@ -50,15 +53,15 @@
 
 //---- Define constructor and implicit cast operators to convert back<>forth from your math types and ImVec2/ImVec4.
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
-/*
+
 #define IM_VEC2_CLASS_EXTRA                                                 \
-        ImVec2(const MyVec2& f) { x = f.x; y = f.y; }                       \
-        operator MyVec2() const { return MyVec2(x,y); }
+        ImVec2( so_math::vec2f_cref_t f ) { x = f.x(); y = f.y(); }                       \
+        operator so_math::vec2f_t() const { return so_math::vec2f_t(x,y); }
 
 #define IM_VEC4_CLASS_EXTRA                                                 \
-        ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \
-        operator MyVec4() const { return MyVec4(x,y,z,w); }
-*/
+        ImVec4( so_math::vec4f_cref_t f ) { x = f.x(); y = f.y(); z = f.z(); w = f.w(); }     \
+        operator so_math::vec4f_t() const { return so_math::vec4f_t(x,y,z,w); }
+
 
 //---- Use 32-bit vertex indices (default is 16-bit) to allow meshes with more than 64K vertices. Render function needs to support it.
 //#define ImDrawIdx unsigned int

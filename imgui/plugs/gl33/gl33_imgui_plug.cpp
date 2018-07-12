@@ -472,6 +472,9 @@ so_gpx::plug_result gl33_imgui_plug::on_update( update_info_cref_t )
                                     {
                                         rd.image_ptr = nullptr ;
                                         rd.tx_ptr = hnd.get_ptr() ;
+                                        rd.tx_ptr->set_texture_filter(
+                                            so_gpu::texture_filter_type::nearest, 
+                                            so_gpu::texture_filter_type::nearest ) ;
 
                                         rd.vars = so_gpu::variable_set_t::create(
                                             "[gl33_imgui_plug] : varset" ) ;

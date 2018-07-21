@@ -501,6 +501,39 @@ namespace so_math
             return vec3_t( type_t(0), type_t(0), this_t::cross_as_scalar(other) ) ;
         }
 
+        //***************************************************
+        vec2_ref_t fract( void_t )
+        {
+            _elem[ 0 ] = so_math::fn<type_t>::fract( _elem[ 0 ] ) ;
+            _elem[ 1 ] = so_math::fn<type_t>::fract( _elem[ 1 ] ) ;
+
+            return *this ;
+        }
+
+        //***************************************************
+        vec2_t fracted( void_t ) const
+        {
+            return this_t(
+                so_math::fn<type_t>::fract( _elem[ 0 ] ),
+                so_math::fn<type_t>::fract( _elem[ 1 ] ) );
+        }
+
+        //***************************************************
+        vec2_ref_t floor( void_t ) 
+        {
+            _elem[ 0 ] = std::floor( _elem[ 0 ] ) ;
+            _elem[ 1 ] = std::floor( _elem[ 1 ] ) ;
+            return *this ;
+        }
+
+        //***************************************************
+        vec2_t floored( void_t ) const
+        {
+            return this_t(
+                std::floor( _elem[ 0 ] ),
+                std::floor( _elem[ 1 ] ) ) ;
+        }
+
     private:
 
             type_t _elem[2] ;

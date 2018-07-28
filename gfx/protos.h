@@ -28,6 +28,7 @@ namespace so_gfx
     so_class_proto_typedefs( image_render_2d_plug_factory ) ;
 
     so_class_proto_typedefs( render_2d ) ;
+    so_class_proto_typedefs( sprite_manager ) ;
 
 
     so_class_proto_typedefs( simple_post ) ;

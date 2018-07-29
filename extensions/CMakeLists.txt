@@ -5,6 +5,7 @@
 
 set( SUBDIRS
     "project_cars"
+    "project_cars2"
 )
 
 foreach( _SUBDIR ${SUBDIRS} )

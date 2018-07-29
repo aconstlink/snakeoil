@@ -49,6 +49,7 @@ if( NOT snakeoil_FIND_COMPONENTS )
     snakeoil_log
     #snakeoil_core
     snakeoil_project_cars
+    snakeoil_project_cars2
     snakeoil_ui
    )
  if( @SNAKEOIL_TARGET_GRAPHICS_OPENGL )

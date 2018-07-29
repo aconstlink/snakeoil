@@ -240,6 +240,7 @@ set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui )
 
 # do extensions
 set( TO_BE_EXPORTED ${TO_BE_EXPORTED} "${PROJECT_NAME}_project_cars" )
+set( TO_BE_EXPORTED ${TO_BE_EXPORTED} "${PROJECT_NAME}_project_cars2" )
 
 configure_file( 
     "${CMAKE_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"

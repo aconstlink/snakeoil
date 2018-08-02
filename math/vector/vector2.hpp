@@ -339,6 +339,12 @@ namespace so_math
             return vecb_t( _elem[0] >= rhv.x(), _elem[1] >= rhv.y() ) ;
         }
 
+        /// this == rhv integer
+        vecb_t equal( this_cref_t rhv ) const
+        {
+            return vecb_t( _elem[ 0 ] == rhv.x(), _elem[ 1 ] == rhv.y() ) ;
+        }
+
     public: // min/max
 
         /// component-wise max operation

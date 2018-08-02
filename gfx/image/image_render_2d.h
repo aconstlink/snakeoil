@@ -217,6 +217,7 @@ namespace so_gfx
 
         image_id_t add_image( so_imex::image_ptr_t ) ;
         image_id_t add_image( so_imex::image_ptr_t, so_gpu::viewport_2d_cref_t ) ;
+        void_t remove_image( this_t::image_id_cref_t ) ;
 
         void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 

@@ -74,6 +74,7 @@ namespace so_gfx
     public:
 
         so_gfx::result add_sequence( so_imex::image_ptr_t, so_std::string_cref_t, sprite_infos_in_t ) ;
+        so_gfx::result set_sequence( so_imex::image_ptr_t, so_std::string_cref_t, sprite_infos_in_t ) ;
 
         bool_t get_sequence( so_std::string_cref_t, sprite_datas_out_t ) const ;
     };

@@ -103,7 +103,8 @@ image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img
 }
 
 //************************************************************************************
-image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img_ptr, so_gpu::viewport_2d_cref_t vp )
+image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img_ptr, 
+    so_gpu::viewport_2d_cref_t vp )
 {
     if( so_core::is_nullptr( img_ptr ) )
     {
@@ -120,10 +121,19 @@ image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img
 
         if( iter != _images.end() )
         {
-            size_t const iid = iter - _images.begin() ;
-            iter->viewports.push_back( vp ) ;
+            size_t i = 0; 
+            for( i; i<iter->viewports.size(); ++i )
+            {
+                if( iter->viewports[ i ].get_x() == size_t( -1 ) )
+                    break ;
+            }
 
-            return this_t::image_id_t( iid, iter->viewports.size()-1 ) ;
+            if( i == iter->viewports.size() )
+                iter->viewports.push_back( vp ) ;
+            else iter->viewports[i] = vp ;
+
+            size_t const iid = iter - _images.begin() ;
+            return this_t::image_id_t( iid, i ) ;
         }
     }
 
@@ -133,6 +143,17 @@ image_render_2d::image_id_t image_render_2d::add_image( so_imex::image_ptr_t img
     _images.push_back( id ) ;
 
     return image_id_t( _images.size()-1, _images.back().viewports.size()-1 )  ;
+}
+
+//************************************************************************************
+void_t image_render_2d::remove_image( this_t::image_id_cref_t img_id ) 
+{
+    so_thread::lock_guard_t lk( _mtx_image ) ;
+    {
+        auto iter = _images.begin() + img_id._iid ;
+        iter->viewports[ img_id._vpid ].set( 
+            size_t( -1 ), size_t( -1 ), size_t( -1 ), size_t( -1 ) )  ;
+    }
 }
 
 //************************************************************************************

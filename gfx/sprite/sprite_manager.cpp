@@ -107,6 +107,27 @@ so_gfx::result sprite_manager::add_sequence( so_imex::image_ptr_t img_ptr, so_st
 }
 
 //************************************************************************************
+so_gfx::result sprite_manager::set_sequence( so_imex::image_ptr_t img_ptr, 
+    so_std::string_cref_t key, sprite_infos_in_t infos ) 
+{
+    {
+        so_thread::lock_guard_t lk( _mtx_ssds ) ;
+
+        auto const iter = _ssds.find( key ) ;
+        if( iter != _ssds.end() )
+        {
+            for( size_t i=0; i<iter->second.sds.size(); ++i )
+            {
+                _img_rnd->remove_image( iter->second.sds[ i ].img_id ) ;
+            }
+            _ssds.erase( iter ) ;
+        }
+    }
+    
+    return this_t::add_sequence( img_ptr, key, infos ) ;
+}
+
+//************************************************************************************
 bool_t sprite_manager::get_sequence( so_std::string_cref_t key, sprite_datas_out_t vo ) const
 {
     auto const iter = _ssds.find( key ) ;

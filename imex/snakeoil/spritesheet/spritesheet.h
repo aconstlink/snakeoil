@@ -15,7 +15,7 @@ namespace so_imex
 {
     namespace so_snakeoil
     {
-
+        //***********************************************************
         struct spritesheet_hitzone
         {
 
@@ -31,6 +31,7 @@ namespace so_imex
         };
         so_typedef( spritesheet_hitzone ) ;
 
+        //***********************************************************
         struct spritesheet_frame
         {
             so_this_typedefs( spritesheet_frame ) ;
@@ -60,6 +61,7 @@ namespace so_imex
         };
         so_typedef( spritesheet_frame ) ;
 
+        //***********************************************************
         struct spritesheet_sequence
         {
             so_this_typedefs( spritesheet_sequence ) ;
@@ -90,6 +92,7 @@ namespace so_imex
         };
         so_typedef( spritesheet_sequence ) ;
 
+        //***********************************************************
         struct spritesheet
         {
             so_this_typedefs( spritesheet ) ;

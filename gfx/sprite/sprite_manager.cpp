@@ -71,7 +71,9 @@ so_gfx::result sprite_manager::add_sequence( so_imex::image_ptr_t img_ptr, so_st
 
                 sd.img_id = _img_rnd->add_image( img_ptr, so_gpu::viewport_2d( x, y, w, h ) ) ;
                 sd.scale = so_math::vec2f_t( float_t( w ), float_t( h ) ) ;
-                sd.pivot = so_math::vec2f_t( infos[ i ].pivot / sd.scale ) * so_math::vec2f_t( 0.5f ) + so_math::vec2f_t( 0.5f );
+                sd.pivot = 
+                    so_math::vec2f_t(infos[ i ].pivot) / so_math::vec2f_t(float_t(w),float_t(h)) * 
+                    so_math::vec2f_t( 0.5f ) + so_math::vec2f_t( 0.5f )  ;
             }
             else
             {
@@ -82,7 +84,9 @@ so_gfx::result sprite_manager::add_sequence( so_imex::image_ptr_t img_ptr, so_st
 
                 sd.img_id = _img_rnd->add_image( img_ptr, so_gpu::viewport_2d( x, y, w, h ) ) ;
                 sd.scale = so_math::vec2f_t( float_t( w ), float_t( h ) ) ;
-                sd.pivot = so_math::vec2f_t( infos[ i ].pivot / sd.scale ) * so_math::vec2f_t( 0.5f ) + so_math::vec2f_t( 0.5f );
+                sd.pivot = 
+                    so_math::vec2f_t(infos[ i ].pivot) / so_math::vec2f_t(float_t(w),float_t(h))  * 
+                    so_math::vec2f_t( 0.5f ) + so_math::vec2f_t( 0.5f ) ;
             }
             
             ssd.sds.push_back( sd )  ;

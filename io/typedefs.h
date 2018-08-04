@@ -26,8 +26,8 @@ namespace so_io
     using memory = so_memory::global ;
     so_typedefs( so_std::filesystem::path, path ) ;
 
-    typedef std::function< void_t( char_cptr_t, size_t, so_io::result ) > load_completion_funk_t ;
-    typedef std::function< void_t( so_io::result ) > store_completion_funk_t ;
+    typedef std::function< void_t( char_cptr_t, size_t const, so_io::result const ) > load_completion_funk_t ;
+    typedef std::function< void_t( so_io::result const ) > store_completion_funk_t ;
 
     typedef so_core::void_ptr_t internal_item_ptr_t ;
 }

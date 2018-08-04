@@ -140,6 +140,10 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
                         rapidxml::xml_attribute<> * attr = n2->first_attribute( "duration" ) ;
                         if( so_core::is_nullptr( attr ) )
                         {
+                            so_log::global_t::error( "[spritesheet_parser::from_string] : "
+                                "<frame> requires a duration" ) ;
+
+                            n2 = n2->next_sibling() ;
                             continue ;
                         }
                         uint_t const dur = uint_t( std::atoi( attr->value() ) ) ;
@@ -150,63 +154,56 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
                     // NODE: hit_zones
                     {
                         rapidxml::xml_node<> * n3 = n2->first_node( "hit_zones" ) ;
-                        if( so_core::is_nullptr( n3 ) )
+                        if( so_core::is_not_nullptr( n3 ) )
                         {
-                            so_log::global_t::error( "[spritesheet_parser::from_string] : "
-                                "<frame> requires one <hit_zones>" ) ;
-
-                            continue ;
-                        }
-
-                        rapidxml::xml_node<> * n4 = n3->first_node() ;
-                        if( so_core::is_nullptr( n4 ) )
-                        {
-                            so_log::global_t::error( "[spritesheet_parser::from_string] : "
-                                "<frame> requires at least one hit zone" ) ;
-
-                            continue ;
-                        }
-
-                        // cycle through all hit zones
-                        while( so_core::is_not_nullptr(n4) )
-                        {
-                            spritesheet_hitzone_t hz ;
-
-                            if( strcmp( n4->name(), "rect" ) == 0 )
+                            rapidxml::xml_node<> * n4 = n3->first_node() ;
+                            if( so_core::is_nullptr( n4 ) )
                             {
-                                hz.t = spritesheet_hitzone_t::type::rect ;
-                            }
-                            else if( strcmp( n4->name(), "circle" ) == 0 )
-                            {
-                                hz.t = spritesheet_hitzone_t::type::circle ;
-                            }
-                            else
-                            {
-                                break ;
+                                so_log::global_t::warning( "[spritesheet_parser::from_string] : "
+                                    "<hit_zones> is empty" ) ;
                             }
 
-                            // ATTR: values of hit zone
+                            // cycle through all hit zones
+                            while( so_core::is_not_nullptr( n4 ) )
                             {
-                                rapidxml::xml_attribute<> * attr = n4->first_attribute( "values" ) ;
-                                if( so_core::is_nullptr( attr ) )
+                                spritesheet_hitzone_t hz ;
+
+                                if( strcmp( n4->name(), "rect" ) == 0 )
+                                {
+                                    hz.t = spritesheet_hitzone_t::type::rect ;
+                                }
+                                else if( strcmp( n4->name(), "circle" ) == 0 )
+                                {
+                                    hz.t = spritesheet_hitzone_t::type::circle ;
+                                }
+                                else
                                 {
                                     break ;
                                 }
-                                uint_t const dur = uint_t( std::atoi( attr->value() ) ) ;
-                                
-                                so_std::vector< so_std::string > values ;
-                                so_std::string_ops::split( so_std::string_t( char_cptr_t( attr->value() ) ), ' ', values ) ;
 
-                                for( size_t i = 0; i < values.size(); ++i )
+                                // ATTR: values of hit zone
                                 {
-                                    uint_t const v = uint_t( atoi( values[ i ].c_str() ) ) ;
-                                    hz.values[ i ] = v ;
+                                    rapidxml::xml_attribute<> * attr = n4->first_attribute( "values" ) ;
+                                    if( so_core::is_nullptr( attr ) )
+                                    {
+                                        break ;
+                                    }
+                                    uint_t const dur = uint_t( std::atoi( attr->value() ) ) ;
+
+                                    so_std::vector< so_std::string > values ;
+                                    so_std::string_ops::split( so_std::string_t( char_cptr_t( attr->value() ) ), ' ', values ) ;
+
+                                    for( size_t i = 0; i < values.size(); ++i )
+                                    {
+                                        uint_t const v = uint_t( atoi( values[ i ].c_str() ) ) ;
+                                        hz.values[ i ] = v ;
+                                    }
                                 }
+
+                                frm.hitzones.push_back( hz ) ;
+
+                                n4 = n4->next_sibling() ;
                             }
-
-                            frm.hitzones.push_back( hz ) ;
-
-                            n4 = n4->next_sibling() ;
                         }
                     }
 

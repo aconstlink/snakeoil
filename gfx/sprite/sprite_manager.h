@@ -28,6 +28,7 @@ namespace so_gfx
         {
             so_math::vec4ui_t rect ;
             so_math::vec2i_t pivot ;
+            uint_t duration ;
 
             uint_t xl( void_t ) const { return rect.x() ; }
             uint_t yb( void_t ) const { return rect.y() ; }
@@ -42,6 +43,7 @@ namespace so_gfx
             so_gfx::image_render_2d_t::image_id_t img_id ;
             so_math::vec2f_t scale ;
             so_math::vec2f_t pivot ;
+            uint_t duration ;
         };
         so_typedef( sprite_data ) ;
         so_typedefs( so_std::vector< sprite_data_t >, sprite_datas ) ;

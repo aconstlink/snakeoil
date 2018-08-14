@@ -10,7 +10,9 @@
 
 #include <snakeoil/io/typedefs.h>
 #include <snakeoil/std/container/vector.hpp>
+#include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/math/vector/vector4.hpp>
+
 namespace so_imex
 {
     namespace so_snakeoil
@@ -18,13 +20,11 @@ namespace so_imex
         //***********************************************************
         struct spritesheet_hitzone
         {
-
             enum class type 
             {
                 rect,
                 circle
             };
-
 
             type t ;
             so_math::vec4ui_t values ;
@@ -37,6 +37,7 @@ namespace so_imex
             so_this_typedefs( spritesheet_frame ) ;
 
             so_math::vec4ui_t rect ;
+            so_math::vec2f_t pivot ;
             uint_t duration ;
 
             so_typedefs( so_std::vector< spritesheet_hitzone >, spritesheet_hitzones ) ;
@@ -55,7 +56,9 @@ namespace so_imex
             {
                 rect = rhv.rect ;
                 duration = rhv.duration ;
+                pivot = rhv.pivot ;
                 hitzones = std::move( rhv.hitzones ) ;
+                
                 return *this ;
             }
         };
@@ -72,8 +75,6 @@ namespace so_imex
             so_std::string_t id ;
             float_t speed ;
 
-
-
             spritesheet_sequence( void_t ) {}
             spritesheet_sequence( this_cref_t ) = delete ;
             spritesheet_sequence( this_rref_t rhv ) {
@@ -88,7 +89,6 @@ namespace so_imex
                 frames = std::move( rhv.frames ) ;
                 return *this ;
             }
-
         };
         so_typedef( spritesheet_sequence ) ;
 
@@ -101,7 +101,6 @@ namespace so_imex
 
             so_typedefs( so_std::vector< spritesheet_sequence >, sequences ) ;
             sequences_t sequences ;
-
 
             spritesheet( void_t ) {}
             spritesheet( this_cref_t ) = delete ;

@@ -128,10 +128,32 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
                         so_std::vector< so_std::string > values ;
                         so_std::string_ops::split( so_std::string_t( char_cptr_t( attr->value() ) ), ' ', values ) ;
 
-                        for( size_t i=0; i<values.size(); ++i )
+                        size_t const max_values = std::min( values.size(), size_t( 4 ) ) ;
+                        for( size_t i=0; i<max_values; ++i )
                         {
                             uint_t const v = uint_t( atoi( values[i].c_str() ) ) ;
                             frm.rect[ i ] = v ;
+                        }
+                    }
+
+                    // ATTR: check pivot
+                    {
+                        rapidxml::xml_attribute<> * attr = n2->first_attribute( "pivot" ) ;
+                        if( so_core::is_nullptr( attr ) )
+                        {
+                            frm.pivot = so_math::vec2f_t( 0.5f ) ;
+                        }
+                        else
+                        {
+                            so_std::vector< so_std::string > values ;
+                            so_std::string_ops::split( so_std::string_t( 
+                                char_cptr_t( attr->value() ) ), ' ', values ) ;
+
+                            size_t const max_values = std::min( values.size(), size_t( 2 ) ) ;
+                            for( size_t i = 0; i < max_values; ++i )
+                            {
+                                frm.pivot[ i ] = float_t( atof( values[ i ].c_str() ) ) ;
+                            }
                         }
                     }
 
@@ -277,6 +299,15 @@ so_std::string_t spritesheet_parser::from_data( spritesheet_in_t ssi )
                         (std::to_string( frame.rect.x() )+" "+std::to_string( frame.rect.y() )+ " " +
                             std::to_string( frame.rect.z() )+" "+std::to_string( frame.rect.w() )).c_str() ) ;
                     rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "rect", s ) ;
+                    frame_node->append_attribute( attr );
+                }
+
+                // ATTR: pivot
+                {
+                    char * s = doc.allocate_string(
+                        ( std::to_string( frame.pivot.x() ) + " " + 
+                            std::to_string( frame.pivot.y() ) ).c_str() ) ;
+                    rapidxml::xml_attribute<> *attr = doc.allocate_attribute( "pivot", s ) ;
                     frame_node->append_attribute( attr );
                 }
 

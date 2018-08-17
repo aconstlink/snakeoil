@@ -81,6 +81,11 @@ target_link_libraries( ${CUR_LIB_NAME}
 
 target_link_libraries( ${CUR_LIB_NAME} ${OS_LIBS} ) 
 
+###########################################################
+# SECTION: Build Tree
+###########################################################
+
+so_export( ${CUR_LIB_NAME} )
 
 ###########################################################
 # SECTION: Install

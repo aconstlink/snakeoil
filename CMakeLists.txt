@@ -29,6 +29,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 set( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/snakeoil-${SNAKEOIL_MAJOR_VERSION}.${SNAKEOIL_MINOR_VERSION}.${SNAKEOIL_PATCH_VERSION}" CACHE STRING "Install prefix" FORCE )    
 
+include( config_export_target )
 include( config_operating_system )
 include( config_compiler )
 include( config_compiler_flags )
@@ -225,28 +226,15 @@ foreach( _D ${SDIR_DEFS} )
     endif()
 endforeach()
 set( ALL_DEFINITIONS ${DEFS})
-#message( ${ALL_DEFINITIONS})
-
-
-foreach( _SUBDIR ${SUBDIRS} )
-
-    set( CUR_LIB_NAME "${PROJECT_NAME}_${_SUBDIR}" )
-    set( TO_BE_EXPORTED ${TO_BE_EXPORTED} ${CUR_LIB_NAME} )
-    
-endforeach()
 
 # do externals
 set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui )
-
-# do extensions
-set( TO_BE_EXPORTED ${TO_BE_EXPORTED} "${PROJECT_NAME}_project_cars" )
-set( TO_BE_EXPORTED ${TO_BE_EXPORTED} "${PROJECT_NAME}_project_cars2" )
 
 configure_file( 
     "${CMAKE_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"
     "${CMAKE_BINARY_DIR}/snakeoil-config.cmake"
     @ONLY )
     
-export( TARGETS ${TO_BE_EXPORTED} FILE snakeoil-targets.cmake )
+export( TARGETS ${TO_BE_EXPORTED} APPEND FILE snakeoil-targets.cmake )
 
 

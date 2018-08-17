@@ -1,0 +1,17 @@
+
+<world>  
+   <physicals>
+       <physical rect="x y z w">
+           <material type="" />
+           <shape>
+           </shape> 
+       </physical>
+   </physicals>
+   <collectables>
+   </collectables>
+   <events>       
+   </events>
+   <spawn_points>
+   </spawn_points>
+   
+</world>

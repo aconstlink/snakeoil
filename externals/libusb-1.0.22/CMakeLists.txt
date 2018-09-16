@@ -51,8 +51,8 @@ if( WIN32 )
     libusb/os/windows_winusb.h
     libusb/os/poll_windows.h
     libusb/os/poll_windows.c
-    libusb/libusb-1.0.def
-    libusb/libusbd-1.0.def
+    libusb/os/libusb-1.0.def
+    libusb/os/libusbd-1.0.def
     )
   
   add_definitions( -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE )

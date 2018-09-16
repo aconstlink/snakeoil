@@ -111,6 +111,13 @@ set( SNAKEOIL_LIBRARIES ${SNAKEOIL_LIBRARIES} imgui )
 set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS}
   "${SNAKEOIL_INCLUDE_BASE}/externals/imgui-@IMGUI_VERSION@/include" )
 
+#
+# libusb
+#
+set( SNAKEOIL_LIBRARIES ${SNAKEOIL_LIBRARIES} libusb )
+set( SNAKEOIL_INCLUDE_DIRS ${SNAKEOIL_INCLUDE_DIRS}
+  "${SNAKEOIL_INCLUDE_BASE}/externals/libusb-@LIBUSB_VERSION@/libusb" )
+
 ####################################################################
 # Find dependencies
 ####################################################################

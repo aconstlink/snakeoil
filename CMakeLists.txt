@@ -16,7 +16,8 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
+
+
 ################################################################
 # SECTION: Configuring
 ################################################################
@@ -105,11 +106,12 @@ set_target_properties( imgui PROPERTIES FOLDER "externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.6/include" )
 
 # libusb
-set( USB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/libusb-1.0.22 )
-set( USB_VERSION 1.0.22 )
-set( USB_ENABLE ON )
+set( LIBUSB_VERSION 1.0.22 )
+set( LIBUSB_ENABLE ON )
 set_target_properties( libusb PROPERTIES FOLDER "externals" )
+set( LIBUSB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/libusb-1.0.22/libusb" )
 
 #zlib
 # todo
@@ -237,7 +239,7 @@ endforeach()
 set( ALL_DEFINITIONS ${DEFS})
 
 # do externals
-set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui )
+set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui libusb )
 
 configure_file( 
     "${CMAKE_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"

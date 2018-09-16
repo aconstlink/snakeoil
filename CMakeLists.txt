@@ -51,6 +51,8 @@ include( install_headers )
 include( install_shaders )
 include( install_library )
 
+so_export_clear()
+
 ################################################################
 # SECTION : Build in and compilable externals
 ################################################################

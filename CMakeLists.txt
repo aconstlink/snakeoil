@@ -97,10 +97,10 @@ set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
 
 # imgui
 set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/imgui-1.6.3 )
-set( IMGUI_VERSION 1.6.3 )
+add_subdirectory( externals/imgui-1.6.6 )
+set( IMGUI_VERSION 1.6.6 )
 set_target_properties( imgui PROPERTIES FOLDER "externals" )
-set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.3/include" )
+set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.6/include" )
 
 # libusb
 set( USB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )

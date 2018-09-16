@@ -25,9 +25,9 @@ set( INCLUDES
   "include/imgui/imgui.h"
   "include/imgui/imconfig.h"
   "include/imgui/internal/imgui_internal.h"
-  "include/imgui/internal/stb_rect_pack.h"
-  "include/imgui/internal/stb_textedit.h"
-  "include/imgui/internal/stb_truetype.h"
+  "include/imgui/internal/imstb_rectpack.h"
+  "include/imgui/internal/imstb_textedit.h"
+  "include/imgui/internal/imstb_truetype.h"
 )
 
 set( SOURCES
@@ -35,6 +35,7 @@ set( SOURCES
     "src/imgui.cpp"
     "src/imgui_demo.cpp"
     "src/imgui_draw.cpp"
+    "src/imgui_widgets.cpp"
 )
 
 add_definitions( -DIMGUI_DEFINE_MATH_OPERATORS )

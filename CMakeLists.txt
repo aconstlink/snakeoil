@@ -102,6 +102,13 @@ set( IMGUI_VERSION 1.6.3 )
 set_target_properties( imgui PROPERTIES FOLDER "externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.3/include" )
 
+# libusb
+set( USB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+add_subdirectory( externals/libusb-1.0.22 )
+set( USB_VERSION 1.0.22 )
+set( USB_ENABLE ON )
+set_target_properties( libusb PROPERTIES FOLDER "externals" )
+
 #zlib
 # todo
 

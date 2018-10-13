@@ -163,6 +163,13 @@ set( SYSTEM_SOURCES
     system/device_system.cpp
 )
 
+set( EXPERIMENTAL_SOURCES
+  experimental/gamepad/libusb_gamepad.h
+  experimental/gamepad/libusb_gamepad.cpp
+  experimental/gamepad/nes_controller/ines_controller.h
+  experimental/gamepad/nes_controller/nes_0079_0011.h
+  experimental/gamepad/nes_controller/nes_0810_e501.h )
+  
 set( OS_SPECIFIC_SOURCES )
 
 if( SNAKEOIL_TARGET_OS_WIN )
@@ -208,6 +215,7 @@ set( SOURCES
     ${API_SOURCES}
     ${OS_SPECIFIC_SOURCES}
     ${MODULES_SOURCES}
+    ${EXPERIMENTAL_SOURCES}
 )
 
 so_vs_src_dir( SOURCES )

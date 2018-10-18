@@ -126,7 +126,9 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     
 # OpenCtm
 set( OPENCTM_ENABLE @OPENCTM_ENABLE@ )
-find_package( OpenCtm )
+if( OPENCTM_ENABLE )
+    find_package( OpenCtm )
+endif()
 
 # Fmod
 set( FMOD_ENABLE @FMOD_ENABLE@ )

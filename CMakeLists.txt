@@ -146,9 +146,6 @@ if( SNAKEOIL_WINDOW_SYSTEM_XLIB )
     #find_package( XLib )
 endif()
 
-# lets give every library the base path
-include_directories( "${CMAKE_CURRENT_LIST_DIR}/.." )
-
 ################################################################
 # SECTION: add sub directories
 ################################################################
@@ -227,6 +224,7 @@ foreach( _SUBDIR ${SUBDIRS} )
         PRIVATE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_EXPORT 
         INTERFACE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_IMPORT )    
     endif()
+    target_include_directories( ${CUR_LIB_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/.." )
 endforeach()
 
 ################################################################

@@ -22,7 +22,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 ################################################################
 
 set( SNAKEOIL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
-set( SNAKEOIL_BINARY_DIR ${CMAKE_PROJECT_BINARY_DIR} )
+set( SNAKEOIL_BINARY_DIR ${PROJECT_BINARY_DIR} )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake/config"

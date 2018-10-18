@@ -149,13 +149,13 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
       snakeoil_font
-      snakeoil_gpx
-      snakeoil_gpu
-      snakeoil_log
-      snakeoil_memory
-      snakeoil_thread
+      snakeoil::gpx
+      snakeoil::gpu
+      snakeoil::log
+      snakeoil::memory
+      snakeoil::thread
       snakeoil_flow
-      snakeoil_gpu
+      snakeoil::gpu
     )
 endif()
 

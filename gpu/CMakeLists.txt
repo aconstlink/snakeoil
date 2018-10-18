@@ -263,9 +263,9 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
       snakeoil_imex
-      snakeoil_log
-      snakeoil_memory
-      snakeoil_thread
+      snakeoil::log
+      snakeoil::memory
+      snakeoil::thread
     )
     
     if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
@@ -275,7 +275,7 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         
         #snakeoil
         target_link_libraries( ${CUR_LIB_NAME}
-            snakeoil_gli
+            snakeoil::gli
         )
 
         #3rd party

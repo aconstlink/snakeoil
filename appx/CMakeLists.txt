@@ -66,13 +66,13 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         snakeoil_imex
         snakeoil_audiox
         snakeoil_audio
-        snakeoil_gpx
-        snakeoil_gpu
-        snakeoil_thread
-        snakeoil_log
-        snakeoil_memory
-        snakeoil_device
-        snakeoil_io
+        snakeoil::gpx
+        snakeoil::gpu
+        snakeoil::thread
+        snakeoil::log
+        snakeoil::memory
+        snakeoil::device
+        snakeoil::io
     )
         
     #3rd party

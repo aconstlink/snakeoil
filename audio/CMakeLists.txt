@@ -102,9 +102,9 @@ endif()
 
 # snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil_thread
-    snakeoil_log
-    snakeoil_memory
+    snakeoil::thread
+    snakeoil::log
+    snakeoil::memory
 )
 
 #all 3rd party

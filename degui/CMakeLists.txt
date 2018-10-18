@@ -50,12 +50,12 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
-      snakeoil_device
-      snakeoil_gpx
-      snakeoil_gpu
-      snakeoil_log
-      snakeoil_memory
-      snakeoil_thread
+      snakeoil::device
+      snakeoil::gpx
+      snakeoil::gpu
+      snakeoil::log
+      snakeoil::memory
+      snakeoil::thread
       imgui
     )
 endif()

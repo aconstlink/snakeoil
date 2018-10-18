@@ -89,10 +89,10 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
     target_link_libraries( ${CUR_LIB_NAME}
         snakeoil_shade
         snakeoil_flow
-        snakeoil_gpx
-        snakeoil_gpu
-        snakeoil_memory
-        snakeoil_log
+        snakeoil::gpx
+        snakeoil::gpu
+        snakeoil::memory
+        snakeoil::log
         snakeoil_imex
         snakeoil_geometry
         snakeoil_gfx

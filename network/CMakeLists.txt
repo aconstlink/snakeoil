@@ -74,9 +74,9 @@ endif()
 
 # snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil_log
-    snakeoil_memory
-    snakeoil_thread
+    snakeoil::log
+    snakeoil::memory
+    snakeoil::thread
 )
 
 target_link_libraries( ${CUR_LIB_NAME} ${OS_LIBS} ) 

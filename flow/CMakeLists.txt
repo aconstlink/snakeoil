@@ -76,9 +76,9 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         )
 
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_thread
-        snakeoil_memory
-        snakeoil_log
+        snakeoil::thread
+        snakeoil::memory
+        snakeoil::log
     )
 
 endif()

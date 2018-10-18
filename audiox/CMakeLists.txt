@@ -58,9 +58,9 @@ target_link_libraries( ${CUR_LIB_NAME}
     snakeoil_imex
     snakeoil_flow
     snakeoil_audio
-    snakeoil_thread
-    snakeoil_log
-    snakeoil_memory
+    snakeoil::thread
+    snakeoil::log
+    snakeoil::memory
 )
 
 ###########################################################

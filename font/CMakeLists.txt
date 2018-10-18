@@ -50,11 +50,11 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_log
-        snakeoil_memory
-        snakeoil_io
-        snakeoil_gpu
-        snakeoil_gpx
+        snakeoil::log
+        snakeoil::memory
+        snakeoil::io
+        snakeoil::gpu
+        snakeoil::gpx
     )
 
     # freetype

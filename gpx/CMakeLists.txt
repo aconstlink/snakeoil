@@ -53,10 +53,10 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_log
-        snakeoil_memory
-        snakeoil_thread
-        snakeoil_gpu
+        snakeoil::log
+        snakeoil::memory
+        snakeoil::thread
+        snakeoil::gpu
     )
 
 endif()

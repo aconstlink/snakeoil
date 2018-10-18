@@ -250,10 +250,10 @@ if( SNAKEOIL_LIBRARY_BUILD_SHARED )
         snakeoil_property
         snakeoil_shade
         snakeoil_geometry
-        snakeoil_log
-        snakeoil_memory
-        snakeoil_io
-        snakeoil_thread
+        snakeoil::log
+        snakeoil::memory
+        snakeoil::io
+        snakeoil::thread
     )
 
     #all 3rd party

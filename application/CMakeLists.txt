@@ -102,8 +102,9 @@ endif()
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
-
+set_target_properties( ${CUR_LIB_NAME} PROPERTIES OUTPUT_NAME ${CUR_FILE_NAME})
 
 if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
@@ -125,18 +126,18 @@ endif()
 
 # snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil_gpx
-    snakeoil_gpu
-    snakeoil_thread
-    snakeoil_log
-    snakeoil_memory
-    snakeoil_device
-    snakeoil_io
+    snakeoil::gpx
+    snakeoil::gpu
+    snakeoil::thread
+    snakeoil::log
+    snakeoil::memory
+    snakeoil::device
+    snakeoil::io
 )
 
 if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_gli
+        snakeoil::gli
         ${GL_LIBRARIES}
     )
     

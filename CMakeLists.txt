@@ -155,41 +155,41 @@ include_directories( "${CMAKE_CURRENT_LIST_DIR}/.." )
 
 if( SNAKEOIL_TARGET_OS_WIN )
 set( SUBDIRS
-    "audio"
-    "audiox"
+    #"audio"
+    #"audiox"
     "core"
     "log"
     "memory"
-    "math" 
-    "physics"
-    "std"
-    "thread"
-    "io"
-    "resource"
+    #"math" 
+    #"physics"
+    #"std"
+    #"thread"
+    #"io"
+    #"resource"
     #"variable"
-    "flow"
-    "geometry"
-    "collide"
-    "animation"
-    "noise"
-    "network"
-    "device"
-    "imex"
-    "imgui"
-    "shade"
+    #"flow"
+    #"geometry"
+    #"collide"
+    #"animation"
+    #"noise"
+    #"network"
+    #"device"
+    #"imex"
+    #"degui"
+    #"shade"
     #"gli" # depends on chosen graphics api
-    "gpu"
-    "gpx"
-    "gfx"
-    "font"
-    "script"
+    #"gpu"
+    #"gpx"
+    #"gfx"
+    #"font"
+    #"script"
     #"manager"
-    "scene"
-    "appx"
-    "application"
-    "spline"
-    "property"
-    "ui"
+    #"scene"
+    #"appx"
+    #"application"
+    #"spline"
+    #"property"
+    #"ui"
     )
 elseif( SNAKEOIL_TARGET_OS_LIN )
 set( SUBDIRS
@@ -207,14 +207,17 @@ set( SUBDIRS
 endif()
 
 if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
-    set( SUBDIRS ${SUBDIRS} gli )
+    #set( SUBDIRS ${SUBDIRS} gli )
 endif()
 
 foreach( _SUBDIR ${SUBDIRS} )
     set( CUR_LIB_NAME_SHORT "${_SUBDIR}" )
-    set( CUR_LIB_NAME "${PROJECT_NAME}_${_SUBDIR}" )
+    set( CUR_LIB_NAME "${_SUBDIR}" )
+    string(TOUPPER ${CUR_LIB_NAME} CUR_LIB_NAME_UPPER)
     set( CUR_DIR_NAME "${_SUBDIR}" )
     set( CUR_LIB_NAME_RAW "${_SUBDIR}" )
+    set( CUR_ALIAS_NAME "${PROJECT_NAME}::${_SUBDIR}" )
+    set( CUR_FILE_NAME "${PROJECT_NAME}_${_SUBDIR}" )
     add_subdirectory(${_SUBDIR})
 endforeach()
 
@@ -224,7 +227,7 @@ endforeach()
 
 # project cars
 
-add_subdirectory( extensions )
+#add_subdirectory( extensions )
 
 ################################################################
 # SECTION: in build tree fing_package generation

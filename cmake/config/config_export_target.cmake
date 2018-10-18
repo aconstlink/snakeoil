@@ -3,7 +3,7 @@
 macro( so_export name )
 
   #message( ${name} )
-  export( TARGETS ${name} APPEND FILE ${SNAKEOIL_BINARY_DIR}/snakeoil-targets.cmake )
+  export( TARGETS ${name} NAMESPACE snakeoil:: APPEND FILE ${SNAKEOIL_BINARY_DIR}/snakeoil-targets.cmake )
 
 endmacro()
 

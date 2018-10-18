@@ -17,10 +17,12 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 ################################################################
 # SECTION: Configuring
 ################################################################
+
+set( SNAKEOIL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
+set( SNAKEOIL_BINARY_DIR ${} )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake/config"
@@ -229,7 +231,7 @@ add_subdirectory( extensions )
 ################################################################
 
 # Definitions from directory
-get_directory_property( SDIR_DEFS DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+get_directory_property( SDIR_DEFS DIRECTORY ${SNAKEOIL_SOURCE_DIR} COMPILE_DEFINITIONS )
 set( DEFS )
 foreach( _D ${SDIR_DEFS} )
     if( _D )
@@ -242,7 +244,7 @@ set( ALL_DEFINITIONS ${DEFS})
 set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui libusb )
 
 configure_file( 
-    "${CMAKE_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"
+    "${SNAKEOIL_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"
     "${CMAKE_BINARY_DIR}/snakeoil-config.cmake"
     @ONLY )
     

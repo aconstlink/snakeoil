@@ -123,7 +123,7 @@ so_vs_src_dir( SOURCES )
 
 ##########################################################
 # configure config.h
-configure_file( "${CMAKE_SOURCE_DIR}/gfx/gfx_config.build.in.h"
+configure_file( "${SNAKEOIL_SOURCE_DIR}/gfx/gfx_config.build.in.h"
   "${CMAKE_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
 
 set( SOURCES_CONFIG ${CMAKE_BINARY_DIR}/gfx/gfx_config.h )

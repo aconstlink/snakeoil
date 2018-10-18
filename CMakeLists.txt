@@ -22,7 +22,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 ################################################################
 
 set( SNAKEOIL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
-set( SNAKEOIL_BINARY_DIR ${} )
+set( SNAKEOIL_BINARY_DIR ${CMAKE_PROJECT_BINARY_DIR} )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
     "${CMAKE_CURRENT_LIST_DIR}/cmake/config"
@@ -30,7 +30,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_LIST_DIR}/cmake/functions/"
     )
 
-set( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install/snakeoil-${SNAKEOIL_MAJOR_VERSION}.${SNAKEOIL_MINOR_VERSION}.${SNAKEOIL_PATCH_VERSION}" CACHE STRING "Install prefix" FORCE )    
+set( CMAKE_INSTALL_PREFIX "${SNAKEOIL_BINARY_DIR}/install/snakeoil-${SNAKEOIL_MAJOR_VERSION}.${SNAKEOIL_MINOR_VERSION}.${SNAKEOIL_PATCH_VERSION}" CACHE STRING "Install prefix" FORCE )    
 
 include( config_export_target )
 include( config_operating_system )
@@ -245,7 +245,7 @@ set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui libusb )
 
 configure_file( 
     "${SNAKEOIL_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"
-    "${CMAKE_BINARY_DIR}/snakeoil-config.cmake"
+    "${SNAKEOIL_BINARY_DIR}/snakeoil-config.cmake"
     @ONLY )
     
 export( TARGETS ${TO_BE_EXPORTED} APPEND FILE snakeoil-targets.cmake )

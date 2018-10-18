@@ -124,11 +124,11 @@ so_vs_src_dir( SOURCES )
 ##########################################################
 # configure config.h
 configure_file( "${SNAKEOIL_SOURCE_DIR}/gfx/gfx_config.build.in.h"
-  "${CMAKE_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
+  "${SNAKEOIL_BINARY_DIR}/gfx/gfx_config.h" @ONLY )
 
-set( SOURCES_CONFIG ${CMAKE_BINARY_DIR}/gfx/gfx_config.h )
+set( SOURCES_CONFIG ${SNAKEOIL_BINARY_DIR}/gfx/gfx_config.h )
 
-include_directories( "${CMAKE_BINARY_DIR}/gfx" )
+include_directories( "${SNAKEOIL_BINARY_DIR}/gfx" )
 ##########################################################
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} ${SOURCES_CONFIG} )
@@ -171,5 +171,5 @@ so_export( ${CUR_LIB_NAME} )
 
 install_shaders( "${GL33_SHADERS}" "bin/${CUR_LIB_NAME_SHORT}" )
 install_headers( "${SOURCES}" "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
-install( FILES ${CMAKE_BINARY_DIR}/gfx/config.h DESTINATION "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
+install( FILES ${SNAKEOIL_BINARY_DIR}/gfx/config.h DESTINATION "include/${PROJECT_NAME}/${CUR_LIB_NAME_SHORT}" )
 install_library( ${CUR_LIB_NAME} )

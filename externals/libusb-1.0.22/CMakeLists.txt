@@ -62,10 +62,10 @@ else()
 endif()
 
 configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/libusb/config.in.h"
-  "${CMAKE_BINARY_DIR}/externals/libusb/generated/config.h" @ONLY )
+  "${SNAKEOIL_BINARY_DIR}/externals/libusb/generated/config.h" @ONLY )
 
-set( SOURCES ${SOURCES} "${CMAKE_BINARY_DIR}/externals/libusb/generated" )
-include_directories("${CMAKE_BINARY_DIR}/externals/libusb/generated")
+set( SOURCES ${SOURCES} "${SNAKEOIL_BINARY_DIR}/externals/libusb/generated" )
+include_directories("${SNAKEOIL_BINARY_DIR}/externals/libusb/generated")
 
 set( USB_BUILD_TYPE SHARED )
 include_directories( "./libusb" )

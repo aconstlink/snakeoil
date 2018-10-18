@@ -11,7 +11,7 @@
 ####################################################################
 # Import targets
 ####################################################################
-include( "@CMAKE_BINARY_DIR@/snakeoil-targets.cmake" )
+include( "@SNAKEOIL_BINARY_DIR@/snakeoil-targets.cmake" )
 
 if( NOT snakeoil_FIND_COMPONENTS )
     set( SNAKEOIL_LIBRARIES

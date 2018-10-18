@@ -20,7 +20,7 @@ set( SOURCES
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} STATIC ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
 ###########################################################
 # SECTION: Build Tree

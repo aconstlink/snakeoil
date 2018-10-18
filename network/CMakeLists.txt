@@ -53,7 +53,7 @@ endif()
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
 if( SNAKEOIL_TARGET_OS_WIN )
     set( OS_LIBS Ws2_32.lib )
@@ -61,25 +61,12 @@ elseif( SNAKEOIL_TARGET_OS_LIN )
     set( OS_LIBS pthread )
 endif()
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_NETWORK_EXPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-        
-endif()
-
-# snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil::log
-    snakeoil::memory
-    snakeoil::thread
+    PUBLIC snakeoil::log
+    PUBLIC snakeoil::memory
+    PUBLIC snakeoil::thread
+    PUBLIC ${OS_LIBS}
 )
-
-target_link_libraries( ${CUR_LIB_NAME} ${OS_LIBS} ) 
 
 ###########################################################
 # SECTION: Build Tree

@@ -155,40 +155,40 @@ include_directories( "${CMAKE_CURRENT_LIST_DIR}/.." )
 
 if( SNAKEOIL_TARGET_OS_WIN )
 set( SUBDIRS
-    #"audio"
-    #"audiox"
+    "audio"
+    "audiox"
     "core"
     "log"
     "memory"
-    #"math" 
-    #"physics"
-    #"std"
-    #"thread"
-    #"io"
+    "math" 
+    "physics"
+    "std"
+    "thread"
+    "io"
     #"resource"
     #"variable"
-    #"flow"
-    #"geometry"
-    #"collide"
-    #"animation"
-    #"noise"
-    #"network"
-    #"device"
-    #"imex"
-    #"degui"
-    #"shade"
-    #"gli" # depends on chosen graphics api
-    #"gpu"
-    #"gpx"
-    #"gfx"
-    #"font"
+    "flow"
+    "geometry"
+    "collide"
+    "animation"
+    "noise"
+    "network"
+    "device"
+    "imex"
+    "degui"
+    "shade"
+    "gli" # depends on chosen graphics api
+    "gpu"
+    "gpx"
+    "gfx"
+    "font"
     #"script"
     #"manager"
     #"scene"
-    #"appx"
-    #"application"
-    #"spline"
-    #"property"
+    "appx"
+    "application"
+    "spline"
+    "property"
     #"ui"
     )
 elseif( SNAKEOIL_TARGET_OS_LIN )
@@ -219,6 +219,14 @@ foreach( _SUBDIR ${SUBDIRS} )
     set( CUR_ALIAS_NAME "${PROJECT_NAME}::${_SUBDIR}" )
     set( CUR_FILE_NAME "${PROJECT_NAME}_${_SUBDIR}" )
     add_subdirectory(${_SUBDIR})
+
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES OUTPUT_NAME ${CUR_FILE_NAME})
+    if( SNAKEOIL_LIBRARY_BUILD_SHARED )
+      target_compile_options( ${CUR_LIB_NAME} 
+        PRIVATE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_EXPORT 
+        INTERFACE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_IMPORT )    
+    endif()
 endforeach()
 
 ################################################################

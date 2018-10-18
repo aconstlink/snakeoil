@@ -132,32 +132,18 @@ include_directories( "${SNAKEOIL_BINARY_DIR}/gfx" )
 ##########################################################
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} ${SOURCES_CONFIG} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_GFX_EXPORT
-        #-DSNAKEOIL_FONT_IMPORT
-        #-DSNAKEOIL_GPX_IMPORT
-        #-DSNAKEOIL_GPU_IMPORT
-        #-DSNAKEOIL_THREAD_IMPORT
-        #-DSNAKEOIL_LOG_IMPORT
-        #-DSNAKEOIL_MEMORY_IMPORT
-        )
-
-    # snakeoil
-    target_link_libraries( ${CUR_LIB_NAME}
-      snakeoil_font
-      snakeoil::gpx
-      snakeoil::gpu
-      snakeoil::log
-      snakeoil::memory
-      snakeoil::thread
-      snakeoil_flow
-      snakeoil::gpu
+target_link_libraries( ${CUR_LIB_NAME}
+      PUBLIC snakeoil::font
+      PUBLIC snakeoil::gpx
+      PUBLIC snakeoil::gpu
+      PUBLIC snakeoil::log
+      PUBLIC snakeoil::memory
+      PUBLIC snakeoil::thread
+      PUBLIC snakeoil::flow
+      PUBLIC snakeoil::gpu
     )
-endif()
 
 ###########################################################
 # SECTION: Build Tree

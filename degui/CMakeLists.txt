@@ -34,31 +34,17 @@ endif()
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_IMGUI_EXPORT
-        -DSNAKEOIL_DEVICE_IMPORT
-        -DSNAKEOIL_GPX_IMPORT
-        -DSNAKEOIL_GPU_IMPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-
-    # snakeoil
-    target_link_libraries( ${CUR_LIB_NAME}
-      snakeoil::device
-      snakeoil::gpx
-      snakeoil::gpu
-      snakeoil::log
-      snakeoil::memory
-      snakeoil::thread
-      imgui
+target_link_libraries( ${CUR_LIB_NAME}
+      PUBLIC snakeoil::device
+      PUBLIC snakeoil::gpx
+      PUBLIC snakeoil::gpu
+      PUBLIC snakeoil::log
+      PUBLIC snakeoil::memory
+      PUBLIC snakeoil::thread
+      PUBLIC imgui
     )
-endif()
 
 ###########################################################
 # SECTION: Build Tree

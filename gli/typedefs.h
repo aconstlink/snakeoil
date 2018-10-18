@@ -2,8 +2,8 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GL_TYPEDEFS_H_
-#define _SNAKEOIL_GL_TYPEDEFS_H_
+#ifndef _SNAKEOIL_GLI_TYPEDEFS_H_
+#define _SNAKEOIL_GLI_TYPEDEFS_H_
 
 #include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/math/vector/vector3.hpp>

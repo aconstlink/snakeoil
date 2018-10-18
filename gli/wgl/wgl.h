@@ -20,7 +20,7 @@ namespace so_gli
 {
     namespace so_wgl
     {
-        struct SNAKEOIL_GL_API wgl
+        struct SNAKEOIL_GLI_API wgl
         {
             so_this_typedefs( wgl ) ;
 

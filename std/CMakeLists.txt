@@ -26,22 +26,11 @@ set( SOURCES ${SOURCES} )
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_STD_EXPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-
-    # snakeoil
-    target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil::log
-        snakeoil::memory
-    )
-endif()
+target_link_libraries( ${CUR_LIB_NAME}
+        PUBLIC snakeoil::log
+        PUBLIC snakeoil::memory )
 
 ###########################################################
 # SECTION: Build Tree

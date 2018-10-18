@@ -20,7 +20,7 @@
 
 namespace so_imgui
 {
-    class SNAKEOIL_IMGUI_API system
+    class SNAKEOIL_DEGUI_API system
     {
         so_this_typedefs( system ) ;
 

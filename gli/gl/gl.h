@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GLI_GL_GL_H_
-#define _SNAKEOIL_GLI_GL_GL_H_
+#pragma once
 
 #include "../result.h"
 #include "../api.h"
@@ -21,7 +20,7 @@
 
 namespace so_gli
 {
-    struct SNAKEOIL_GL_API gl
+    struct SNAKEOIL_GLI_API gl
     {
         so_this_typedefs( gl ) ;
 
@@ -564,6 +563,3 @@ namespace so_gli
  
     }; 
 }
-    
-#endif
-

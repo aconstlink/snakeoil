@@ -41,51 +41,20 @@ set( SOURCES
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_APPX_EXPORT
-        -DSNAKEOIL_APPLICATION_IMPORT
-        -DSNAKEOIL_IMEX_IMPORT
-        -DSNAKEOIL_AUDIOX_IMPORT
-        -DSNAKEOIL_AUDIO_IMPORT
-        -DSNAKEOIL_GPX_IMPORT
-        -DSNAKEOIL_GPU_IMPORT
-        -DSNAKEOIL_DEVICE_IMPORT
-        -DSNAKEOIL_IO_IMPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-        
-    # snakeoil
-    target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_application
-        snakeoil_imex
-        snakeoil_audiox
-        snakeoil_audio
-        snakeoil::gpx
-        snakeoil::gpu
-        snakeoil::thread
-        snakeoil::log
-        snakeoil::memory
-        snakeoil::device
-        snakeoil::io
-    )
-        
-    #3rd party
-    #target_link_libraries( ${CUR_LIB_NAME}	
-    #)
-
-    #win 3rd party
-    if( ${SNAKEOIL_TARGET_OS_WIN} )
-        target_link_libraries( ${CUR_LIB_NAME}
-            general ${XINPUT_LIBRARY_GENERAL}
-        )
-    endif()
-    endif()
+target_link_libraries( ${CUR_LIB_NAME}
+  PUBLIC snakeoil::application
+  PUBLIC snakeoil::imex
+  PUBLIC snakeoil::audiox
+  PUBLIC snakeoil::audio
+  PUBLIC snakeoil::gpx
+  PUBLIC snakeoil::gpu
+  PUBLIC snakeoil::thread
+  PUBLIC snakeoil::log
+  PUBLIC snakeoil::memory
+  PUBLIC snakeoil::device
+  PUBLIC snakeoil::io  )
 
 ###########################################################
 # SECTION: Build Tree

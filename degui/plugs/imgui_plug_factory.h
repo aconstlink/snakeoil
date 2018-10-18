@@ -10,7 +10,7 @@
 
 namespace so_imgui
 {
-    class SNAKEOIL_IMGUI_API imgui_plug_factory : public so_gpx::iplug_factory
+    class SNAKEOIL_DEGUI_API imgui_plug_factory : public so_gpx::iplug_factory
     {
         so_this_typedefs( imgui_plug_factory ) ;
 

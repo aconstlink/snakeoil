@@ -2,8 +2,8 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GL_PROTOS_H_
-#define _SNAKEOIL_GL_PROTOS_H_
+#ifndef _SNAKEOIL_GLI_PROTOS_H_
+#define _SNAKEOIL_GLI_PROTOS_H_
 
 #include <snakeoil/core/macros/typedef.h>
 

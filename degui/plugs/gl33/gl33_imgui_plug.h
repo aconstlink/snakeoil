@@ -20,7 +20,7 @@ namespace so_imgui
 {
     namespace so_gl33
     {
-        class SNAKEOIL_IMGUI_API gl33_imgui_plug :
+        class SNAKEOIL_DEGUI_API gl33_imgui_plug :
             public so_gpx::plug<so_gpu::so_gl::igl_33_api >
         {
             typedef so_gpx::plug<so_gpu::so_gl::igl_33_api > this_base_t ;

@@ -221,28 +221,18 @@ set( SOURCES
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_DEVICE_EXPORT 
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-endif()
-
-# snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil::log
-    snakeoil::memory
+    PUBLIC snakeoil::log
+    PUBLIC snakeoil::memory
 )
 
 #all 3rd party
 if( ${SNAKEOIL_TARGET_OS_WIN} )
     target_link_libraries( ${CUR_LIB_NAME}
-        ${XINPUT_LIBRARIES}
-        ${OS_SPECIFIC_LIBS}
+        PUBLIC ${XINPUT_LIBRARIES}
+        PUBLIC ${OS_SPECIFIC_LIBS}
     )
 endif()
     

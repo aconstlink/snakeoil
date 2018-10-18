@@ -230,35 +230,23 @@ set( SOURCES ${SOURCES} )
 so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
+
+target_link_libraries( ${CUR_LIB_NAME}
+        PUBLIC snakeoil::property
+        PUBLIC snakeoil::shade
+        PUBLIC snakeoil::geometry
+        PUBLIC snakeoil::log
+        PUBLIC snakeoil::memory
+        PUBLIC snakeoil::io
+        PUBLIC snakeoil::thread
+    )
 
 if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
-    add_definitions(
-        -DSNAKEOIL_IMEX_EXPORT
-        -DSNAKEOIL_PROPERTY_IMPORT
-        -DSNAKEOIL_SHADE_IMPORT
-        -DSNAKEOIL_GEOMETRY_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        -DSNAKEOIL_IO_IMPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        )
-
-    # snakeoil
-    target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_property
-        snakeoil_shade
-        snakeoil_geometry
-        snakeoil::log
-        snakeoil::memory
-        snakeoil::io
-        snakeoil::thread
-    )
-
     #all 3rd party
     target_link_libraries( ${CUR_LIB_NAME}
-        ${EXTERNAL_LIBRARIES} )
+        PUBLIC ${EXTERNAL_LIBRARIES} )
 
 endif()
 

@@ -2,8 +2,8 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GL_RESULT_H_
-#define _SNAKEOIL_GL_RESULT_H_
+#ifndef _SNAKEOIL_GLI_RESULT_H_
+#define _SNAKEOIL_GLI_RESULT_H_
 
 #include "typedefs.h"
 #include <string>

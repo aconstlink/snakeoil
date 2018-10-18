@@ -28,15 +28,6 @@ so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} ) 
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES OUTPUT_NAME ${CUR_FILE_NAME})
-
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-  target_compile_options( ${CUR_LIB_NAME} 
-    PRIVATE -DSNAKEOIL_LOG_EXPORT 
-    INTERFACE -DSNAKEOIL_LOG_IMPORT )
-endif()
-
 
 ###########################################################
 # SECTION: Build Tree

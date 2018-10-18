@@ -103,54 +103,16 @@ so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES OUTPUT_NAME ${CUR_FILE_NAME})
 
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-
-    add_definitions( 
-        -DSNAKEOIL_APPLICATION_EXPORT
-        -DSNAKEOIL_GPX_IMPORT
-        -DSNAKEOIL_GPU_IMPORT
-        -DSNAKEOIL_DEVICE_IMPORT
-        -DSNAKEOIL_IO_IMPORT
-        -DSNAKEOIL_THREAD_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        )
-        
-        if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
-            add_definitions( -DSNAKEOIL_GL_IMPORT )
-        endif()
-endif()
-
-# snakeoil
 target_link_libraries( ${CUR_LIB_NAME}
-    snakeoil::gpx
-    snakeoil::gpu
-    snakeoil::thread
-    snakeoil::log
-    snakeoil::memory
-    snakeoil::device
-    snakeoil::io
-)
-
-if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
-    target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil::gli
-        ${GL_LIBRARIES}
-    )
-    
-endif()
-    
-
-
-#win 3rd party
-if( SNAKEOIL_TARGET_OS_WIN )
-    target_link_libraries( ${CUR_LIB_NAME}
-        general ${XINPUT_LIBRARY_GENERAL}
-    )
-endif()
+    PUBLIC snakeoil::gpx
+    PUBLIC snakeoil::gpu
+    PUBLIC snakeoil::thread
+    PUBLIC snakeoil::log
+    PUBLIC snakeoil::memory
+    PUBLIC snakeoil::device
+    PUBLIC snakeoil::io
+) 
 
 ###########################################################
 # SECTION: Build Tree

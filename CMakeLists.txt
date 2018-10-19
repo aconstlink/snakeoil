@@ -47,7 +47,8 @@ include( config_build_configuration )
 
 include( config_real_type )
 include( config_rt_link ) 
-include( config_output_directory )
+#include( config_output_directory )
+set( CMAKE_DEBUG_POSTFIX d )
 
 include( so_visual_studio_src_dir )
 include( install_headers )

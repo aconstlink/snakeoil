@@ -226,6 +226,8 @@ foreach( _SUBDIR ${SUBDIRS} )
     endif()
     target_compile_options( ${CUR_LIB_NAME} PRIVATE ${SNAKEOIL_COMPILER_OPTIONS_PRIVATE})
     target_include_directories( ${CUR_LIB_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/.." )
+
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES FOLDER "snakeoil" )
     
 endforeach()
 

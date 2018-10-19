@@ -38,11 +38,17 @@ set( SOURCES
     "src/imgui_widgets.cpp"
 )
 
-add_definitions( -DIMGUI_DEFINE_MATH_OPERATORS )
-include_directories( "./include/imgui" "./include/imgui/internal" ) 
+#add_definitions( -DIMGUI_DEFINE_MATH_OPERATORS )
+#include_directories( "./include/imgui" "./include/imgui/internal" ) 
 
 add_library( imgui STATIC ${SOURCES} )
 set_target_properties( imgui PROPERTIES LINKER_LANGUAGE CXX )
+target_include_directories( imgui 
+  PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include 
+  PRIVATE "./include/imgui" 
+  PRIVATE "./include/imgui/internal" ) 
+
+target_compile_options(imgui PUBLIC -DIMGUI_DEFINE_MATH_OPERATORS )
 
 ###########################################################
 # SECTION: Install

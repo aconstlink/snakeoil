@@ -94,6 +94,7 @@ target_link_libraries( ${CUR_LIB_NAME}
     PUBLIC snakeoil::thread
     PUBLIC snakeoil::log
     PUBLIC snakeoil::memory
+    PUBLIC snakeoil::std
 )
 
 #all 3rd party

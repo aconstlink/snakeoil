@@ -224,7 +224,9 @@ foreach( _SUBDIR ${SUBDIRS} )
         PRIVATE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_EXPORT 
         INTERFACE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_IMPORT )    
     endif()
+    target_compile_options( ${CUR_LIB_NAME} PRIVATE ${SNAKEOIL_COMPILER_OPTIONS_PRIVATE})
     target_include_directories( ${CUR_LIB_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/.." )
+    
 endforeach()
 
 ################################################################

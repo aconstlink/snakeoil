@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_STD_SNAKEOIL_API_H_
-#define _SNAKEOIL_STD_SNAKEOIL_API_H_
+#pragma once
 
 #if defined( SNAKEOIL_BUILD_DLL )
 
@@ -21,5 +20,4 @@
     #define SNAKEOIL_IMEX_API 
 
 #endif 
-#endif // GUARD
 

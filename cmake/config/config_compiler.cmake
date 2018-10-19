@@ -20,12 +20,13 @@ set( SNAKEOIL_COMPILER_CLANG OFF )
 if( MSVC_IDE OR MSVC )
 
     set( SNAKEOIL_COMPILER_MSC ON )
-    add_definitions( -DSNAKEOIL_COMPILER_MSC )
+    #add_definitions( -DSNAKEOIL_COMPILER_MSC )
+    #set( SNAKEOIL_COMPILER_DEFINITION_PUBLIC SNAKEOIL_COMPILER_MSC )
 
 elseif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
     set( SNAKEOIL_COMPILER_GNU ON )
-    add_definitions( -DSNAKEOIL_COMPILER_GNU )
+    #add_definitions( -DSNAKEOIL_COMPILER_GNU )
 else()
 
     message( FATAL_ERROR "Unsupported compiler")

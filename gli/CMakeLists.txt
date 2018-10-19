@@ -44,8 +44,9 @@ add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
 target_link_libraries( ${CUR_LIB_NAME}
-    PUBLIC snakeoil::log
-    PUBLIC snakeoil::memory
+  PUBLIC snakeoil::std
+  PUBLIC snakeoil::log
+  PUBLIC snakeoil::memory
 )
 
 #3rd party

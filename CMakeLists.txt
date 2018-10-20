@@ -212,6 +212,7 @@ endforeach()
 # full libs
 #
 add_library( complete INTERFACE )
+add_library( ${PROJECT_NAME}::complete ALIAS complete )
 
 foreach( _SUBDIR ${SUBDIRS} )
     set( CUR_LIB_NAME_SHORT "${_SUBDIR}" )

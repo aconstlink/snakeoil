@@ -10,25 +10,21 @@ set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 1 )
 set( SNAKEOIL_PATCH_VERSION 8 )
 
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
-    "${CMAKE_CURRENT_LIST_DIR}/cmake"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/modules/"
-    )
-
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
 ################################################################
 # SECTION: Configuring
 ################################################################
 
 set( SNAKEOIL_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} )
 set( SNAKEOIL_BINARY_DIR ${PROJECT_BINARY_DIR} )
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} 
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/config"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/macros/"
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/functions/"
-    )
+  "${CMAKE_CURRENT_LIST_DIR}/cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/cmake/modules/"
+  "${CMAKE_CURRENT_LIST_DIR}/cmake/config"
+  "${CMAKE_CURRENT_LIST_DIR}/cmake/macros/"
+  "${CMAKE_CURRENT_LIST_DIR}/cmake/functions/"
+  )
 
 set( CMAKE_INSTALL_PREFIX "${SNAKEOIL_BINARY_DIR}/install/snakeoil-${SNAKEOIL_MAJOR_VERSION}.${SNAKEOIL_MINOR_VERSION}.${SNAKEOIL_PATCH_VERSION}" CACHE STRING "Install prefix" FORCE )    
 
@@ -47,8 +43,7 @@ include( config_build_configuration )
 
 include( config_real_type )
 include( config_rt_link ) 
-#include( config_output_directory )
-set( CMAKE_DEBUG_POSTFIX d )
+include( config_output_directory )
 
 include( so_visual_studio_src_dir )
 include( install_headers )

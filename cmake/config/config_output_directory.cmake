@@ -7,13 +7,20 @@
 #
 #
 
+set( CMAKE_DEBUG_POSTFIX d )
+
+if( CMAKE_RUNTIME_OUTPUT_DIRECTORY )
+  message( "SNAKEOIL: Omiting output directories, which are set by the user" )
+  message( "Runtime: " ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+  return()
+endif()
+
 if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 set( SNAKEOIL_LIB_OUTPUT_PATH ${SNAKEOIL_BINARY_DIR}/build/shared )
 else()
 set( SNAKEOIL_LIB_OUTPUT_PATH ${SNAKEOIL_BINARY_DIR}/build/static)
 endif()
 
-set( CMAKE_DEBUG_POSTFIX d )
 message( STATUS "output library path: " ${SNAKEOIL_LIB_OUTPUT_PATH}) 
 
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${SNAKEOIL_LIB_OUTPUT_PATH} )

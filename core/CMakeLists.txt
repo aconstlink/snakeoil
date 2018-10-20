@@ -31,7 +31,7 @@ set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 # SECTION: Build Tree
 ###########################################################
 
-so_export( ${CUR_LIB_NAME} )
+#so_export( ${CUR_LIB_NAME} )
 
 ###########################################################
 # SECTION: Install

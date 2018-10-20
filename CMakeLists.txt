@@ -146,15 +146,19 @@ endif()
 # SECTION: add sub directories
 ################################################################
 
-if( SNAKEOIL_TARGET_OS_WIN )
+set( SUBDIRS_HEADER_ONLY 
+  core
+  math
+  physics
+  collide
+  animation
+  spline
+)
 set( SUBDIRS
     "audio"
     "audiox"
-    "core"
     "log"
     "memory"
-    "math" 
-    "physics"
     "std"
     "thread"
     "io"
@@ -162,15 +166,13 @@ set( SUBDIRS
     #"variable"
     "flow"
     "geometry"
-    "collide"
-    "animation"
     "noise"
     "network"
     "device"
     "imex"
     "degui"
     "shade"
-    "gli" # depends on chosen graphics api
+    #"gli" # depends on chosen graphics api
     "gpu"
     "gpx"
     "gfx"
@@ -180,28 +182,36 @@ set( SUBDIRS
     #"scene"
     "appx"
     "application"
-    "spline"
     "property"
     #"ui"
     )
-elseif( SNAKEOIL_TARGET_OS_LIN )
-set( SUBDIRS
-    "core"
-    "log"
-    "memory"
-    "math" 
-    "std"
-    "thread"
-    "io"
-    "network"
-    "gpu"
-    "gpx"
-    )
-endif()
+
 
 if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
-    #set( SUBDIRS ${SUBDIRS} gli )
+    list( APPEND SUBDIRS gli )
 endif()
+
+#
+# header-only
+#
+foreach( _SUBDIR ${SUBDIRS_HEADER_ONLY} )
+    
+    set( CUR_LIB_NAME "${_SUBDIR}" )
+    set( CUR_ALIAS_NAME "${PROJECT_NAME}::${_SUBDIR}" )
+    add_subdirectory(${_SUBDIR})
+
+    target_compile_options( ${CUR_LIB_NAME} PRIVATE ${SNAKEOIL_COMPILER_OPTIONS_PRIVATE})
+    target_include_directories( ${CUR_LIB_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/.." )
+
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES FOLDER "snakeoil" )
+
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+endforeach()
+
+#
+# full libs
+#
+add_library( complete INTERFACE )
 
 foreach( _SUBDIR ${SUBDIRS} )
     set( CUR_LIB_NAME_SHORT "${_SUBDIR}" )
@@ -225,7 +235,9 @@ foreach( _SUBDIR ${SUBDIRS} )
 
     set_target_properties( ${CUR_LIB_NAME} PROPERTIES FOLDER "snakeoil" )
     
+    target_link_libraries( complete INTERFACE ${CUR_LIB_NAME} )
 endforeach()
+export(TARGETS complete NAMESPACE snakeoil:: APPEND FILE ${PROJECT_NAME}-targets.cmake)
 
 ################################################################
 # SECTION : Extensions

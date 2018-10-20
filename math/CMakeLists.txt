@@ -96,13 +96,13 @@ so_vs_src_dir( SOURCES )
 
 #add_custom_target( ${CUR_LIB_NAME} SOURCES ${SOURCES} )
 add_library( ${CUR_LIB_NAME} STATIC ${SOURCES} )
-set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
 ###########################################################
 # SECTION: Build Tree
 ###########################################################
 
-so_export( ${CUR_LIB_NAME} )
+#so_export( ${CUR_LIB_NAME} )
 
 ###########################################################
 # SECTION: Install

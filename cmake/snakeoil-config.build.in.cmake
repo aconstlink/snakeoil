@@ -29,3 +29,6 @@ set( SNAKEOIL_MODULES_DIR
 # not perfect but currently required for dlls under windows
 set( SNAKEOIL_BINDIR "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@" )
 
+list( APPEND CMAKE_MODULE_PATH ${SNAKEOIL_MODULES_DIR} )
+include( so_visual_studio_src_dir )
+include( so_visual_studio_generate_bat_dll )

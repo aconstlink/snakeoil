@@ -249,27 +249,19 @@ export(TARGETS complete NAMESPACE snakeoil:: APPEND FILE ${PROJECT_NAME}-targets
 #add_subdirectory( extensions )
 
 ################################################################
-# SECTION: in build tree fing_package generation
+# SECTION : Export externals
 ################################################################
 
-# Definitions from directory
-get_directory_property( SDIR_DEFS DIRECTORY ${SNAKEOIL_SOURCE_DIR} COMPILE_DEFINITIONS )
-set( DEFS )
-foreach( _D ${SDIR_DEFS} )
-    if( _D )
-        set( DEFS ${DEFS} -D${_D} )
-    endif()
-endforeach()
-set( ALL_DEFINITIONS ${DEFS})
-
 # do externals
-set( TO_BE_EXPORTED ${TO_BE_EXPORTED} lua imgui libusb )
+# TODO this should be done in the libs respective target files and 
+# included in snakeoils config file
+list( APPEND TO_BE_EXPORTED lua imgui libusb )
+export( TARGETS ${TO_BE_EXPORTED} NAMESPACE snakeoil:: APPEND FILE snakeoil-targets.cmake )
 
+################################################################
+# SECTION: in build tree fing_package generation
+################################################################
 configure_file( 
     "${SNAKEOIL_SOURCE_DIR}/cmake/snakeoil-config.build.in.cmake"
     "${SNAKEOIL_BINARY_DIR}/snakeoil-config.cmake"
     @ONLY )
-    
-export( TARGETS ${TO_BE_EXPORTED} APPEND FILE snakeoil-targets.cmake )
-
-

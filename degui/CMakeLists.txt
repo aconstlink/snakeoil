@@ -3,8 +3,6 @@
 #. Distributed under the MIT license
 #.............................................................
 
-include_directories( ${IMGUI_INCLUDE_DIRS} )
-
 set( GL33_SOURCES 
   plugs/gl33/gl33_imgui_plug.h
   plugs/gl33/gl33_imgui_plug.cpp
@@ -45,6 +43,7 @@ target_link_libraries( ${CUR_LIB_NAME}
       PUBLIC snakeoil::thread
       PUBLIC imgui
     )
+target_include_directories( ${CUR_LIB_NAME} PUBLIC ${IMGUI_INCLUDE_DIRS} )
 
 ###########################################################
 # SECTION: Build Tree

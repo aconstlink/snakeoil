@@ -71,13 +71,8 @@ message( STATUS "xinput: " ${XINPUT_INCLUDE_DIRECTORY})
 #look under C:\Program Files (x86)\Windows Kits
 #include_directories( ${XINPUT_INCLUDE_DIRECTORY} )
 
-if( NOT SNAKEOIL_EXTERNAL_LINKAGE_REQUIRED ) 
-return()
-endif()
-
 set( XINPUT_LIBRARIES_SEARCH_PATHS 
     ${XINPUT_LIBRARIES_SEARCH_PATHS}
-
     )
 
 find_library( XINPUT_LIBRARY_GENERAL 
@@ -93,5 +88,4 @@ set( XINPUT_LIBRARIES
     general ${XINPUT_LIBRARY_GENERAL}
 )
 set( XINPUT_FOUND True )
-
 

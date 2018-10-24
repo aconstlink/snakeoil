@@ -62,7 +62,7 @@ set( LUA_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/lua-5.3.3 )
 set( LUA_VERSION 5.3.3 )
 set( LUA_ENABLE ON )
-set_target_properties( lua PROPERTIES FOLDER "externals" )
+set_target_properties( lua PROPERTIES FOLDER "snakeoil/externals" )
 
 # khronos
 set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
@@ -85,22 +85,22 @@ add_subdirectory( externals/stb-2.31 )
 set( OGG_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 set( OGG_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
 add_subdirectory( externals/ogg-1.3.1 )
-set_target_properties( ogg PROPERTIES FOLDER "externals/xiph" )
+set_target_properties( ogg PROPERTIES FOLDER "snakeoil/externals/xiph" )
 
 # vorbis
 set( VORBIS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 set( VORBIS_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
 
 add_subdirectory( externals/vorbis-1.3.5 )
-set_target_properties( vorbis PROPERTIES FOLDER "externals/xiph" )
-set_target_properties( vorbisenc PROPERTIES FOLDER "externals/xiph" )
-set_target_properties( vorbisfile PROPERTIES FOLDER "externals/xiph" )
+set_target_properties( vorbis PROPERTIES FOLDER "snakeoil/externals/xiph" )
+set_target_properties( vorbisenc PROPERTIES FOLDER "snakeoil/externals/xiph" )
+set_target_properties( vorbisfile PROPERTIES FOLDER "snakeoil/externals/xiph" )
 
 # imgui
 set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/imgui-1.6.6 )
 set( IMGUI_VERSION 1.6.6 )
-set_target_properties( imgui PROPERTIES FOLDER "externals" )
+set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.6/include" )
 
 # libusb
@@ -108,7 +108,7 @@ set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/libusb-1.0.22 )
 set( LIBUSB_VERSION 1.0.22 )
 set( LIBUSB_ENABLE ON )
-set_target_properties( libusb PROPERTIES FOLDER "externals" )
+set_target_properties( libusb PROPERTIES FOLDER "snakeoil/externals" )
 set( LIBUSB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/libusb-1.0.22/libusb" )
 
 #zlib

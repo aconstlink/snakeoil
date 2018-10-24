@@ -24,14 +24,14 @@ if( SNAKEOIL_TARGET_OS_WIN )
     if( SNAKEOIL_TARGET_WINDOW_SYSTEM_API STREQUAL "null" )
         
         set( SNAKEOIL_WINDOW_SYSTEM_NULL ON )
-        add_definitions( -DSNAKEOIL_WINDOW_SYSTEM_NULL )
-        
+        set( SNAKEOIL_WINDOW_SYSTEM_DEFINES 
+          -DSNAKEOIL_WINDOW_SYSTEM_NULL )
     elseif( SNAKEOIL_TARGET_WINDOW_SYSTEM_API STREQUAL "win32" )
     
         set( SNAKEOIL_WINDOW_SYSTEM_NULL OFF )
         set( SNAKEOIL_WINDOW_SYSTEM_WIN32 ON )
-        add_definitions( -DSNAKEOIL_WINDOW_SYSTEM_WIN32 )
-    
+        set( SNAKEOIL_WINDOW_SYSTEM_DEFINES 
+          -DSNAKEOIL_WINDOW_SYSTEM_WIN32 )
     else()
         message( FATAL_ERROR "Invalid window system parameter" )
     endif()
@@ -49,20 +49,23 @@ elseif( SNAKEOIL_TARGET_OS_LIN )
     if( SNAKEOIL_TARGET_WINDOW_SYSTEM_API STREQUAL "null" )
         
         set( SNAKEOIL_WINDOW_SYSTEM_NULL ON )
-        add_definitions( -DSNAKEOIL_WINDOW_SYSTEM_NULL )
+        set( SNAKEOIL_WINDOW_SYSTEM_DEFINES 
+          -DSNAKEOIL_WINDOW_SYSTEM_WIN32 )
         message( "Null window system driver used" )
 
     elseif( SNAKEOIL_TARGET_WINDOW_SYSTEM_API STREQUAL "x11" )
 
         set( SNAKEOIL_WINDOW_SYSTEM_XLIB ON )
-        add_definitions( -DSNAKEOIL_WINDOW_SYSTEM_XLIB )
+        set( SNAKEOIL_WINDOW_SYSTEM_DEFINES 
+          -DSNAKEOIL_WINDOW_SYSTEM_XLIB )
         message( "X11 window system driver used" )
         message( FATAL_ERROR "Not supported at the moment" )
     
     elseif( SNAKEOIL_TARGET_WINDOW_SYSTEM_API STREQUAL "wayland" )
         
         set( SNAKEOIL_WINDOW_SYSTEM_WAYLAND ON )
-        add_definitions( -DSNAKEOIL_WINDOW_SYSTEM_WAYLAND )
+        set( SNAKEOIL_WINDOW_SYSTEM_DEFINES 
+          -DSNAKEOIL_WINDOW_SYSTEM_WAYLAND )
         message( "Wayland window system driver used" )
         message( FATAL_ERROR "Not supported at the moment" )
 

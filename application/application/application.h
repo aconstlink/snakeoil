@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_APPLICATION_APPLICATION_APPLICATION_H_
-#define _SNAKEOIL_APPLICATION_APPLICATION_APPLICATION_H_
+#pragma once
 
 #if defined( SNAKEOIL_WINDOW_SYSTEM_WIN32 )
 #include "win32/win32_application.h"
@@ -21,6 +20,3 @@ namespace so_app
     so_typedefs( so_xlib::xlib_application, application ) ;
 #endif    
 }
-
-#endif
-

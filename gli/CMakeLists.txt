@@ -3,10 +3,6 @@
 #. Distributed under the MIT license
 #.............................................................
 
-include_directories(
-    ${OPENGL_INCLUDE_DIRS}
-)
-
 set( GL_SOURCES
     gl/gl.h
     gl/gl.cpp
@@ -50,9 +46,8 @@ target_link_libraries( ${CUR_LIB_NAME}
 )
 
 #3rd party
-target_link_libraries( ${CUR_LIB_NAME}
-    PUBLIC ${OPENGL_LIBRARIES}
-)
+target_include_directories( ${CUR_LIB_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS} )
+target_link_libraries( ${CUR_LIB_NAME} PUBLIC ${OPENGL_LIBRARIES} )
 
 ###########################################################
 # SECTION: Build Tree

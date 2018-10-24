@@ -3,12 +3,6 @@
 #. Distributed under the MIT license
 #.............................................................
 
-if( SNAKEOIL_TARGET_GRAPHICS_OPENGL )
-    include_directories(
-        ${OPENGL_INCLUDE_DIRS}
-    )
-endif()
-
 set( WIN32_SOURCES 
     application/win32/win32_application.h
     application/win32/win32_application.cpp
@@ -103,6 +97,7 @@ so_vs_src_dir( SOURCES )
 
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
+target_compile_options( ${CUR_LIB_NAME} PUBLIC ${SNAKEOIL_WINDOW_SYSTEM_DEFINES} )
 
 target_link_libraries( ${CUR_LIB_NAME}
     PUBLIC snakeoil::gpx

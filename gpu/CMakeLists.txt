@@ -3,10 +3,6 @@
 #. Distributed under the MIT license
 #.............................................................
 
-include_directories(
-    ${OPENGL_INCLUDE_DIRS}
-)
-
 set( SOURCE_ENUMS
     enums/types.h
     enums/type_traits.h
@@ -249,6 +245,8 @@ so_vs_src_dir( SOURCES )
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
+target_compile_options( ${CUR_LIB_NAME} PUBLIC ${SNAKEOIL_TARGET_GRAPHICS_DEFINES} )
+target_include_directories( ${CUR_LIB_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS} )
 target_link_libraries( ${CUR_LIB_NAME}
   PUBLIC snakeoil::imex
   PUBLIC snakeoil::log

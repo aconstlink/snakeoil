@@ -98,10 +98,10 @@ set_target_properties( vorbisfile PROPERTIES FOLDER "snakeoil/externals/xiph" )
 
 # imgui
 set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/imgui-1.6.6 )
-set( IMGUI_VERSION 1.6.6 )
+add_subdirectory( externals/imgui-1.6.7 )
+set( IMGUI_VERSION 1.6.7 )
 set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
-set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.6/include" )
+set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.7/include" )
 
 # libusb
 #set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )

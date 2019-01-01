@@ -104,12 +104,12 @@ set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.6/include" )
 
 # libusb
-set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/libusb-1.0.22 )
-set( LIBUSB_VERSION 1.0.22 )
-set( LIBUSB_ENABLE ON )
-set_target_properties( libusb PROPERTIES FOLDER "snakeoil/externals" )
-set( LIBUSB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/libusb-1.0.22/libusb" )
+#set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+#add_subdirectory( externals/libusb-1.0.22 )
+#set( LIBUSB_VERSION 1.0.22 )
+#set( LIBUSB_ENABLE ON )
+#set_target_properties( libusb PROPERTIES FOLDER "snakeoil/externals" )
+#set( LIBUSB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/libusb-1.0.22/libusb" )
 
 #zlib
 # todo
@@ -255,7 +255,7 @@ export(TARGETS complete NAMESPACE snakeoil:: APPEND FILE ${PROJECT_NAME}-targets
 # do externals
 # TODO this should be done in the libs respective target files and 
 # included in snakeoils config file
-list( APPEND TO_BE_EXPORTED lua imgui libusb )
+list( APPEND TO_BE_EXPORTED lua imgui )
 export( TARGETS ${TO_BE_EXPORTED} NAMESPACE snakeoil:: APPEND FILE snakeoil-targets.cmake )
 
 ################################################################

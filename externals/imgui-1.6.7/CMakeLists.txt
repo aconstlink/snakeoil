@@ -16,7 +16,7 @@ endif()
 
 set( IMGUI_MAJOR_VERSION 1 )
 set( IMGUI_MINOR_VERSION 6 )
-set( IMGUI_PATCH_VERSION 6 )
+set( IMGUI_PATCH_VERSION 7 )
 set( IMGUI_VERSION "${IMGUI_MAJOR_VERSION}.${IMGUI_MINOR_VERSION}.${IMGUI_PATCH_VERSION}" )
 
 set( CMAKE_DEBUG_POSTFIX d )
@@ -24,10 +24,10 @@ set( CMAKE_DEBUG_POSTFIX d )
 set( INCLUDES 
   "include/imgui/imgui.h"
   "include/imgui/imconfig.h"
-  "include/imgui/internal/imgui_internal.h"
-  "include/imgui/internal/imstb_rectpack.h"
-  "include/imgui/internal/imstb_textedit.h"
-  "include/imgui/internal/imstb_truetype.h"
+  "include/imgui/imgui_internal.h"
+  "include/imgui/imstb_rectpack.h"
+  "include/imgui/imstb_textedit.h"
+  "include/imgui/imstb_truetype.h"
 )
 
 set( SOURCES

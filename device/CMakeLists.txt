@@ -134,7 +134,9 @@ set( API_SOURCES
   api/imidi_api.h
   api/igamepad_api.h
   api/imouse_api.h
-  api/ikeyboard_api.h    
+  api/ikeyboard_api.h 
+  api/rtmidi/rtmidi_api.h
+  api/rtmidi/rtmidi_api.cpp
 )
 
 set( WIN32_API_SOURCES

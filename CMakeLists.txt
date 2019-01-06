@@ -103,6 +103,20 @@ set( IMGUI_VERSION 1.6.7 )
 set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
 set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.7/include" )
 
+# rtmidi
+set( RTMIDI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
+add_subdirectory( externals/rtmidi-3.0.0 )
+set( RTMIDI_VERSION 3.0.0 )
+set_target_properties( rtmidi PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
+set_target_properties( rtmidi_static PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
+set_target_properties( uninstall PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
+set( RTMIDI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/rtmidi-3.0.0" )
+
+if( SNAKEOIL_COMPILER_MSC )
+  target_compile_options( rtmidi PRIVATE /wd4267 /wd4996 )
+  target_compile_options( rtmidi_static PRIVATE /wd4267 /wd4996 )
+endif()
+
 # libusb
 #set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 #add_subdirectory( externals/libusb-1.0.22 )

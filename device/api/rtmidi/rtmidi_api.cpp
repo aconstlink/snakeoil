@@ -12,10 +12,49 @@
 #include <snakeoil/log/global.h>
 #include <snakeoil/core/macros/move.h>
 
+#include <RtMidi.h>
+
 #include <algorithm>
 
 using namespace so_device ;
 using namespace so_device::so_win32 ;
+
+struct rtmidi_api::data_pimpl 
+{
+    so_this_typedefs( data_pimpl ) ;
+
+    uint_t pid = uint_t( -1 );
+    RtMidiIn * midiin = nullptr ;
+    RtMidiOut * midiout = nullptr ;
+
+    data_pimpl( uint_t const pid_ ) : pid( pid_ )
+    {
+        try
+        {
+            midiin = new RtMidiIn()  ;             
+            midiout = new RtMidiOut() ;
+        
+        } catch( RtMidiError & err )
+        {
+            so_log::global_t::error( "[rtmidi_api::data_pimpl] " + so_std::string_t( err.what() ) ) ;
+        }
+    }
+
+    data_pimpl( this_cref_t ) = delete ;
+
+    data_pimpl( this_rref_t rhv )
+    {
+        pid = rhv.pid ;
+        so_move_member_ptr( midiin, rhv ) ;
+        so_move_member_ptr( midiout, rhv ) ;
+    }
+
+    ~data_pimpl( void_t )
+    {
+        delete midiin ;
+        delete midiout ;
+    }
+} ;
 
 //****************************************************************************************
 #if 0
@@ -89,7 +128,6 @@ rtmidi_api::rtmidi_api( void_t )
 rtmidi_api::rtmidi_api( this_rref_t rhv ) 
 {
     _devices = std::move( rhv._devices ) ;
-    _ins = std::move( rhv._ins ) ;
 
     so_move_member_ptr( _global_self_ptr, rhv ) ;
     _global_self_ptr->self_ptr = this ;
@@ -100,27 +138,14 @@ rtmidi_api::rtmidi_api( this_rref_t rhv )
 //****************************************************************************************
 rtmidi_api::~rtmidi_api( void_t ) 
 {
-    for( auto & item : _devices )
-    {
-        
-        so_device::midi_device::destroy( item.dev_ptr ) ;
-
-        {
-            auto res = this_t::unregister_device( item ) ;
-            so_log::global::error( so_device::no_success(res), 
-                "[midi_module::~midi_module] : unregister_device" ) ;
-        }
-                
-        /*if( item.mdata.inh != NULL )
-            midiInClose( item.mdata.inh ) ;
-
-        if( item.mdata.outh != NULL )
-            midiOutClose( item.mdata.outh ) ;*/
-    }
-
     for( auto * ptr : _midi_notifies )
     {
         ptr->destroy() ;
+    }
+
+    for( auto & item : _devices )
+    {
+        so_memory::global_t::dealloc( item.mptr ) ;
     }
 
     so_device::memory::dealloc( _global_self_ptr ) ;
@@ -164,6 +189,8 @@ void_t rtmidi_api::create_devices( so_device::imidi_module_ptr_t mptr )
     so_std::vector< so_std::string_t > names ;
     this_t::get_device_names( names ) ;
 
+    uint_t pid = 0 ;
+
     for( auto const & name : names )
     {
         auto * mdev = mptr->create_midi_device( name ) ;
@@ -186,36 +213,32 @@ void_t rtmidi_api::create_devices( so_device::imidi_module_ptr_t mptr )
         // otherwise, create a new one.
         else
         {
-            this_t::store_data sd ;
+            this_t::store_data_t sd ;
             sd.key = name ;
             sd.dev_ptr = mdev ;
-            _devices.push_back( sd ) ;
+            sd.mptr = so_memory::global_t::alloc( std::move( data_pimpl(pid) ), 
+                "[rtmidi_api::create_devices] : pimpl" ) ;
 
-            check_handle_for_device( _devices.size() - 1 ) ;
+            sd.mptr->midiin->openPort( pid ) ;
+
+            _devices.push_back( std::move( sd )  ) ;
+
+            //check_handle_for_device( _devices.size() - 1 ) ;
         }
+        ++pid ;
     }
 }
 
 //****************************************************************************************
 void_t rtmidi_api::get_device_names( so_std::vector< so_std::string_t > & names_out ) const
 {
-    #if 0
-    for( uint_t i = 0; i < midiInGetNumDevs(); ++i )
+    auto midiin = RtMidiIn() ;
+    
+
+    for( uint_t i = 0; i < midiin.getPortCount(); ++i )
     {
-        MIDIINCAPS caps ;
-        ZeroMemory( &caps, sizeof( MIDIINCAPS ) ) ;
-
-        MMRESULT const res = midiInGetDevCaps( i, &caps, sizeof( MIDIINCAPS ) ) ;
-        if( res != MMSYSERR_NOERROR )
-        {
-            so_log::global::warning( "[so_device::rtmidi_api::get_device_names] : "
-                                   "unable to retrieve device caps" ) ;
-            continue ;
-        }
-
-        names_out.push_back( so_std::string_t( caps.szPname ) ) ;
+        names_out.push_back( midiin.getPortName(i) ) ;
     }
-    #endif
 }
 
 //****************************************************************************************
@@ -294,6 +317,7 @@ so_device::result rtmidi_api::unregister_device( store_data_ref_t item )
         item.mdata.outh = NULL ;
     }
     #endif
+    
     return so_device::ok ;
 }
 
@@ -307,6 +331,41 @@ void_t rtmidi_api::update_midi( void_t )
         check_for_new_devices() ;
     }
 
+    for( auto & item : _devices )
+    {
+        so_device::midi_device_t::midi_messages_t msgs ;
+
+        while( true )
+        {
+            std::vector< uchar_t > message ;
+            double_t const ts = item.mptr->midiin->getMessage( &message ) ;
+
+
+            if( message.size() == 0 ) break ;
+
+            if( message.size() == 3 )
+            {
+                message.push_back( 0 ) ;
+            }
+
+            if( message.size() != 4 ) 
+            {
+                so_log::global_t::error( "[rtmidi_api::update_midi] : size muste be 4 at the moment" ) ;
+                continue ;
+            }
+
+
+            //msgs.push_back( so_device::midi_device_t::midi_message() )
+            for( auto * ptr : _midi_notifies )
+            {
+                ptr->on_message( item.key, 
+                    so_device::midi_message((byte_t)message[0],(byte_t)message[1],
+                    (byte_t)message[2],(byte_t)message[3] ) ) ;
+            }
+        }
+    }
+    
+    
     #if 0
     for( auto & item : _devices )
     {
@@ -368,7 +427,9 @@ void_t rtmidi_api::handle_message( HMIDIIN hin, so_device::midi_message_cref_t m
 
 //****************************************************************************************
 void_t rtmidi_api::check_handle_for_device( size_t slot ) 
-{
+{    
+    
+     #if 0
     if( slot >= _devices.size() ) 
         return ;
     
@@ -379,7 +440,7 @@ void_t rtmidi_api::check_handle_for_device( size_t slot )
 
     auto di = dptr->get_device_info() ;
 
-    #if 0
+   
     if( md.inh != NULL )
         return ;
 

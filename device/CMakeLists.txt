@@ -225,7 +225,17 @@ so_vs_src_dir( SOURCES )
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
+
+if( SNAKEOIL_LIBRARY_BUILD_SHARED )
+  set( RTMIDI_LIB rtmidi )
+else()
+  set( RTMIDI_LIB rtmidi_static )
+endif()
+
+target_include_directories( ${CUR_LIB_NAME} PRIVATE ${RTMIDI_INCLUDE_DIRS} )
+
 target_link_libraries( ${CUR_LIB_NAME}
+    PRIVATE ${RTMIDI_LIB}
     PUBLIC snakeoil::log
     PUBLIC snakeoil::memory
 )

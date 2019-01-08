@@ -26,60 +26,11 @@ namespace so_device
 
     private:
 
-        struct midi_data
-        {
-            so_this_typedefs( midi_data );
 
-            //HMIDIIN inh = NULL ;
-            //HMIDIOUT outh = NULL ;
-            //LPSTR in_buffer = NULL ;
+        struct data_pimpl ;
+        so_typedef( data_pimpl ) ;
 
-            midi_data( void_t ) {}
-                
-            midi_data( this_rref_t rhv )
-            {
-                *this = std::move(rhv) ;
-            }
-
-            midi_data( this_cref_t rhv )
-            {
-                *this = rhv ;
-            }
-
-            this_ref_t operator = ( this_cref_t rhv )
-            {
-                //inh = rhv.inh;
-                //outh = rhv.outh;
-                //in_buffer = rhv.in_buffer;
-
-                return *this ;
-            }
-
-            this_ref_t operator = ( this_rref_t rhv )
-            {
-                //inh = rhv.inh ;
-                //rhv.inh = NULL ;
-
-                //outh = rhv.outh ;
-                //rhv.outh = NULL ;
-
-                //so_move_member_ptr( in_buffer, rhv );
-                    
-                return *this ;
-            }
-
-        };
-        so_typedef( midi_data ) ;
-
-        so_typedefs( so_std::vector<midi_data_t>, midi_datas ) ;
-
-        struct in_message
-        {
-            //HMIDIIN inh ;
-            midi_message message ;
-        };
-        so_typedef( in_message ) ;
-        so_typedefs( so_std::vector<in_message>, in_messages ) ;
+    private:
 
         struct store_data
         {
@@ -87,13 +38,23 @@ namespace so_device
 
             so_device::key_t key ;
             midi_device_ptr_t dev_ptr ;
-            midi_data mdata ;
+            data_pimpl_ptr_t mptr ;
 
-            this_ref_t operator = ( this_cref_t rhv )
+            this_ref_t operator = ( this_cref_t rhv ) = delete ;
+
+            store_data( void_t ){}
+            store_data( this_cref_t ) = delete ;
+            store_data( this_rref_t rhv )
             {
                 key = rhv.key;
                 dev_ptr = rhv.dev_ptr;
-                mdata = rhv.mdata;
+                so_move_member_ptr( mptr, rhv ) ;
+            }
+            this_ref_t operator = ( this_rref_t rhv )
+            {
+                key = rhv.key;
+                dev_ptr = rhv.dev_ptr;
+                so_move_member_ptr( mptr, rhv ) ;
                 return *this;
             }
         };
@@ -109,9 +70,6 @@ namespace so_device
 
         /// will contain a registered midi device
         midi_devices_t _devices ;
-
-        so_thread::mutex_t _mtx_in ;
-        in_messages_t _ins ;
 
     private:
         so_typedefs( so_std::vector< so_device::imidi_notify_ptr_t >, midi_notifies ) ;

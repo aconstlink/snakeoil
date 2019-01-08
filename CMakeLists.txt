@@ -112,6 +112,9 @@ set_target_properties( rtmidi_static PROPERTIES FOLDER "snakeoil/externals/rtmid
 set_target_properties( uninstall PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
 set( RTMIDI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/rtmidi-3.0.0" )
 
+target_compile_definitions( rtmidi PRIVATE RTMIDI_DO_NOT_ENSURE_UNIQUE_PORTNAMES )
+target_compile_definitions( rtmidi_static PRIVATE RTMIDI_DO_NOT_ENSURE_UNIQUE_PORTNAMES )
+
 if( SNAKEOIL_COMPILER_MSC )
   target_compile_options( rtmidi PRIVATE /wd4267 /wd4996 )
   target_compile_options( rtmidi_static PRIVATE /wd4267 /wd4996 )

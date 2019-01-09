@@ -113,7 +113,6 @@ namespace so_device
 
     private:
 
-        void_t check_handle_for_device( size_t ) ;
         void_t check_for_new_devices( void_t ) ;
 
         so_device::result unregister_device( store_data_ref_t ) ;

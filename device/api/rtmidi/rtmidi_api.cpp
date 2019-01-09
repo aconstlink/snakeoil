@@ -189,8 +189,6 @@ void_t rtmidi_api::create_devices( so_device::imidi_module_ptr_t mptr )
     so_std::vector< so_std::string_t > names ;
     this_t::get_device_names( names ) ;
 
-    uint_t pid = 0 ;
-
     for( auto const & name : names )
     {
         auto * mdev = mptr->create_midi_device( name ) ;
@@ -216,16 +214,36 @@ void_t rtmidi_api::create_devices( so_device::imidi_module_ptr_t mptr )
             this_t::store_data_t sd ;
             sd.key = name ;
             sd.dev_ptr = mdev ;
-            sd.mptr = so_memory::global_t::alloc( std::move( data_pimpl(pid) ), 
+            sd.mptr = so_memory::global_t::alloc( std::move( data_pimpl(uint_t(-1)) ), 
                 "[rtmidi_api::create_devices] : pimpl" ) ;
 
-            sd.mptr->midiin->openPort( pid ) ;
+            {
+                auto mi = RtMidiIn() ;
+                for( uint_t pid = 0; pid < mi.getPortCount(); ++pid )
+                {
+                    if( mi.getPortName(pid) == name )
+                    {
+                        sd.mptr->midiin->openPort( pid ) ;
+                        break ;
+                    }
+                }
+            }
 
+            {
+                auto mo = RtMidiOut() ;
+                for( uint_t pid = 0; pid < mo.getPortCount(); ++pid )
+                {
+                    if( mo.getPortName(pid) == name )
+                    {
+                        sd.mptr->midiout->openPort( pid ) ;
+                        break ;
+                    }
+                }
+            }
             _devices.push_back( std::move( sd )  ) ;
 
             //check_handle_for_device( _devices.size() - 1 ) ;
         }
-        ++pid ;
     }
 }
 
@@ -354,16 +372,35 @@ void_t rtmidi_api::update_midi( void_t )
                 continue ;
             }
 
+            auto const midi_msg = so_device::midi_message( ( byte_t ) message[ 0 ], ( byte_t ) message[ 1 ],
+                ( byte_t ) message[ 2 ], ( byte_t ) message[ 3 ] ) ;
 
             //msgs.push_back( so_device::midi_device_t::midi_message() )
             for( auto * ptr : _midi_notifies )
             {
-                ptr->on_message( item.key, 
-                    so_device::midi_message((byte_t)message[0],(byte_t)message[1],
-                    (byte_t)message[2],(byte_t)message[3] ) ) ;
+                ptr->on_message( item.key, midi_msg ) ;
+            }
+
+            item.dev_ptr->receive_message( midi_msg ) ;
+        }
+
+        {
+            so_device::midi_device_t::midi_messages_t msgs_out ;
+            item.dev_ptr->update( msgs_out ) ;
+
+            for( auto const msg_out : msgs_out )
+            {
+                std::vector< uchar_t > message( 3 ) ;
+                message[ 0 ] = msg_out.status ;
+                message[ 1 ] = msg_out.byte1 ;
+                message[ 2 ] = msg_out.byte2 ;
+                //message[ 3 ] = msg_out.byte3 ;
+                item.mptr->midiout->sendMessage( &message ) ;
             }
         }
     }
+
+    
     
     
     #if 0

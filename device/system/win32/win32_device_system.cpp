@@ -30,6 +30,7 @@ void_t device_system::create_default_system_modules( void_t )
     }
     #endif
     
+    #if 1
     // midi
     {
         auto * midi_mod_ptr = so_device::rtmidi_api_t::create(
@@ -42,7 +43,7 @@ void_t device_system::create_default_system_modules( void_t )
         so_log::global::status( so_device::success( res ),
             "[so_device::device_system] : rtmidi module online" ) ;
     }
-    
+    #endif
 
     // xinput
     {

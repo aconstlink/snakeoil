@@ -59,6 +59,24 @@ namespace so_device
                 }
             }
 
+            void_t toggle( void_t )
+            {
+                if( _cur_state == led_state::off )
+                {
+                    _last_state = _cur_state ;
+                    _cur_state = led_state::on ;
+                }
+                else if( _cur_state == led_state::on )
+                {
+                    _last_state = _cur_state ;
+                    _cur_state = led_state::off ;
+                }
+                else
+                {
+                    _cur_state = led_state::off ;
+                }
+            }
+
             bool_t acquire_and_reset_changed_state( led_state & state_out )
             {
                 if( _last_state != _cur_state )

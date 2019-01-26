@@ -98,10 +98,10 @@ set_target_properties( vorbisfile PROPERTIES FOLDER "snakeoil/externals/xiph" )
 
 # imgui
 set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/imgui-1.6.7 )
-set( IMGUI_VERSION 1.6.7 )
+add_subdirectory( externals/imgui-1.6.8 )
+set( IMGUI_VERSION 1.6.8 )
 set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
-set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.7/include" )
+set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.6.8/include" )
 
 # rtmidi
 set( RTMIDI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )

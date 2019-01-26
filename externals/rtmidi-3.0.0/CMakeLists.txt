@@ -134,7 +134,7 @@ if (NEED_PTHREAD)
 endif()
 
 # Create library targets.
-cmake_policy(SET CMP0042 OLD)
+#cmake_policy(SET CMP0042 OLD)
 set(LIB_TARGETS)
 if(BUILD_SHARED_LIBS)
   add_library(rtmidi SHARED ${rtmidi_SOURCES})

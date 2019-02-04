@@ -132,6 +132,13 @@ bool_t three_button_mouse::is_released( so_device::three_button const tb ) const
 }
 
 //*****************************************************************************************
+so_device::button_state three_button_mouse::get_button_state( so_device::three_button const tb ) const 
+{
+    auto const iter = _three_button_states.find( tb ) ;
+    return iter != _three_button_states.end() ? iter->second : so_device::button_state::none ;
+}
+
+//*****************************************************************************************
 void_t three_button_mouse::update( void_t )
 {
     auto tmp_states = std::move( _three_button_states ) ;

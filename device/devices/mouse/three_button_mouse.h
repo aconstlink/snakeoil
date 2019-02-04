@@ -74,6 +74,7 @@ namespace so_device
         bool_t is_pressing( so_device::three_button const ) const ;
         bool_t is_released( so_device::three_button const ) const ;
 
+        so_device::button_state get_button_state( so_device::three_button const ) const ;
 
     public:
 

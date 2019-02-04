@@ -86,3 +86,58 @@ so_gfx::line_render_2d_ptr_t render_2d::get_line_render_2d( void_t )
 }
 
 //************************************************************************************
+void_t render_2d::init( void_t ) 
+{
+    _rr_ptr->init() ;
+    _cr_ptr->init() ;
+    _ir_ptr->init() ;
+    _lr_ptr->init() ;
+}
+
+//************************************************************************************
+void_t render_2d::release( void_t ) 
+{
+    _rr_ptr->release() ;
+    _cr_ptr->release() ;
+    _ir_ptr->release() ;
+    _lr_ptr->release() ;
+}
+
+//************************************************************************************
+void_t render_2d::set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) 
+{
+    _rr_ptr->set_view_projection( view, proj ) ;
+    _cr_ptr->set_view_projection( view, proj ) ;
+    _ir_ptr->set_view_projection( view, proj ) ;
+    _lr_ptr->set_view_projection( view, proj ) ;
+}
+
+//************************************************************************************
+void_t render_2d::prepare_for_rendering( void_t ) 
+{
+    _rr_ptr->prepare_for_rendering() ;
+    _cr_ptr->prepare_for_rendering() ;
+    _ir_ptr->prepare_for_rendering() ;
+    _lr_ptr->prepare_for_rendering() ;
+}
+
+//************************************************************************************
+void_t render_2d::render_range( size_t const a, size_t const b ) 
+{
+    for( size_t i = a; i < b; ++i )
+    {
+        _rr_ptr->render( i ) ;
+        _cr_ptr->render( i ) ;
+        _ir_ptr->render( i ) ;
+        _lr_ptr->render( i ) ;
+    }
+}
+
+//************************************************************************************
+void_t render_2d::render( size_t const i ) 
+{
+    _rr_ptr->render( i ) ;
+    _cr_ptr->render( i ) ;
+    _ir_ptr->render( i ) ;
+    _lr_ptr->render( i ) ;
+}

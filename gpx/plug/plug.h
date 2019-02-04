@@ -120,7 +120,7 @@ namespace so_gpx
                 return so_memory::global::alloc( std::move( rhv ), p ) ;
             }
 
-            static void_t destroy( this_ptr_t ptr ) {
+            static this_ptr_t destroy( this_ptr_t ptr ) {
                 return so_memory::global::dealloc( ptr ) ;
             }
 

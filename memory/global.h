@@ -43,7 +43,7 @@ namespace so_memory
     
         static void_ptr_t alloc( size_t sib, so_memory::purpose_cref_t purpose ) ;
         static void_ptr_t alloc( size_t sib ) ;
-        static void_t dealloc( void_ptr_t ) ;
+        static void_ptr_t dealloc( void_ptr_t ) ;
         static size_t get_sib( void_t ) ;
 
         static bool_t get_purpose( void_ptr_t, so_memory::purpose_ref_t ) ;
@@ -95,11 +95,12 @@ namespace so_memory
         }
 
         template< typename T >
-        static void_t dealloc( T * ptr )
+        static T * dealloc( T * ptr )
         {
-            if( ptr == nullptr ) return ;
+            if( ptr == nullptr ) return nullptr ;
             ( *ptr ).~T() ;
             this_t::dealloc( reinterpret_cast< void_ptr_t >( ptr ) ) ;
+            return nullptr ;
         }
 
         template< typename T >
@@ -131,17 +132,19 @@ namespace so_memory
         }
 
         template< typename T >
-        static void_t dealloc( T* ptr, size_t n )
+        static T * dealloc( T* ptr, size_t n )
         {
-            if( ptr == nullptr ) return ;
+            if( ptr == nullptr ) return nullptr ;
             for( size_t i = 0; i < n; ++i ) ( *( ptr + 1 ) ).~T() ;
             this_t::dealloc_raw<T>( ptr ) ;
+            return nullptr ;
         }
 
         template< typename T >
-        static void_t dealloc_raw( T* ptr )
+        static T * dealloc_raw( T* ptr )
         {
             this_t::dealloc( reinterpret_cast< void_ptr_t >( ptr ) ) ;
+            return nullptr ;
         }
 
     public:

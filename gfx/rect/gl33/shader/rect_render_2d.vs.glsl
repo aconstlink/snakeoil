@@ -11,6 +11,7 @@ uniform samplerBuffer u_rect_info ;
 
 uniform uint u_offset ;
 uniform mat4 u_proj ;
+uniform mat4 u_view ;
 
 out vertex_data
 {
@@ -32,5 +33,5 @@ void main( void )
   rpos = rpos - d1.xy ;
 
   vec2 pos = rpos * d0.zw + d0.xy ;
-  gl_Position = u_proj * vec4( pos, 1.0, 1.0) ;
+  gl_Position = u_proj * u_view * vec4( pos, 1.0, 1.0) ;
 }

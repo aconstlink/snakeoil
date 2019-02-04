@@ -50,7 +50,7 @@ resource_bridge::this_ptr_t so_gfx::resource_bridge::create(
 }
 
 //*************************************************************************************
-void_t so_gfx::resource_bridge::destroy( this_ptr_t ptr )
+so_gfx::resource_bridge::this_ptr_t so_gfx::resource_bridge::destroy( this_ptr_t ptr )
 {
     return so_memory::global_t::dealloc( ptr ) ;
 }

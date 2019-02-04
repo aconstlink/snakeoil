@@ -81,16 +81,11 @@ void_t image_render_2d::destroy( this_ptr_t ptr )
 }
 
 //************************************************************************************
-void_t image_render_2d::init( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj )
+void_t image_render_2d::init( void_t )
 {
     if( _t_rnd == so_gpx::technique_id_t(-1) )
         _t_rnd = _gpxr->register_technique( _fac_ptr ) ;
-
-    _proj = proj ;
-    _view = view ;
-
-    _sd_ptr->proj = proj ;
-    _sd_ptr->view = view ;
+    
 }
 
 //************************************************************************************
@@ -171,6 +166,16 @@ image_render_2d::group_info_ptr_t image_render_2d::insert_group( size_t const gr
     } ) ;
     
     return *( _gis.insert( lower_iter, so_gfx::memory::alloc( li ) ) ) ;
+}
+
+//************************************************************************************
+void_t image_render_2d::set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) 
+{
+    _proj = proj ;
+    _view = view ;
+
+    _sd_ptr->proj = proj ;
+    _sd_ptr->view = view ;
 }
 
 //************************************************************************************

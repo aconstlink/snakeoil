@@ -6,12 +6,13 @@
 
 #include "../typedefs.h"
 #include "../protos.h"
+#include "../api.h"
 
 #include <snakeoil/gpx/protos.h>
 
 namespace so_gfx
 {
-    class render_2d
+    class SNAKEOIL_GFX_API render_2d
     {
         so_this_typedefs( render_2d ) ;
 
@@ -43,5 +44,15 @@ namespace so_gfx
         so_gfx::image_render_2d_ptr_t get_image_render_2d( void_t ) ;
         so_gfx::line_render_2d_ptr_t get_line_render_2d( void_t ) ;
 
+    public:
+
+        void_t init( void_t ) ;
+        void_t release( void_t ) ;
+        void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+
+        void_t prepare_for_rendering( void_t ) ;
+        void_t render_range( size_t const, size_t const ) ;
+        void_t render( size_t const ) ;
     };
+    so_typedef( render_2d ) ;
 }

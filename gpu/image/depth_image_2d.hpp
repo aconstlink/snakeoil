@@ -49,7 +49,7 @@ namespace so_gpu
             return so_gpu::memory::alloc( std::move( rhv ), purpose ) ;
         }
 
-        static void_t destroy( this_ptr_t ptr )
+        static this_ptr_t destroy( this_ptr_t ptr )
         {
             return so_gpu::memory::dealloc( ptr ) ;
         }

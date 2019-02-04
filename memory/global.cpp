@@ -89,11 +89,13 @@ void_ptr_t global::alloc( size_t sib )
 }
 
 //*************************************************************************************
-void_t global::dealloc( void_ptr_t ptr )
+void_ptr_t global::dealloc( void_ptr_t ptr )
 {
-    if( ptr == nullptr ) return ;
+    if( ptr == nullptr ) return nullptr ;
 
     this_t::get()->_manager->dealloc( ptr ) ;
+
+    return nullptr ;
 }
 
 //*************************************************************************************

@@ -74,7 +74,7 @@ namespace so_gfx
     public:
 
         static this_ptr_t create( this_rref_t, so_memory::purpose_cref_t ) ;
-        static void_t destroy( this_ptr_t ) ;
+        static this_ptr_t destroy( this_ptr_t ) ;
 
     public:
 

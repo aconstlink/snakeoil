@@ -213,13 +213,15 @@ namespace so_gfx
 
     public:
 
-        void_t init( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+        void_t init( void_t ) ;        
 
         image_id_t add_image( so_imex::image_ptr_t ) ;
         image_id_t add_image( so_imex::image_ptr_t, so_gpu::viewport_2d_cref_t ) ;
         void_t remove_image( this_t::image_id_cref_t ) ;
 
-        void_t set_view_projection( size_t const, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+        void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
+        /// group is not used right now
+        void_t set_view_projection( size_t const group, so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         so_gfx::result draw_image( size_t const group, image_id_cref_t image_id, bool_t const dirty,
             so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, so_math::vec2f_cref_t scale, float_t const rot,

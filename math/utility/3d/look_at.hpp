@@ -234,7 +234,7 @@ namespace so_math
             //vcRighte = vec3_t(vcWorldUp).normalize().cross( vcLookAte ) ;
             //vcUpe = vcLookAte.cross( vcRighte ) ;
 
-            create_lookat_lh_from_vec<type_t>( vcCurPos, vcLookAte, vcUpe, vcRighte, inout ) ;
+            create_lookat_from_vec<type_t>( vcCurPos, vcLookAte, vcUpe, vcRighte, inout ) ;
         }
 
         template< typename type_t >

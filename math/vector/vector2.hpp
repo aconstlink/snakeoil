@@ -413,22 +413,22 @@ namespace so_math
 
         //***************************************************
         this_ref_t negate( void )
-            {
-                _elem[0] = -_elem[0] ;_elem[1] = -_elem[1] ;
-        return (*this) ;
+        {
+            _elem[0] = -_elem[0] ;_elem[1] = -_elem[1] ;
+            return ( *this ) ;
         }
 
         //***************************************************
         this_t negated( void ) const
-            {
-                this_t v(*this) ;
-                return v.negate() ;
+        {
+            this_t v(*this) ;
+            return v.negate() ;
         }
 
         //***************************************************
-        this_t sign( void ) const
-            {
-                return this_t( so_math::fn<type_t>::sign(_elem[0]), so_math::fn<type_t>::sign(_elem[1]) ) ;
+        this_t sign( void ) const{
+            return this_t( so_math::fn<type_t>::sign(_elem[0]), 
+                so_math::fn<type_t>::sign(_elem[1]) ) ;
         }
 
         //***************************************************

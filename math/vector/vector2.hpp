@@ -277,6 +277,13 @@ namespace so_math
             return this_t(_elem[0]/rhv, _elem[1]/rhv) ;
         }
 
+    public: // operator %
+
+        //***************************************************
+        this_t operator % ( this_cref_t rhv ) const{
+            return this_t(_elem[0]%rhv.x(), _elem[1]%rhv.y()) ;
+        }
+
     public: // operator =
 
         //***************************************************

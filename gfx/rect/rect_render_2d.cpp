@@ -132,6 +132,44 @@ so_gfx::result rect_render_2d::prepare_for_rendering( void_t )
 so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, 
     so_math::vec2f_cref_t scale, float_t const rot, so_math::vec4f_cref_t color )
 {
+    group_info_ptr_t gi_ptr = this_t::find_or_create_group_info( group_id ) ;
+
+    {
+        this_t::rect_info_t ri ;
+        ri.color = color ;
+        ri.pos = pos ;
+        ri.rot = rot ;
+        ri.pivot = pivot ;
+        ri.scale = scale ;
+
+        so_thread::lock_guard_t lk( gi_ptr->mtx ) ;
+        gi_ptr->rect_infos.push_back( ri ) ;
+    }
+    return so_gfx::ok ;
+}
+
+//************************************************************************************
+so_gfx::result rect_render_2d::draw_rects( size_t const group_id, 
+    size_t const num_rects, draw_funk_t funk ) 
+{
+    group_info_ptr_t gi_ptr = this_t::find_or_create_group_info( group_id ) ;
+
+    // 2. generate user lines and insert into group's buffer
+    {
+        so_thread::lock_guard_t lk( gi_ptr->mtx ) ;
+        for( size_t i = 0; i < num_rects; ++i )
+        {
+            this_t::rect_info_t ri ;
+            if( funk( i, ri  ) )
+                gi_ptr->rect_infos.push_back( ri ) ;
+        }
+    }
+    return so_gfx::result::ok ;
+}
+
+//************************************************************************************
+rect_render_2d::group_info_ptr_t rect_render_2d::find_or_create_group_info( size_t const group_id )
+{
     group_info_ptr_t gi_ptr = nullptr ;
 
     // 1. find and/or insert group
@@ -151,7 +189,7 @@ so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_
             //gi.view = 
 
             gi_ptr = so_gfx::memory::alloc( this_t::group_info_t( std::move( gi ) ),
-                "[rect_render_2d::draw_lines] : group_infos" ) ;
+                "[rect_render_2d::find_or_create_group_info] : group_infos" ) ;
 
             auto const lower_iter = std::lower_bound( _group_infos.begin(), _group_infos.end(), group_id,
                 [&] ( this_t::group_info_ptr_t li, size_t const val )
@@ -165,19 +203,7 @@ so_gfx::result rect_render_2d::draw_rect( size_t const group_id, so_math::vec2f_
             gi_ptr = *iter ;
     }
 
-    // 2. generate user lines and insert into group's buffer
-    {
-        this_t::rect_info_t ri ;
-        ri.color = color ;
-        ri.pos = pos ;
-        ri.rot = rot ;
-        ri.pivot = pivot ;
-        ri.scale = scale ;
-
-        so_thread::lock_guard_t lk( gi_ptr->mtx ) ;
-        gi_ptr->rect_infos.push_back( ri ) ;
-    }
-    return so_gfx::ok ;
+    return gi_ptr ;
 }
 
 //************************************************************************************

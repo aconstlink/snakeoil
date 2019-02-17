@@ -20,7 +20,7 @@ namespace so_gfx
         so_this_typedefs( rect_render_2d ) ;
 
 
-    private:
+    public:
 
         struct rect_info
         {
@@ -32,6 +32,7 @@ namespace so_gfx
         };
         so_typedef( rect_info ) ;
 
+    private:
         struct group_info
         {
             so_this_typedefs( group_info ) ;
@@ -101,6 +102,10 @@ namespace so_gfx
         so_math::mat4f_t _proj ;
         so_math::mat4f_t _view ;
 
+    private:
+
+        group_info_ptr_t find_or_create_group_info( size_t const ) ;
+
     public:
 
         rect_render_2d( so_gpx::render_system_ptr_t ) ;
@@ -121,6 +126,9 @@ namespace so_gfx
 
         so_gfx::result draw_rect( size_t const group, so_math::vec2f_cref_t pos, so_math::vec2f_cref_t pivot, 
             so_math::vec2f_cref_t scale, float_t const rot, so_math::vec4f_cref_t color ) ;
+
+        typedef std::function< bool_t ( size_t const, rect_info_out_t ) > draw_funk_t ;
+        so_gfx::result draw_rects( size_t const, size_t const, draw_funk_t ) ;
 
         so_gfx::result prepare_for_rendering( void_t ) ;
         bool_t need_to_render( size_t const ) const ;

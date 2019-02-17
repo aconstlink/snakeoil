@@ -78,7 +78,7 @@ namespace so_gfx
             data_buffer_ptr_t _rect_info_ptr = nullptr ;
 
             /// the number of lines in the vertex buffer
-            size_t _num_rects = 10000 ;
+            size_t _num_rects = 50000 ;
 
             so_typedefs( so_std::vector<so_gpu::variable_set_ptr_t>, var_sets ) ;
 

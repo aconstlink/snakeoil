@@ -1,18 +1,19 @@
 
 <world>  
-   <physicals>
-       <physical rect="x y z w">
-           <material type="" />
-           <shape>
-           </shape> 
-       </physical>
-   </physicals>
-   <collectables>
-   </collectables>
-   <events>       
-   </events>
-   <spawn_points>
 
-   </spawn_points>
-   
+   <materials>
+     <material id=x name="">
+       <color value="r g b a" />
+     </material>
+   </materials>
+
+   <field w=num_chunks h=num_chunks>
+   <chunks layer=x w=chunk_width h=chunk_height>
+     <chunk i=x j=y>
+       <block i=x j=y>
+         <material id=x />
+       </block>
+     </chunk>
+   </chunks>
+   </field>
 </world>

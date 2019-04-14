@@ -25,6 +25,9 @@ set( SNAKEOIL_SOURCES
     snakeoil/spritesheet/spritesheet_parser.h
     snakeoil/spritesheet/spritesheet_parser.cpp
     snakeoil/spritesheet/spritesheet.h
+    snakeoil/world/world.h
+    snakeoil/world/world_parser.h
+    snakeoil/world/world_parser.cpp
 )
 
 set( SOURCES

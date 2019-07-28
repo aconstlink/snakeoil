@@ -145,7 +145,7 @@ find_package( RapidJson REQUIRED )
 
 #
 # optionals
-find_package( OpenCtm )
+#find_package( OpenCtm )
 find_package( Fmod ) 
 
 if( SNAKEOIL_TARGET_OS_WIN )

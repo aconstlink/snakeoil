@@ -28,7 +28,8 @@ namespace so_flow
         generic_input_slot( void_t )
         {}
 
-        generic_input_slot( this_rref_t rhv ) : _data(std::move(rhv._data))
+        generic_input_slot( this_rref_t rhv ) : input_slot( std::move(rhv) ), 
+            _data(std::move(rhv._data))
         {}
 
         generic_input_slot( type_ptr_t d ) : _data(d)
@@ -77,7 +78,7 @@ namespace so_flow
 
         bool_t get( type_ref_t d ) const 
         {
-            return _data.get( d ) ;
+            return _data.get_checked(d) ;
         }
 
         void_t set_ptr( type_ptr_t ptr )

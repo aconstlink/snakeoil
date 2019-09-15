@@ -76,7 +76,7 @@ void_t store_logger::for_each( size_t const begin, size_t const end, funk_t f ) 
 
     for( size_t i = a; i < b; ++i )
     {
-        f( _stores[ i ] ) ;
+        f( _stores[ i % _stores.size() ] ) ;
     }
 }
 

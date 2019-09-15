@@ -247,10 +247,28 @@ namespace so_audio
             size_t const start = _end < _start ? _end : _start ;
             size_t const end = _end < _start ? _start : _end ;
 
-            for( size_t i = start; i < end; ++i )
+            // overflow check
+            if( (end - start) > (_samples.size() - end) )
             {
-                size_t const channel = i % _num_channels ;
-                f( channel, _samples[ i ] ) ;
+                for( size_t i = end; i < _samples.size(); ++i )
+                {
+                    size_t const channel = i % _num_channels ;
+                    f( channel, _samples[ i ] ) ;
+                }
+
+                for( size_t i = 0; i < start; ++i )
+                {
+                    size_t const channel = i % _num_channels ;
+                    f( channel, _samples[ i ] ) ;
+                }
+            }
+            else
+            {
+                for( size_t i = start; i < end; ++i )
+                {
+                    size_t const channel = i % _num_channels ;
+                    f( channel, _samples[ i ] ) ;
+                }
             }
         }
         

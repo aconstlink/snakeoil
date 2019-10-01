@@ -8,7 +8,7 @@
 
 #include <snakeoil/math/vector/vector2.hpp>
 #include <snakeoil/math/utility/fn.hpp>
-#include <snakeoil/math/constants.h>
+#include <snakeoil/math/utility/constants.hpp>
 
 using namespace so_noise ;
 
@@ -43,7 +43,7 @@ gradient_noise::gradient_noise( uint_t seed, uint_t bit, uint_t num_mixes )
             2.0f + 1.0f ;
 
         float_t const r = so_math::fn<float_t>::sqrt( 1.0f - z*z ) ;
-        float_t const theta = 2.0f * so_math::constants::pi<float_t>() * 
+        float_t const theta = 2.0f * so_math::constants<float_t>::pi() * 
             ((float_t)((rand()& value_limit)/(double_t)value_limit));
 
         _noises[i] = so_math::vec3f_t( 

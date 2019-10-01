@@ -6,7 +6,7 @@
 #define _SNAKEOIL_MATH_UTILITY_ANGLE_HPP_
 
 #include "fn.hpp"
-#include "../constants.h"
+#include "constants.hpp"
 #include "../typedefs.h"
 
 namespace so_math
@@ -29,17 +29,17 @@ namespace so_math
         /// based on the passed radians value
         static type_t constrain_angle( type_t const radian )
         {
-            return so_math::fn<type_t>::mod( radian, type_t(2)*so_math::constants::pi<type_t>() ) ;
+            return so_math::fn<type_t>::mod( radian, type_t(2)*so_math::constants<type_t>::pi() ) ;
         }
 
         static type_t radian_to_degree( type_t const radian )
         {
-            return radian * type_t(180) / so_math::constants::pi<type_t>() ;
+            return radian * type_t(180) / so_math::constants<type_t>::pi() ;
         }
 
         static type_t degree_to_radian( type_t const degree )
         {
-            return degree * so_math::constants::pi<type_t>() / type_t(180) ;			
+            return degree * so_math::constants<type_t>::pi() / type_t(180) ;			
         }
 
     public:

@@ -30,7 +30,6 @@ set( NON_ARCH_SOURCES
     vector/vector2b.hpp
     vector/vector3b.hpp
     vector/vector4b.hpp
-
     
     interpolation/interpolate.hpp
         
@@ -57,10 +56,13 @@ set( NON_ARCH_SOURCES
     primitive/3d/ray.hpp
     primitive/3d/frustum.hpp
 
+    utility/constants.hpp
     utility/radian.hpp
     utility/degree.hpp
     utility/angle.hpp
     utility/fn.hpp
+    utility/factorial.hpp
+    utility/taylor.hpp
     utility/index_1d_to_2d.hpp
     utility/index_2d_to_1d.hpp
     utility/index_3d_to_1d.hpp
@@ -86,7 +88,6 @@ set( SOURCES
     default_instruction_set.h
     typedefs.h
     common/function.h
-    constants.h
 
     ${CPP_SOURCES}
     ${NON_ARCH_SOURCES}	

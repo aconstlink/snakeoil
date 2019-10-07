@@ -179,6 +179,7 @@ set( SUBDIRS
     "std"
     "thread"
     "io"
+    "dsp"
     #"resource"
     #"variable"
     "flow"

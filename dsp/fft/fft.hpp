@@ -24,6 +24,9 @@ namespace so_dsp
         so_typedefs( std::valarray<float_t>, samples ) ;
         so_typedefs( std::valarray<complex_t>, complexes ) ;
 
+        typedef std::pair< T, size_t > sorted_item_t ;
+        so_typedefs( std::vector< sorted_item_t >, sorted ) ;
+
     private: // variables
 
         size_t _n = 2048 ;
@@ -120,6 +123,27 @@ namespace so_dsp
             }
 
             return have_new ;
+        }
+
+        bool_t sort_abs( complexes_in_t frequencies, sorted_out_t sorted )
+        {
+            if( sorted.size() < frequencies.size() )
+            {
+                sorted.resize( frequencies.size() ) ;
+            }
+
+            for( size_t i=0; i<frequencies.size(); ++i )
+            {
+                sorted[ i ] = std::make_pair( std::abs( frequencies[ i ] ), i ) ;
+            }
+
+            std::sort( sorted.begin(), sorted.end(), [&] ( 
+                std::pair< T, size_t > const & a, std::pair< T, size_t > const & b ) 
+            { 
+                return a.first > b.first ;
+            } ) ;
+
+            return true ;
         }
 
     public: // static 

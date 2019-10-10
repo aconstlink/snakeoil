@@ -30,7 +30,7 @@ namespace so_std
 
     #elif defined(SNAKEOIL_COMPILER_MSC_15)
 
-    using filesystem = std::filesystem ;
+    namespace filesystem = std::experimental::filesystem ;
 
     #elif defined( SNAKEOIL_COMPILER_GNU )
 

@@ -197,7 +197,7 @@ set( SUBDIRS
     "font"
     #"script"
     #"manager"
-    #"scene"
+    "scene"
     "appx"
     "application"
     "property"

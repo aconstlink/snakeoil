@@ -72,32 +72,18 @@ set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 if( SNAKEOIL_LIBRARY_BUILD_SHARED )
 
-    add_definitions( 
-        -DSNAKEOIL_SCENE_EXPORT 
-        -DSNAKEOIL_FLOW_IMPORT
-        -DSNAKEOIL_SHADE_IMPORT
-        -DSNAKEOIL_GPX_IMPORT
-        -DSNAKEOIL_GPU_IMPORT
-        -DSNAKEOIL_MEMORY_IMPORT
-        -DSNAKEOIL_LOG_IMPORT
-        -DSNAKEOIL_IMEX_IMPORT
-        -DSNAKEOIL_GEOMETRY_IMPORT
-        -DSNAKEOIL_GFX_IMPORT
-        )
-
     # snakeoil
     target_link_libraries( ${CUR_LIB_NAME}
-        snakeoil_shade
-        snakeoil_flow
+        snakeoil::shade
+        snakeoil::flow
         snakeoil::gpx
         snakeoil::gpu
         snakeoil::memory
         snakeoil::log
-        snakeoil_imex
-        snakeoil_geometry
-        snakeoil_gfx
+        snakeoil::imex
+        snakeoil::geometry
+        snakeoil::gfx
     )
-	
 endif()
 
 ###########################################################

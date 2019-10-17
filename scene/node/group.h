@@ -10,6 +10,7 @@
 #include <snakeoil/thread/mutex.h>
 
 #include <vector>
+#include <functional>
 
 namespace so_scene
 {

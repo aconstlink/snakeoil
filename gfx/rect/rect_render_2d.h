@@ -13,6 +13,8 @@
 #include <snakeoil/gpx/protos.h>
 #include <snakeoil/gpx/technique/technique_id.h>
 
+#include <functional>
+
 namespace so_gfx
 {
     class SNAKEOIL_GFX_API rect_render_2d

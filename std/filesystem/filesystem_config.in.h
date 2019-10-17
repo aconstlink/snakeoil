@@ -9,11 +9,14 @@
 #cmakedefine SNAKEOIL_COMPILER_MSC
 #cmakedefine SNAKEOIL_COMPILER_MSC_14
 #cmakedefine SNAKEOIL_COMPILER_MSC_15
+#cmakedefine SNAKEOIL_COMPILER_MSC_16
 #cmakedefine SNAKEOIL_COMPILER_GNU
 
 #if defined( SNAKEOIL_COMPILER_MSC_14 )
 #include <filesystem>
 #elif defined( SNAKEOIL_COMPILER_MSC_15 )
+#include <filesystem>
+#elif defined( SNAKEOIL_COMPILER_MSC_16 )
 #include <filesystem>
 #elif SNAKEOIL_COMPILER_GNU
 // requires -lstdc++fs on gcc
@@ -31,6 +34,10 @@ namespace so_std
     #elif defined(SNAKEOIL_COMPILER_MSC_15)
 
     namespace filesystem = std::experimental::filesystem ;
+
+    #elif defined(SNAKEOIL_COMPILER_MSC_16)
+
+    namespace filesystem = std::filesystem ;
 
     #elif defined( SNAKEOIL_COMPILER_GNU )
 

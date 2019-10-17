@@ -18,6 +18,8 @@
 
 #include <imgui/imgui.h>
 
+#include <functional>
+
 namespace so_imgui
 {
     class SNAKEOIL_DEGUI_API system

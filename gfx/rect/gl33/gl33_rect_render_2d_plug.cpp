@@ -108,8 +108,8 @@ so_gpx::plug_result gl33_rect_render_2d_plug::on_load( load_info_cref_t li )
 
     // text render shader
     {
-        auto const vs_path = base / so_io::path_t( "/rect_render_2d.vs.glsl" ) ;
-        auto const ps_path = base / so_io::path_t( "/rect_render_2d.ps.glsl" ) ;
+        auto const vs_path = base / so_io::path_t( "rect_render_2d.vs.glsl" ) ;
+        auto const ps_path = base / so_io::path_t( "rect_render_2d.ps.glsl" ) ;
 
         so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
         so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;

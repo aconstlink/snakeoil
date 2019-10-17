@@ -15,6 +15,8 @@ set( SNAKEOIL_COMPILER_CONFIGURED FALSE )
 set( SNAKEOIL_COMPILER_MSC OFF )
 set( SNAKEOIL_COMPILER_MSC_14 OFF ) # vs 2015
 set( SNAKEOIL_COMPILER_MSC_15 OFF ) # vs 2017
+set( SNAKEOIL_COMPILER_MSC_16 OFF ) # vs 2019
+set( SNAKEOIL_CXX_STANDARD 17 )
 
 # Gnu compiler (GCC, GCC-C++)
 set( SNAKEOIL_COMPILER_GNU OFF )
@@ -26,10 +28,15 @@ if( MSVC_IDE OR MSVC )
     
     if( MSVC_VERSION EQUAL 1900 )
       set( SNAKEOIL_COMPILER_MSC_14 on )
+      set( SNAKEOIL_CXX_STANDARD 11 )
     elseif( MSVC_VERSION GREATER 1909 AND MSVC_VERSION LESS 1920 )
       set( SNAKEOIL_COMPILER_MSC_15 on )
+      set( SNAKEOIL_CXX_STANDARD 14 )
+    elseif( MSVC_VERSION GREATER 1919 AND MSVC_VERSION LESS 1930 )
+      set( SNAKEOIL_COMPILER_MSC_16 on )
+      set( SNAKEOIL_CXX_STANDARD 17 )
     else()
-      message( "MSVC Compiler not yet supported" )
+      message( FATAL "MSVC Compiler not yet supported" )
     endif()
 
     #add_definitions( -DSNAKEOIL_COMPILER_MSC )

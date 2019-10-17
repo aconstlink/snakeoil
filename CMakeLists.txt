@@ -244,6 +244,7 @@ foreach( _SUBDIR ${SUBDIRS} )
 
     set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
     set_target_properties( ${CUR_LIB_NAME} PROPERTIES OUTPUT_NAME ${CUR_FILE_NAME})
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES CXX_STANDARD ${SNAKEOIL_CXX_STANDARD} )
     if( SNAKEOIL_LIBRARY_BUILD_SHARED )
       target_compile_options( ${CUR_LIB_NAME} 
         PRIVATE -DSNAKEOIL_${CUR_LIB_NAME_UPPER}_EXPORT 

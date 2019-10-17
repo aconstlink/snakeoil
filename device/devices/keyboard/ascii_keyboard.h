@@ -13,6 +13,8 @@
 #include <snakeoil/std/container/map.hpp>
 #include <snakeoil/std/container/vector.hpp>
 
+#include <functional>
+
 namespace so_device
 {
     class SNAKEOIL_DEVICE_API ascii_keyboard : public ikeyboard_device

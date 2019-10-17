@@ -14,6 +14,8 @@
 #include <snakeoil/std/container/vector.hpp>
 #include <snakeoil/std/string/string.hpp>
 
+#include <functional>
+
 namespace so_device
 {
     class SNAKEOIL_DEVICE_API midi_device : public idevice

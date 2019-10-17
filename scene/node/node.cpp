@@ -4,6 +4,7 @@
 //------------------------------------------------------------
 #include "node.h"
 
+#include <algorithm>
 
 using namespace so_scene ;
 using namespace so_scene::so_node ;
@@ -37,7 +38,7 @@ node::~node( void_t )
 //*******************************************************************
 so_scene::result node::apply( so_scene::so_visitor::ivisitor_ptr_t ) 
 {
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
@@ -70,4 +71,29 @@ bool_t node::reconnect_flow_node( void_t )
 bool_t node::bind_variable( so_std::string_in_t bp, so_flow::ivariable_ptr_t ptr ) 
 {
     return variable_node_policy_t::bind_variable( bp, ptr ) ;
+}
+
+//*******************************************************************
+so_scene::result node::add_component( so_scene::so_node::icomponent_ptr_t inptr ) 
+{
+    auto iter = std::find_if( _comps.begin(), _comps.end(), [&] ( icomponent_ptr_t ptr ) 
+    { 
+        return ptr == inptr ;
+    } ) ;
+
+    if( iter != _comps.end() )
+        return so_scene::result::ok ;
+
+    _comps.emplace_back( inptr ) ;
+
+    return so_scene::result::ok ;
+}
+
+//*******************************************************************
+void_t node::for_each( component_funk_t funk ) 
+{
+    for( auto * ptr : _comps )
+    {
+        funk( ptr ) ;
+    }
 }

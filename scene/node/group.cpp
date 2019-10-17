@@ -52,7 +52,7 @@ so_scene::result group::apply( so_scene::so_visitor::ivisitor_ptr_t vptr,
 
     switch( r ) 
     {
-    case so_scene::ok:
+    case so_scene::result::ok:
         traverse_children( vptr, pred ) ;
         break ;
     default:
@@ -67,14 +67,14 @@ so_scene::result group::apply( so_scene::so_visitor::ivisitor_ptr_t vptr,
 so_scene::result group::replace( node_ptr_t which_ptr, node_ptr_t with_ptr )
 {
     if( with_ptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     if( which_ptr == with_ptr ) 
-        return so_scene::ok ;
+        return so_scene::result::ok ;
 
     auto found = std::find( _children.begin(), _children.end(), which_ptr ) ;
     if( found == _children.end() ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     which_ptr->set_parent( nullptr ) ;
     with_ptr->set_parent( this ) ;
@@ -82,23 +82,23 @@ so_scene::result group::replace( node_ptr_t which_ptr, node_ptr_t with_ptr )
     size_t const n = found - _children.begin() ;
     _children[n] = with_ptr ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
 so_scene::result group::detach( node_ptr_t which_ptr )
 {
     if( which_ptr == nullptr ) 
-        return so_scene::ok ;
+        return so_scene::result::ok ;
 
     auto found = std::find( _children.begin(), _children.end(), which_ptr ) ;
     if( found == _children.end() ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     which_ptr->set_parent( nullptr ) ;
     _children.erase( found ) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
@@ -132,18 +132,18 @@ size_t group::find_index( node_ptr_t nptr ) const
 so_scene::result group::add_child( node_ptr_t nptr ) 
 {
     if( nptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     so_thread::lock_guard_t lk(_mtx) ;
 
     auto found = std::find( _children.begin(), _children.end(), nptr ) ;
     if( found != _children.end() ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     _children.push_back(nptr) ;
     nptr->set_parent(this) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
@@ -169,8 +169,8 @@ void_t group::traverse_children( so_scene::so_visitor::ivisitor_ptr_t ptr,
     {
         if( !func( i ) ) continue ;
         
-        so_scene::result r = so_scene::repeat ;
-        while( r == so_scene::repeat )
+        so_scene::result r = so_scene::result::repeat ;
+        while( r == so_scene::result::repeat )
         {
             auto * nptr = _children[i] ;
             r = nptr->apply( ptr ) ;

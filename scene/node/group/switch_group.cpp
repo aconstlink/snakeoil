@@ -52,62 +52,62 @@ switch_group::~switch_group( void_t )
 so_scene::result switch_group::switch_child( size_t child_i, bool_t active ) 
 {
     if( child_i >= base_t::get_num_children() ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     _actives[child_i] = active ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
 so_scene::result switch_group::switch_off_all( void_t )  
 {
     for( size_t i=0; i<_actives.size(); ++i ) _actives[i] = false ;
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
 so_scene::result switch_group::switch_on( node_ptr_t nptr ) 
 {
     if( nptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     size_t const index = base_t::find_index( nptr ) ;
     if( index == size_t(-1) ) 
-        return so_scene::failed ;
+        return so_scene::result::failed ;
 
     _actives[index] = true ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
 so_scene::result switch_group::add_child( node_ptr_t nptr, bool_t active ) 
 {
     if( nptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     if( so_scene::no_success( base_t::add_child( nptr ) ) ) 
-        return so_scene::failed ;
+        return so_scene::result::failed ;
         
     _actives.push_back( active ) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
 so_scene::result switch_group::remove_child( node_ptr_t nptr ) 
 {
     if( nptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     size_t const index = base_t::remove_child( nptr ) ;
     if( index == size_t(-1) ) 
-        return so_scene::ok ;
+        return so_scene::result::ok ;
     
     _actives.erase( _actives.begin() + index ) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************
@@ -123,10 +123,10 @@ so_scene::result switch_group::detach( node_ptr_t which_ptr )
 {
     size_t index = base_t::remove_child( which_ptr ) ;
     if( index == size_t(-1) ) 
-        return so_scene::failed ;
+        return so_scene::result::failed ;
 
     _actives.erase( _actives.begin() + index ) ;
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*******************************************************************

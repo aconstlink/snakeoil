@@ -7,7 +7,7 @@
 
 namespace so_scene
 {
-    enum result
+    enum class result
     {
         ok,
         failed,
@@ -16,7 +16,7 @@ namespace so_scene
         repeat
     };
 
-    static bool success( result r ){ return r == ok ; }
+    static bool success( result r ){ return r == result::ok ; }
     static bool no_success( result r ) { return !success(r) ; }
 
 }

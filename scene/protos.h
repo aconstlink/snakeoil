@@ -25,6 +25,8 @@ namespace so_scene
         so_class_proto_typedefs( render_state ) ;
         so_class_proto_typedefs( camera ) ;
 
+        so_class_proto_typedefs( icomponent ) ;
+
     }
 
     namespace so_visitor

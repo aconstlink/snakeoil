@@ -132,14 +132,14 @@ so_scene::result renderable::add_variable_set( so_gpu::variable_set_ptr_t ptr )
 {
     auto const iter = std::find( _gpu_varsets.begin(), _gpu_varsets.end(), ptr ) ;
     if( iter != _gpu_varsets.end() )
-        return so_scene::failed ;
+        return so_scene::result::failed ;
 
     _gpu_varsets.push_back( ptr ) ;
 
     if( so_core::is_not_nullptr( _config_ptr ) )
         _config_ptr->add_variable_set( ptr ) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*************************************************************************************

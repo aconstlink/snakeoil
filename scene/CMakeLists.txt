@@ -20,6 +20,10 @@ set( SOURCES ${SOURCES}
     #creator/scene_creator_context.h
     #creator/scene_creator_context.cpp
 
+    component/icomponent.h
+    component/component.h
+    component/component.cpp
+
     node/node.h
     node/node.cpp
     node/group.h

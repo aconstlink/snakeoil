@@ -55,13 +55,13 @@ so_scene::result decorator::apply( so_scene::so_visitor::ivisitor_ptr_t vptr )
 so_scene::result decorator::replace( node_ptr_t which_ptr, node_ptr_t with_ptr )
 {
     if( which_ptr == with_ptr ) 
-        return so_scene::ok ;
+        return so_scene::result::ok ;
 
     if( which_ptr == nullptr ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     if( which_ptr != _decorated ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     if( _decorated != nullptr ) 
         _decorated->set_parent( nullptr ) ;
@@ -71,22 +71,22 @@ so_scene::result decorator::replace( node_ptr_t which_ptr, node_ptr_t with_ptr )
     if( _decorated != nullptr ) 
         _decorated->set_parent( this ) ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*************************************************************************
 so_scene::result decorator::detach( node_ptr_t which_ptr )
 {
     if( which_ptr == nullptr ) 
-        return so_scene::ok ;
+        return so_scene::result::ok ;
 
     if( which_ptr != _decorated ) 
-        return so_scene::invalid_argument ;
+        return so_scene::result::invalid_argument ;
 
     _decorated->set_parent( nullptr ) ;
     _decorated = nullptr ;
 
-    return so_scene::ok ;
+    return so_scene::result::ok ;
 }
 
 //*************************************************************************
@@ -122,8 +122,8 @@ node_cptr_t decorator::get_decorated( void_t ) const
 //*************************************************************************
 so_scene::result decorator::traverse_decorated( so_scene::so_visitor::ivisitor_ptr_t ptr )
 {
-    so_scene::result r = so_scene::repeat ;
-    while( r == so_scene::repeat )
+    so_scene::result r = so_scene::result::repeat ;
+    while( r == so_scene::result::repeat )
     {
         if( _decorated == nullptr ) break ;
         r = _decorated->apply(ptr) ;

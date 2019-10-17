@@ -8,6 +8,11 @@
 #include "iparent.h"
 #include "policy/variable_node_policy.h"
 
+#include "../component/icomponent.h"
+
+#include <snakeoil/std/container/vector.hpp>
+#include <functional>
+
 namespace so_scene
 {
     namespace so_node
@@ -25,7 +30,12 @@ namespace so_scene
         private:
 
             // not copyable
-            node( this_cref_t ) {}
+            node( this_cref_t ) = delete ;
+
+        private: // components
+
+            so_typedefs( so_std::vector<so_scene::so_node::icomponent_ptr_t>, components ) ;
+            components_t _comps ;
 
         public:
 
@@ -77,6 +87,15 @@ namespace so_scene
             {
                 return static_cast< T* >( ptr ) ;
             }
+
+        public:
+
+            so_scene::result add_component( so_scene::so_node::icomponent_ptr_t ) ;
+
+            typedef std::function< void_t ( so_scene::so_node::icomponent_ptr_t ) >
+                component_funk_t ;
+
+            void_t for_each( component_funk_t ) ;
         };
     }
 }

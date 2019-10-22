@@ -180,6 +180,7 @@ set( SUBDIRS
     "thread"
     "io"
     "dsp"
+    "event"
     #"resource"
     #"variable"
     "flow"

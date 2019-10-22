@@ -39,7 +39,7 @@ so_flow::result input_slot::connect( so_flow::ioutput_slot_ptr_t os_ptr )
     if( _os_ptr == os_ptr )
         return so_flow::already_connected ;
 
-    so_thread::semaphore_guard_t d( &_in_connect ) ;
+    so_thread::semaphore_guard_t d( _in_connect ) ;
     if( _in_connect == 2 )
     {
         so_log::global::warning( "[so_flow::input_slot::connect] : \

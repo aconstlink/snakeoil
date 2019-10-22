@@ -30,6 +30,7 @@ set( SOURCES ${SOURCES}
     helper.h
     helper/helper_os.h
 
+    mrsw.hpp
     semaphore.hpp
     semaphore_guard.hpp
     mutex.h

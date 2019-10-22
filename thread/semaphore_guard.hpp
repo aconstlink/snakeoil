@@ -15,32 +15,22 @@ namespace so_thread
 
     private:
 
-        semaphore_ptr_t _s ;
+        semaphore_ref_t _s ;
 
     public:
 
-        semaphore_guard( semaphore_ptr_t s ) : _s(s)
+        semaphore_guard( semaphore_ref_t s ) : _s(s)
         {
-            _s->increment() ;
-        }
-
-        semaphore_guard( this_rref_t rhv )
-        {
-            *this = std::move(rhv) ;
+            _s.increment() ;
         }
 
         ~semaphore_guard( void_t )
         {
-            _s->decrement() ;
+            _s.decrement() ;
         }
-    
-    public:
 
-        this_ref_t operator = ( this_rref_t rhv )
-        {
-            so_move_member_ptr( _s, rhv ) ; 
-            return *this ;
-        }
+        semaphore_guard( this_cref_t ) = delete ;
+        semaphore_guard( this_rref_t rhv ) = delete ;
     };
     so_typedef( semaphore_guard ) ;
 }

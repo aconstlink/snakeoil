@@ -195,7 +195,8 @@ so_flow::result node::on_trigger( so_flow::inode::nodes_ref_t nodes_out )
 //***********************************************************************
 so_flow::result node::on_update( so_flow::inode::nodes_ref_t nodes_out ) 
 {
-    auto const res = _triggered.decrement([=]( size_t sem ){ return sem == 0 ; }) ;
+    auto const res = _triggered.decrement( 
+        so_thread::semaphore_static::is_zero_funk ) ;
 
     // we only call update and collect all connected nodes when
     // the last on_update call is made of all on_triggers

@@ -27,6 +27,14 @@ namespace so_event
             so_thread::mutex_t mtx ;
             so_std::string_t name ;
             triggers_t triggers ;
+
+            named_trigger( void_t ) {}
+
+            named_trigger( named_trigger && rhv )
+            {
+                name = std::move( rhv.name ) ;
+                triggers = std::move( rhv.triggers ) ;
+            }
         };
         so_typedef( named_trigger ) ;
         so_typedefs( so_std::vector< named_trigger_t >, named ) ;
@@ -36,16 +44,24 @@ namespace so_event
             so_thread::mutex_t mtx ;
             so_core::clock_t::time_point tp ;
             triggers_t triggers ;
+
+            timed_trigger( void_t ) {}
+
+            timed_trigger( timed_trigger&& rhv )
+            {
+                tp = std::move( rhv.tp ) ;
+                triggers = std::move( rhv.triggers ) ;
+            }
         };
         so_typedef( timed_trigger ) ;
         so_typedefs( so_std::vector< timed_trigger_t >, timed ) ;
         
         
-        so_thread::mrsw_t _timed_lock ;
+        so_thread::mrsw_t _timed_mtx ;
         timed_t _timed ;
+        size_t _timed_index = size_t(-1) ;
 
-        so_thread::semaphore_t _named_read ;
-        so_thread::semaphore_t _named_write ;
+        so_thread::mrsw_t _named_mtx ;
         named_t _named ;
 
     public:
@@ -70,7 +86,7 @@ namespace so_event
     public:
 
         /// trigger timed trigger and do all update
-        so_event::result update( float_t const dt ) ;
+        so_event::result update( so_core::clock_t::time_point const & ) ;
 
     };
     so_typedef( event_manager ) ;

@@ -18,6 +18,8 @@ namespace so_event
         processing,
         not_ready,
         name_taken,
+        name_not_found,
+        not_in_range,
         trigger_already_added
     };
 

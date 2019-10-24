@@ -14,6 +14,7 @@ set( SOURCES
 
     events/ievent.h
     events/itrigger.h
+    events/triggers.h
    )
 
 so_vs_src_dir( SOURCES )

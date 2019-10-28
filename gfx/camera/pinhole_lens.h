@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GFX_CAMERA_PINHOLE_LENS_H_
-#define _SNAKEOIL_GFX_CAMERA_PINHOLE_LENS_H_
+#pragma once
 
 #include "ilens.h"
 
@@ -45,8 +44,16 @@ namespace so_gfx
 
     public:
 
-        void_t create_orthographic( float_t aspect, float_t near, float_t far ) ;
-        void_t create_perspective_fov( float_t fov, float_t aspect, float_t near, float_t far ) ;
+        this_ref_t make_orthographic( float_t const w, float_t const h,
+            float_t const near, float_t const far ) noexcept ;
+
+        this_ref_t make_perspective_fov( float_t const fov, float_t const aspect,
+            float_t const near, float_t const far ) noexcept ;
+
+        static this_t create_orthographic( float_t const w, float_t const h, 
+            float_t const near, float_t const far ) noexcept ;
+        static this_t create_perspective_fov( float_t const fov, float_t const aspect, 
+            float_t const near, float_t const far ) noexcept ;
         
         bool_t is_perspective( void_t ) const ;
         bool_t is_orthographic( void_t ) const ;
@@ -74,5 +81,3 @@ namespace so_gfx
     };
     so_typedef( pinhole_lens ) ;
 }
-
-#endif

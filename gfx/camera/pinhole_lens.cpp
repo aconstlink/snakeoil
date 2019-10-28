@@ -6,6 +6,7 @@
 
 #include <snakeoil/math/utility/3d/look_at.hpp>
 #include <snakeoil/math/utility/3d/perspective_fov.hpp>
+#include <snakeoil/math/utility/3d/orthographic_projection.hpp>
 
 using namespace so_gfx ;
 
@@ -51,18 +52,47 @@ void_t pinhole_lens::destroy( this_ptr_t ptr )
 }
 
 //**********************************************************************************************
-void_t pinhole_lens::create_orthographic( float_t aspect, float_t near, float_t far ) 
+pinhole_lens::this_ref_t pinhole_lens::make_orthographic( float_t const w, float_t const h,
+    float_t const near, float_t const far ) noexcept 
 {
-    // @todo
+    _proj_matrix = so_math::so_3d::orthographic<float_t>::create(
+        w, h, near, far ) ;
+    _projection_mode = projection_type::orthographic ;
+
+    return *this ;
 }
 
 //**********************************************************************************************
-void_t pinhole_lens::create_perspective_fov( float_t fov, float_t aspect, float_t near, float_t far ) 
+pinhole_lens::this_ref_t pinhole_lens::make_perspective_fov( float_t const fov, float_t const aspect,
+    float_t const near, float_t const far ) noexcept 
 {
-    so_math::so_3d::perspective<float_t>::create_by_fovv_aspect( 
+    so_math::so_3d::perspective<float_t>::create_by_fovv_aspect(
         fov, aspect, near, far, _proj_matrix ) ;
 
     _projection_mode = projection_type::perspective ;
+
+    return *this ;
+}
+
+//**********************************************************************************************
+pinhole_lens::this_t pinhole_lens::create_orthographic( float_t const w, float_t const h,
+    float_t const near, float_t const far ) noexcept
+{
+    return std::move( this_t().make_orthographic( w, h, near, far ) ) ;
+}
+
+//**********************************************************************************************
+pinhole_lens::this_t pinhole_lens::create_perspective_fov( float_t const fov, float_t const aspect,
+    float_t const near, float_t const far ) noexcept
+{
+    this_t ret ;
+
+    so_math::so_3d::perspective<float_t>::create_by_fovv_aspect( 
+        fov, aspect, near, far, ret._proj_matrix ) ;
+
+    ret._projection_mode = projection_type::perspective ;
+
+    return std::move( ret ) ;
 }
 
 //**********************************************************************************************

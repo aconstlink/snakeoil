@@ -6,6 +6,10 @@
 cmake_minimum_required( VERSION 3.6 )
 project(snakeoil CXX)
 
+if( POLICY CMP0079 )
+  cmake_policy( SET CMP0079 NEW )
+endif()
+
 set( SNAKEOIL_MAJOR_VERSION 0 )
 set( SNAKEOIL_MINOR_VERSION 1 )
 set( SNAKEOIL_PATCH_VERSION 8 )
@@ -258,6 +262,7 @@ foreach( _SUBDIR ${SUBDIRS} )
     
     target_link_libraries( complete INTERFACE ${CUR_LIB_NAME} )
 endforeach()
+add_subdirectory(sox)
 export(TARGETS complete NAMESPACE snakeoil:: APPEND FILE ${PROJECT_NAME}-targets.cmake)
 
 ################################################################

@@ -11,6 +11,8 @@
     typedef to_ ## _t & to_ ## _ref_t ; \
     typedef to_ ## _t && to_ ## _rref_t ; \
     typedef to_ ## _t const * to_ ## _cptr_t ; \
+    typedef to_ ## _t * const to_ ## _ptrc_t ; \
+    typedef to_ ## _t const * const to_ ## _cptrc_t ; \
     typedef to_ ## _t const * to_ ## _cvtr_t ; \
     typedef to_ ## _t const & to_ ## _cref_t ; \
     typedef to_ ## _cref_t to_ ## _in_t ; \
@@ -41,6 +43,8 @@
     typedef x * x ## _ptr_t ; \
     typedef x * x ## _vtr_t ; \
     typedef x const * x ## _cptr_t ; \
+    typedef x * const x ## _ptrc_t ; \
+    typedef x const * const x ## _cptrc_t ; \
     typedef x && x ## _rref_t ; \
     typedef x & x ## _inout_t
 
@@ -49,6 +53,8 @@
     typedef x * x ## _ptr_t ; \
     typedef x * x ## _vtr_t ; \
     typedef x const * x ## _cptr_t ; \
+    typedef x * const x ## _ptrc_t ; \
+    typedef x const * const x ## _cptrc_t ; \
     typedef x const * x ## _cvtr_t 
 
     

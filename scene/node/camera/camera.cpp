@@ -65,7 +65,12 @@ void_t camera::set_transformation( so_math::so_3d::trafof_cref_t trafo_in )
     if( so_core::is_nullptr(_cam_ptr) ) return ;
     
     _cam_ptr->set_transformaion( trafo_in ) ;
+}
 
+//*************************************************************************************
+so_gfx::icamera_cptrc_t camera::get_camera( void_t ) const noexcept 
+{
+    return _cam_ptr ;
 }
 
 //*************************************************************************************

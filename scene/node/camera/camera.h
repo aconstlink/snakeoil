@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_SCENE_NODE_CAMERA_CAMERA_H_
-#define _SNAKEOIL_SCENE_NODE_CAMERA_CAMERA_H_
+#pragma once
 
 #include "../leaf.h"
 
@@ -39,14 +38,13 @@ namespace so_scene
 
             void_t transform_by( so_math::so_3d::trafof_cref_t ) ;
             void_t set_transformation( so_math::so_3d::trafof_cref_t ) ;
+            so_gfx::icamera_cptrc_t get_camera( void_t ) const noexcept ;
 
         public:
 
             virtual so_scene::result apply( so_scene::so_visitor::ivisitor_ptr_t ) ;
             virtual void_t destroy( void_t ) ;
-
         } ;
     }
 }
 
-#endif

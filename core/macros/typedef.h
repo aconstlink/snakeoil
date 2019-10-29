@@ -56,14 +56,14 @@
     typedef x && x ## _rref_t ;                                         \
     typedef x & x ## _inout_t
 
-#define so_struct_proto_typedefs(x) \
+#define so_struct_proto_typedefs(x)                                     \
     struct x ;                                                          \
     typedef x * x ## _ptr_t ;                                           \
     typedef x * x ## _vtr_t ;                                           \
     typedef x const * x ## _cptr_t ;                                    \
     typedef x * const x ## _ptrc_t ;                                    \
     typedef x const * const x ## _cptrc_t ;                             \
-    typedef x const * x ## _cvtr_t                                      \
+    typedef x const * x ## _cvtr_t ;                                    \
     typedef x * x ## _utr_t ;                     /*unique ptr*/        \
     typedef x * x ## _str_t ;                     /*shared ptr*/        \
-    typedef x const * x ## _cstr_t ;              /*const shared ptr*/  \
+    typedef x const * x ## _cstr_t               /*const shared ptr*/   \

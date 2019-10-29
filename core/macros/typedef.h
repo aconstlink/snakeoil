@@ -64,6 +64,6 @@
     typedef x * const x ## _ptrc_t ;                                    \
     typedef x const * const x ## _cptrc_t ;                             \
     typedef x const * x ## _cvtr_t                                      \
-    typedef x * ## _utr_t ;                     /*unique ptr*/          \
-    typedef x * ## _str_t ;                     /*shared ptr*/          \
-    typedef x const * ## _cstr_t ;              /*const shared ptr*/    \
+    typedef x * x ## _utr_t ;                     /*unique ptr*/        \
+    typedef x * x ## _str_t ;                     /*shared ptr*/        \
+    typedef x const * x ## _cstr_t ;              /*const shared ptr*/  \

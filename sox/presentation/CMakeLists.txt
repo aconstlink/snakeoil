@@ -8,11 +8,16 @@ set( SOURCES
     result.h
     typedefs.h
     protos.h
+    structs.h
 
-    component/trigger_component.h
-    component/trigger_component.cpp
-    visitor/render_visitor.h
-    visitor/render_visitor.cpp
+    manager/presentation_manager.h
+    manager/presentation_manager.cpp
+    content/ipage.h
+    content/page.h
+    content/page.cpp
+    content/itransition.h
+    content/transition.h
+    content/transition.cpp
     )
 
 set( SOURCES ${SOURCES} )

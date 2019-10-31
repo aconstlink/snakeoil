@@ -23,10 +23,10 @@ namespace so_scene
 
         public:
 
-            camera( void_t ) ;
-            camera( so_gfx::icamera_ptr_t ) ;
-            camera( this_rref_t ) ;
-            virtual ~camera( void_t ) ;
+            camera( void_t ) noexcept ;
+            camera( so_gfx::icamera_ptr_t ) noexcept ;
+            camera( this_rref_t ) noexcept ;
+            virtual ~camera( void_t ) noexcept ;
 
         public:
 
@@ -38,13 +38,14 @@ namespace so_scene
 
             void_t transform_by( so_math::so_3d::trafof_cref_t ) ;
             void_t set_transformation( so_math::so_3d::trafof_cref_t ) ;
-            so_gfx::icamera_cptrc_t get_camera( void_t ) const noexcept ;
+            so_gfx::icamera_cstr_t get_camera( void_t ) const noexcept ;
 
         public:
 
             virtual so_scene::result apply( so_scene::so_visitor::ivisitor_ptr_t ) ;
             virtual void_t destroy( void_t ) ;
         } ;
+        so_typedef( camera ) ;
     }
 }
 

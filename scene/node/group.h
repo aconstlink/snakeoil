@@ -46,16 +46,12 @@ namespace so_scene
             void_t traverse_children( so_scene::so_visitor::ivisitor_ptr_t ptr,
                 traverse_predicate_t func ) ;
 
-        private: 
-
-            /// non-copyable
-            group( this_cref_t ) {}
-
         protected:
 
             group( void_t ) ;
             group( iparent_ptr_t ) ;
             group( this_rref_t ) ;
+            group( this_cref_t ) = delete ;
 
         public:
 

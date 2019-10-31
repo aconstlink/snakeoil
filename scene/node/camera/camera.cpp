@@ -12,25 +12,25 @@ using namespace so_scene ;
 using namespace so_scene::so_node ;
 
 //*************************************************************************************
-camera::camera( void_t ) 
+camera::camera( void_t ) noexcept
 {
 
 }
 
 //*************************************************************************************
-camera::camera( so_gfx::icamera_ptr_t cptr ) 
+camera::camera( so_gfx::icamera_ptr_t cptr ) noexcept
 {
     _cam_ptr = cptr ;
 }
 
 //*************************************************************************************
-camera::camera( this_rref_t rhv ) 
+camera::camera( this_rref_t rhv ) noexcept : leaf( std::move(rhv) )
 {
     so_move_member_ptr( _cam_ptr, rhv ) ;
 }
 
 //*************************************************************************************
-camera::~camera( void_t ) 
+camera::~camera( void_t ) noexcept
 {}
 
 //*************************************************************************************
@@ -68,7 +68,7 @@ void_t camera::set_transformation( so_math::so_3d::trafof_cref_t trafo_in )
 }
 
 //*************************************************************************************
-so_gfx::icamera_cptrc_t camera::get_camera( void_t ) const noexcept 
+so_gfx::icamera_cstr_t camera::get_camera( void_t ) const noexcept 
 {
     return _cam_ptr ;
 }

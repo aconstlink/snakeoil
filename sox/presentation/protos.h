@@ -2,15 +2,13 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOILX_PRESENTATION_PROTOS_H_
-#define _SNAKEOILX_PRESENTATION_PROTOS_H_
+#pragma once
 
 #include <snakeoil/core/macros/typedef.h>
 
 namespace sox_presentation
 {
-    
+    so_class_proto_typedefs( ipage ) ;
+    so_class_proto_typedefs( itransition ) ;
 }
-
-#endif
 

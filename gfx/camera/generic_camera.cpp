@@ -9,20 +9,24 @@
 using namespace so_gfx ;
 
 //**********************************************************************************************
-generic_camera::generic_camera( void_t ) 
-{
+generic_camera::generic_camera( void_t ) noexcept
+{}
 
+//**********************************************************************************************
+generic_camera::generic_camera( so_gfx::ilens_utr_t ptr ) noexcept 
+{
+    this_t::add_lens( ptr ) ;
 }
 
 //**********************************************************************************************
-generic_camera::generic_camera( this_rref_t rhv ) 
+generic_camera::generic_camera( this_rref_t rhv ) noexcept 
 {
     _trafo = rhv._trafo ;
     _lenses = std::move( rhv._lenses ) ;
 }
 
 //**********************************************************************************************
-generic_camera::~generic_camera( void_t )
+generic_camera::~generic_camera( void_t ) noexcept
 {
     for( ilens_ptr_t l : _lenses )
     {
@@ -49,7 +53,7 @@ void_t generic_camera::destroy( this_ptr_t ptr )
 }
 
 //**********************************************************************************************
-so_gfx::result generic_camera::add_lens( so_gfx::ilens_ptr_t lptr ) 
+so_gfx::result generic_camera::add_lens( so_gfx::ilens_utr_t lptr ) 
 {
     auto found = std::find( _lenses.begin(), _lenses.end(), lptr ) ;
     if( found != _lenses.end() ) 

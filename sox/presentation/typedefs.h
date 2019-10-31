@@ -19,6 +19,7 @@
 #include <snakeoil/core/macros/move.h>
 #include <snakeoil/core/boolean.h>
 #include <snakeoil/core/checks.h>
+#include <snakeoil/core/typedefs.hpp>
 
 #include <algorithm>
 

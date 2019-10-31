@@ -64,7 +64,8 @@ set( SOURCES ${SOURCES}
     visitor/visitor.cpp
     visitor/std_out/std_out.h
     visitor/std_out/std_out.cpp
-
+    visitor/camera/camera_collector.h
+    visitor/camera/camera_collector.cpp
     #visitor/render/direct_gpx_render.h
     #visitor/render/direct_gpx_render.cpp
     )

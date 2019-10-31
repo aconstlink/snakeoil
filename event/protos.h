@@ -8,6 +8,8 @@
 
 namespace so_event
 {
+    so_class_proto_typedefs( itrigger ) ;
+    so_class_proto_typedefs( flagged_trigger ) ;
 }
 
 

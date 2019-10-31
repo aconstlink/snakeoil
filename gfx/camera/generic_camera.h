@@ -25,9 +25,11 @@ namespace so_gfx
 
     public: // 
          
-        generic_camera( void_t ) ;
-        generic_camera( this_rref_t ) ;
-        virtual ~generic_camera( void_t ) ;
+        generic_camera( void_t ) noexcept ;
+        generic_camera( so_gfx::ilens_utr_t ) noexcept ;
+        generic_camera( this_rref_t ) noexcept ;
+        generic_camera( this_cref_t ) = delete ;
+        virtual ~generic_camera( void_t ) noexcept ;
 
     public:
 
@@ -37,7 +39,7 @@ namespace so_gfx
 
     public:
 
-        so_gfx::result add_lens( so_gfx::ilens_ptr_t ) ;
+        so_gfx::result add_lens( so_gfx::ilens_utr_t ) ;
 
     public: // interface
 

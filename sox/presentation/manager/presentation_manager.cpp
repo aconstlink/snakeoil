@@ -59,7 +59,7 @@ void_t presentation_manager::render( render_data_in_t rd ) noexcept
         }
 
         if( _cur_page->is_loaded() )
-            _cur_page->render( rd ) ;
+            _cur_page->on_render( rd ) ;
     }
 
     // 2. do transition
@@ -68,7 +68,7 @@ void_t presentation_manager::render( render_data_in_t rd ) noexcept
         {
             std::chrono::seconds const dur = _transition->get_duration() ;
 
-            _transition->render( rd ) ;
+            _transition->on_render( rd ) ;
         }
     }
 
@@ -76,7 +76,7 @@ void_t presentation_manager::render( render_data_in_t rd ) noexcept
     {
         if( so_core::is_not_nullptr( _nxt_page ) )
         {
-            _nxt_page->render( rd ) ;
+            _nxt_page->on_render( rd ) ;
         }
     }
 }
@@ -94,7 +94,7 @@ void_t presentation_manager::update( update_data_in_t ud ) noexcept
         }
 
         if( _cur_page->is_loaded() )
-            _cur_page->update( ud ) ;
+            _cur_page->on_update( ud ) ;
     }
 
     // 2. do transition
@@ -103,7 +103,7 @@ void_t presentation_manager::update( update_data_in_t ud ) noexcept
         {
             so_core::seconds_t const dur = _transition->get_duration() ;
 
-            _transition->update( ud ) ;
+            _transition->on_update( ud ) ;
         }
     }
 
@@ -111,7 +111,7 @@ void_t presentation_manager::update( update_data_in_t ud ) noexcept
     {
         if( so_core::is_not_nullptr( _nxt_page ) )
         {
-            _nxt_page->update( ud ) ;
+            _nxt_page->on_update( ud ) ;
         }
     }
 }

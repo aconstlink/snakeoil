@@ -18,6 +18,11 @@ set( SOURCES
     content/itransition.h
     content/transition.h
     content/transition.cpp
+
+    content/log/log_page.h
+    content/log/log_page.cpp
+    content/log/log_transition.h
+    content/log/log_transition.cpp
     )
 
 set( SOURCES ${SOURCES} )

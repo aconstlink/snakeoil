@@ -21,8 +21,8 @@ namespace sox_presentation
 
     public:
 
-        virtual void_t update( update_data_in_t ) noexcept = 0 ;
-        virtual void_t render( render_data_in_t ) noexcept = 0 ;
+        virtual void_t on_update( update_data_in_t ) noexcept = 0 ;
+        virtual void_t on_render( render_data_in_t ) noexcept = 0 ;
         virtual void_t destroy( void_t ) noexcept = 0 ;
     };
     so_typedef( ipage ) ;

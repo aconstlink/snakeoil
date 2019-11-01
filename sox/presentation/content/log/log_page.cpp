@@ -39,29 +39,21 @@ void_t log_page::destroy( this_utr_t ptr )
 }
 
 //**************************************************
-void_t log_page::on_load() noexcept
+bool_t log_page::on_load() noexcept
 {
     so_log::global_t::status( "[log_page] : on_load " + std::to_string(_i) ) ;
-}
-
-//**************************************************
-bool_t log_page::is_loaded( void_t ) noexcept
-{
+    
     return true ;
 }
 
 //**************************************************
-void_t log_page::on_unload() noexcept
+bool_t log_page::on_unload() noexcept
 {
     so_log::global_t::status( "[log_page] : on_unload " + std::to_string(_i) ) ;
 
     _update = false ;
     _render = false ;
-}
 
-//**************************************************
-bool_t log_page::is_unloaded( void_t ) noexcept
-{
     return true ;
 }
 

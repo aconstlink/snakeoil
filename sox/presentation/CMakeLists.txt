@@ -10,8 +10,8 @@ set( SOURCES
     protos.h
     structs.h
 
-    manager/presentation_manager.h
-    manager/presentation_manager.cpp
+    presentation/presentation.h
+    presentation/presentation.cpp
     content/ipage.h
     content/page.h
     content/page.cpp

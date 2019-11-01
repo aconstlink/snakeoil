@@ -13,11 +13,8 @@ namespace sox_presentation
 
     public:
 
-        virtual void_t on_load() noexcept = 0 ;
-        virtual bool_t is_loaded( void_t ) noexcept = 0 ;
-
-        virtual void_t on_unload() noexcept = 0 ;
-        virtual bool_t is_unloaded( void_t ) noexcept = 0 ;
+        virtual bool_t on_load() noexcept = 0 ;
+        virtual bool_t on_unload() noexcept = 0 ;
 
     public:
 

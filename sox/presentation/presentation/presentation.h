@@ -29,7 +29,23 @@ namespace sox_presentation
         so_typedefs( so_std::vector< page_info_t >, pages ) ;
         pages_t _pages ;
 
-        so_typedefs( so_std::vector< sox_presentation::itransition_utr_t >, transitions ) ;
+
+        struct transition_info
+        {
+            itransition_ptr_t pptr = nullptr ;
+            bool_t loaded = false ;
+
+            bool_t on_load( void_t ) ;
+            void_t on_unload( void_t ) ;
+            bool_t do_update( update_data_in_t ) ;
+            bool_t do_render( render_data_in_t ) ;
+
+        };
+        so_typedef( transition_info ) ;
+
+        typedef std::function< void_t ( transition_info_ref_t ) > on_transition_t ;
+
+        so_typedefs( so_std::vector< transition_info_t >, transitions ) ;
         transitions_t _transitions ;
 
         so_core::clock_t::time_point _transition_started ;
@@ -38,7 +54,7 @@ namespace sox_presentation
         size_t _tgt_index = size_t( -1 ) ;
 
         // the current transition time.
-        std::chrono::seconds _tdur = std::chrono::seconds(0) ;
+        std::chrono::microseconds _tdur = std::chrono::microseconds(0) ;
 
 
         so_core::clock_t::time_point _utime = 
@@ -111,16 +127,18 @@ namespace sox_presentation
             return true ;
         }
 
-        itransition_utr_t cur_transition( void_t ) noexcept
+        bool_t cur_transition( on_transition_t f ) noexcept
         {
             size_t i ;
-            if( this_t::cur_index( i ) )
+            if( so_core::is_not( this_t::cur_index( i ) ) )
+                return false ;
+
+            if( _transitions.size() == 0 && _transitions.size() > i )
                 return nullptr ;
 
-            if( _transitions.size() == 0 )
-                return nullptr ;
+            f( _transitions[ i ] ) ;
 
-            return _transitions[ i ] ;
+            return true ;
         }
 
         bool_t in_transition( void_t ) const noexcept

@@ -13,7 +13,7 @@ namespace sox_presentation
     {
     public:
 
-        virtual std::chrono::seconds get_duration( void_t ) noexcept = 0 ;
+        virtual std::chrono::milliseconds get_duration( void_t ) noexcept = 0 ;
 
         virtual bool_t on_load() noexcept = 0 ;
         virtual bool_t on_unload() noexcept = 0 ;

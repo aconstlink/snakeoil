@@ -1,5 +1,7 @@
 #include "presentation.h"
 
+#include <snakeoil/log/global.h>
+
 using namespace sox_presentation ;
 
 //*********************************************************
@@ -43,6 +45,46 @@ bool_t presentation::page_info::do_render( render_data_in_t rd )
 }
 
 //*********************************************************
+bool_t presentation::transition_info::on_load( void_t ) 
+{
+    if( !loaded ) loaded = pptr->on_load() ;
+    return loaded ;
+}
+
+//*********************************************************
+void_t presentation::transition_info::on_unload( void_t ) 
+{
+    if( loaded ) 
+    {
+        loaded = so_core::is_not( pptr->on_unload() ) ;
+    }
+}
+
+//*********************************************************
+bool_t presentation::transition_info::do_update( update_data_in_t ud ) 
+{
+    if( !loaded ) 
+    {
+        loaded = pptr->on_load() ;
+        return loaded ;
+    }
+    
+    pptr->on_update( ud ) ;
+
+    return true ;
+}
+
+//*********************************************************
+bool_t presentation::transition_info::do_render( render_data_in_t rd ) 
+{
+    if( loaded ) 
+    {
+        pptr->on_render( rd ) ;
+    }
+    return loaded ;
+}
+
+//*********************************************************
 presentation::presentation( void_t ) noexcept 
 {}
 
@@ -64,9 +106,9 @@ presentation::~presentation( void_t ) noexcept
         item.pptr->destroy() ;
     }
 
-    for( auto * ptr : _transitions ) 
+    for( auto item : _transitions ) 
     {
-        ptr->destroy() ;
+        item.pptr->destroy() ;
     }
 }
 
@@ -97,12 +139,15 @@ void_t presentation::render( void_t ) noexcept
 
     // 2. do transition
     {
-        if( so_core::is_not_nullptr( this_t::cur_transition() ) && this_t::in_transition() )
+        bool_t const res = this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
-            std::chrono::seconds const dur = this_t::cur_transition()->get_duration() ;
-
-            this_t::cur_transition()->on_render( rd ) ;
-        }
+            if( this_t::in_transition() )
+            {
+                
+                ti.do_render( rd ) ;
+            }
+            
+        } ) ;
     }
 
     // 3. do next page
@@ -118,7 +163,7 @@ void_t presentation::render( void_t ) noexcept
 //*********************************************************
 void_t presentation::update( void_t ) noexcept
 {
-    auto const dt = std::chrono::duration_cast<std::chrono::seconds>( 
+    auto const dt = std::chrono::duration_cast<std::chrono::microseconds>( 
         so_core::clock_t::now() - _utime )  ;
 
     _utime = so_core::clock_t::now() ;
@@ -135,22 +180,26 @@ void_t presentation::update( void_t ) noexcept
 
     // 2. do transition
     {
-        so_core::seconds_t dur = std::chrono::seconds(0) ;
+        std::chrono::microseconds dur = std::chrono::microseconds(0) ;
 
-        if( so_core::is_not_nullptr( this_t::cur_transition() ) )
+        this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
-            if( this_t::cur_transition()->on_load() && this_t::in_transition() )
-            {
-                dur = this_t::cur_transition()->get_duration() ;
+            ti.on_load() ;
 
-                this_t::cur_transition()->on_update( ud ) ;
+            if( this_t::in_transition() )
+            {
+                dur = std::chrono::duration_cast<std::chrono::microseconds>( 
+                    ti.pptr->get_duration() ) ;
+
+                ti.do_update( ud ) ;
             }
-        }
+        } ) ;
 
         // is transition done?
         if( dur <= _tdur )
         {
             _cur_index = _tgt_index ;
+            _tdur = std::chrono::microseconds( 0 ) ;
         }
     }
 
@@ -177,6 +226,7 @@ void_t presentation::update( void_t ) noexcept
     // 5. update transition duration
     {
         _tdur += dt ;
+        so_log::global_t::status( std::to_string(_tdur.count()) ) ;
     }
     
 }
@@ -211,12 +261,22 @@ void_t presentation::add_page( sox_presentation::ipage_utr_t pptr ) noexcept
 void_t presentation::add_transition( sox_presentation::itransition_utr_t ptr ) noexcept 
 {
     {
-        auto const iter = std::find( _transitions.begin(), _transitions.end(), ptr ) ;
+        auto const iter = std::find_if( _transitions.begin(), _transitions.end(), 
+            [&]( transition_info_cref_t item )
+        {
+            return item.pptr == ptr ;
+        } ) ;
+
         if( iter != _transitions.end() )
             return ;
     }
 
-    _transitions.emplace_back( ptr ) ;
+    {
+        this_t::transition_info_t i ;
+        i.loaded = false ;
+        i.pptr = ptr ;
+        _transitions.emplace_back( i ) ;
+    }
 }
 
 //*********************************************************

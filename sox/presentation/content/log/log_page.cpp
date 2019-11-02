@@ -43,6 +43,9 @@ bool_t log_page::on_load() noexcept
 {
     so_log::global_t::status( "[log_page] : on_load " + std::to_string(_i) ) ;
     
+    _update = false ;
+    _render = false ;
+
     return true ;
 }
 

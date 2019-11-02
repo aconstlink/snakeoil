@@ -11,7 +11,22 @@ namespace sox_presentation
 
     private:
 
-        so_typedefs( so_std::vector< sox_presentation::ipage_utr_t >, pages ) ;
+        struct page_info
+        {
+            ipage_ptr_t pptr = nullptr ;
+            bool_t loaded = false ;
+
+            bool_t on_load( void_t ) ;
+            void_t on_unload( void_t ) ;
+            bool_t do_update( update_data_in_t ) ;
+            bool_t do_render( render_data_in_t ) ;
+            
+        };
+        so_typedef( page_info ) ;
+
+        typedef std::function< void_t ( page_info_ref_t ) > on_page_t ;
+
+        so_typedefs( so_std::vector< page_info_t >, pages ) ;
         pages_t _pages ;
 
         so_typedefs( so_std::vector< sox_presentation::itransition_utr_t >, transitions ) ;
@@ -23,8 +38,7 @@ namespace sox_presentation
         size_t _tgt_index = size_t( -1 ) ;
 
         // the current transition time.
-        so_core::clock_t::time_point _ttime = 
-            so_core::clock_t::time_point( std::chrono::seconds(0) ) ;
+        std::chrono::seconds _tdur = std::chrono::seconds(0) ;
 
 
         so_core::clock_t::time_point _utime = 
@@ -32,62 +46,81 @@ namespace sox_presentation
 
     private:
 
-        size_t cur_index( void_t ) const noexcept
+        bool_t cur_index( size_t & i ) const noexcept
         {
-            return _cur_index ;
+            if( _cur_index == size_t( -1 ) )
+                return false ;
+
+            i = _cur_index ;
+
+            return true ;
         }
 
-        size_t nxt_index( void_t ) const noexcept
+        bool_t nxt_index( size_t & i ) const noexcept
         {
             if( _cur_index == (_pages.size() - 1) )
             {
-                return size_t( -1 ) ;
+                return false ;
             }
-            return _cur_index + 1 ;
+
+            i = _cur_index + 1 ;
+
+            return true ;
         }
 
-        size_t prv_index( void_t ) const noexcept
+        bool_t prv_index( size_t & i ) const noexcept
         {
             if( _cur_index == 0 )
             {
-                return size_t( -1 ) ;
+                return false ;
             }
-            return _cur_index - 1 ;
+            i = _cur_index - 1 ;
+            return true ;
         }
 
-        ipage_utr_t cur_page( void_t ) noexcept
+        bool_t cur_page( on_page_t f ) noexcept
         {
-            if( this_t::cur_index() == size_t( -1 ) )
-                return nullptr ;
+            size_t i ;
+            if( so_core::is_not( this_t::cur_index( i ) ) )
+                return false ;
 
-            return _pages[ this_t::cur_index() ] ;
+            f( _pages[ i ] ) ;
+            
+            return true ;
         }
 
-        ipage_utr_t nxt_page( void_t ) noexcept
+        bool_t nxt_page( on_page_t f ) noexcept
         {
-            if( this_t::nxt_index() == size_t( -1 ) )
-                return nullptr ;
+            size_t i ;
+            if( so_core::is_not( this_t::nxt_index( i ) ) )
+                return false ;
 
-            return _pages[ this_t::nxt_index() ] ;
+            f( _pages[ i ] ) ;
+
+            return true ;
         }
 
-        ipage_utr_t prc_page( void_t ) noexcept
+        bool_t prv_page( on_page_t f ) noexcept
         {
-            if( this_t::prv_index() == size_t( -1 ) )
-                return nullptr ;
+            size_t i ;
+            if( so_core::is_not( this_t::prv_index( i ) ) )
+                return false ;
 
-            return _pages[ this_t::prv_index() ] ;
+            f( _pages[ i ] ) ;
+
+            return true ;
         }
 
         itransition_utr_t cur_transition( void_t ) noexcept
         {
-            if( this_t::cur_index() == size_t( -1 ) )
+            size_t i ;
+            if( this_t::cur_index( i ) )
                 return nullptr ;
 
             if( _transitions.size() == 0 )
                 return nullptr ;
 
-            return _transitions[ this_t::cur_index() ] ;
+            return _transitions[ i ] ;
         }
 
         bool_t in_transition( void_t ) const noexcept
@@ -107,8 +140,8 @@ namespace sox_presentation
 
     public:
 
-        void_t render( render_data_in_t ) noexcept ;
-        void_t update( update_data_in_t ) noexcept ;
+        void_t render( void_t ) noexcept ;
+        void_t update( void_t ) noexcept ;
 
     public:
 

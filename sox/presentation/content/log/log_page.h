@@ -12,8 +12,6 @@ namespace sox_presentation
     private:
 
         size_t _i = size_t( -1 ) ;
-        bool_t _update = false ;
-        bool_t _render = false ;
 
     public: 
 
@@ -29,6 +27,9 @@ namespace sox_presentation
 
         virtual bool_t on_load() noexcept  ;
         virtual bool_t on_unload() noexcept  ;
+
+        virtual bool_t on_init() noexcept ;
+        virtual bool_t on_release() noexcept ;
 
     public:
 

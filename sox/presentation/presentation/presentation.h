@@ -15,11 +15,14 @@ namespace sox_presentation
         {
             ipage_ptr_t pptr = nullptr ;
             bool_t loaded = false ;
+            bool_t inited = false ;
 
             bool_t on_load( void_t ) ;
             void_t on_unload( void_t ) ;
             bool_t do_update( update_data_in_t ) ;
             bool_t do_render( render_data_in_t ) ;
+            bool_t on_init( void_t ) ;
+            bool_t on_release( void_t ) ;
             
         };
         so_typedef( page_info ) ;
@@ -59,6 +62,8 @@ namespace sox_presentation
 
         so_core::clock_t::time_point _utime = 
             so_core::clock_t::now() ;
+
+        bool_t _abort_transition = false ;
 
     private:
 
@@ -127,14 +132,33 @@ namespace sox_presentation
             return true ;
         }
 
+        bool_t tgt_page( on_page_t f ) noexcept
+        {
+            if( so_core::is_not( this_t::in_transition() ) )
+                return false ;
+
+            size_t const i = _tgt_index ;
+            if( i == size_t(-1) )
+                return false ;
+
+            f( _pages[ i ] ) ;
+
+            return true ;
+        }
+
         bool_t cur_transition( on_transition_t f ) noexcept
         {
             size_t i ;
             if( so_core::is_not( this_t::cur_index( i ) ) )
                 return false ;
 
-            if( _transitions.size() == 0 && _transitions.size() > i )
+            if( _transitions.size() == 0 )
                 return nullptr ;
+
+            if( _transitions.size() >= i )
+            {
+                i = 0 ;
+            }
 
             f( _transitions[ i ] ) ;
 
@@ -145,6 +169,8 @@ namespace sox_presentation
         {
             return _cur_index != _tgt_index ;
         }
+
+        void_t change_to_target( void_t ) noexcept ;
 
     public:
 

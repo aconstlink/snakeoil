@@ -14,6 +14,9 @@ bool_t presentation::page_info::on_load( void_t )
 //*********************************************************
 void_t presentation::page_info::on_unload( void_t ) 
 {
+    if( so_log::global_t::error( inited,
+        "[presentation::page_info] : call on_release first" ) ) return ;
+
     if( loaded ) 
     {
         loaded = so_core::is_not( pptr->on_unload() ) ;
@@ -21,13 +24,30 @@ void_t presentation::page_info::on_unload( void_t )
 }
 
 //*********************************************************
+bool_t presentation::page_info::on_init( void_t ) 
+{
+    if( !inited ) 
+    {
+        inited = pptr->on_init() ;
+    }
+    return inited ;
+}
+
+//*********************************************************
+bool_t presentation::page_info::on_release( void_t ) 
+{
+    if( inited )
+    {
+        inited = so_core::is_not( pptr->on_release() ) ;
+    }
+    return inited ;
+}
+
+//*********************************************************
 bool_t presentation::page_info::do_update( update_data_in_t ud ) 
 {
-    if( !loaded ) 
-    {
-        loaded = pptr->on_load() ;
-        return loaded ;
-    }
+    if( !on_load() ) return false ;
+    if( !on_init() ) return false ;
     
     pptr->on_update( ud ) ;
 
@@ -37,13 +57,15 @@ bool_t presentation::page_info::do_update( update_data_in_t ud )
 //*********************************************************
 bool_t presentation::page_info::do_render( render_data_in_t rd ) 
 {
-    if( loaded ) 
-    {
-        pptr->on_render( rd ) ;
-    }
-    return loaded ;
+    if( !on_load() ) return false ;
+    if( !on_init() ) return false ;
+
+    pptr->on_render( rd ) ;
+
+    return true ;
 }
 
+// transition info //
 //*********************************************************
 bool_t presentation::transition_info::on_load( void_t ) 
 {
@@ -152,7 +174,7 @@ void_t presentation::render( void_t ) noexcept
 
     // 3. do next page
     {
-        this_t::nxt_page( [&] ( page_info_ref_t pi )
+        this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
             if( this_t::in_transition() )
                 pi.do_render( rd ) ;
@@ -170,6 +192,13 @@ void_t presentation::update( void_t ) noexcept
 
     update_data_t ud ;
 
+    // 0. check for abort transition
+    if( _abort_transition )
+    {
+        change_to_target() ;
+        _abort_transition = false ;
+    }
+
     // 1. do current page
     {
         this_t::cur_page( [&] ( page_info_ref_t pi )
@@ -179,33 +208,42 @@ void_t presentation::update( void_t ) noexcept
     }
 
     // 2. do transition
+    
     {
         std::chrono::microseconds dur = std::chrono::microseconds(0) ;
 
         this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
             ti.on_load() ;
-
-            if( this_t::in_transition() )
-            {
-                dur = std::chrono::duration_cast<std::chrono::microseconds>( 
-                    ti.pptr->get_duration() ) ;
-
-                ti.do_update( ud ) ;
-            }
         } ) ;
 
-        // is transition done?
-        if( dur <= _tdur )
+        if( this_t::in_transition() )
         {
-            _cur_index = _tgt_index ;
-            _tdur = std::chrono::microseconds( 0 ) ;
+            this_t::cur_transition( [&] ( transition_info_ref_t ti )
+            {
+                ti.on_load() ;
+
+
+                {
+                    dur = std::chrono::duration_cast< std::chrono::microseconds >(
+                        ti.pptr->get_duration() ) ;
+
+                    ti.do_update( ud ) ;
+                }
+            } ) ;
+
+            // is transition done?
+            if( dur <= _tdur )
+            {
+                change_to_target() ;
+                _tdur = std::chrono::microseconds( 0 ) ;
+            }
         }
     }
 
-    // 3. do next page
+    // 3. do target page
     {
-        this_t::nxt_page( [&] ( page_info_ref_t pi )
+        this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
             pi.on_load() ;
 
@@ -214,7 +252,16 @@ void_t presentation::update( void_t ) noexcept
         } ) ;
     }
 
-    // 4. do unload
+    // 4. guess to load the next page
+    {
+        this_t::nxt_page( [&] ( page_info_ref_t pi )
+        {
+            pi.on_load() ;
+
+        } ) ;
+    }
+
+    // 5. do unload
     {
         size_t i ;
         if( this_t::cur_index( i ) && i > 2 )
@@ -223,12 +270,27 @@ void_t presentation::update( void_t ) noexcept
         }
     }
 
-    // 5. update transition duration
+    // 6. update transition duration
     {
         _tdur += dt ;
-        so_log::global_t::status( std::to_string(_tdur.count()) ) ;
     }
     
+}
+
+//*********************************************************
+void_t presentation::change_to_target( void_t ) noexcept
+{
+    this_t::cur_page( [&] ( page_info_ref_t pi )
+    {
+        pi.on_release() ;
+    } ) ;
+
+    _cur_index = _tgt_index ;
+
+    this_t::cur_page( [&] ( page_info_ref_t pi )
+    {
+        pi.on_init() ;
+    } ) ;
 }
 
 //*********************************************************
@@ -282,8 +344,16 @@ void_t presentation::add_transition( sox_presentation::itransition_utr_t ptr ) n
 //*********************************************************
 bool_t presentation::next_page( void_t ) noexcept 
 {
-    so_core::is_not( this_t::nxt_index( _tgt_index ) ) ;
-    _tdur = std::chrono::seconds( 0 ) ;
+    if( this_t::in_transition() )
+    {
+        _abort_transition = true ;
+    }
+    else
+    {
+        this_t::nxt_index( _tgt_index ) ;
+    }
+
+    _tdur = std::chrono::microseconds( 0 ) ;
 
     return _tgt_index != size_t( -1 ) ;
 }
@@ -291,11 +361,16 @@ bool_t presentation::next_page( void_t ) noexcept
 //*********************************************************
 bool_t presentation::prev_page( void_t ) noexcept 
 {
-    this_t::prv_index( _tgt_index ) ;
-
-    // no transition if going backwards
-    _cur_index = _tgt_index ;
-    _tdur = std::chrono::seconds( 0 ) ;
+    if( this_t::in_transition() )
+    {
+        _abort_transition = true ;
+    }
+    else 
+    {
+        this_t::prv_index( _tgt_index ) ;
+    }
+    
+    _tdur = std::chrono::microseconds( 0 ) ;
 
     return _tgt_index != size_t( -1 ) ;
 }
@@ -305,3 +380,4 @@ bool_t presentation::change_page( size_t const ) noexcept
 {
     return false ;
 }
+

@@ -13,8 +13,15 @@ namespace sox_presentation
 
     public:
 
+        // early call for loading the page's assets
         virtual bool_t on_load() noexcept = 0 ;
         virtual bool_t on_unload() noexcept = 0 ;
+
+        // before update starts
+        virtual bool_t on_init() noexcept = 0 ;
+
+        // after update ends
+        virtual bool_t on_release() noexcept = 0 ;
 
     public:
 

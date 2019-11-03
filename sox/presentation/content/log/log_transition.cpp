@@ -61,6 +61,20 @@ bool_t log_transition::on_unload() noexcept
 }
 
 //**************************************************
+bool_t log_transition::on_init() noexcept 
+{
+    so_log::global_t::status( "[log_transition] : on_init " + std::to_string( _i ) ) ;  
+    return true ;
+}
+
+//**************************************************
+bool_t log_transition::on_release() noexcept 
+{
+    so_log::global_t::status( "[log_transition] : on_release " + std::to_string( _i ) ) ;
+    return true ;
+}
+
+//**************************************************
 std::chrono::milliseconds log_transition::get_duration( void_t ) noexcept 
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::seconds( 2 ) ) ;

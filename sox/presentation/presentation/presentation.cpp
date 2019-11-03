@@ -83,13 +83,30 @@ void_t presentation::transition_info::on_unload( void_t )
 }
 
 //*********************************************************
+bool_t presentation::transition_info::on_init( void_t ) 
+{
+    if( !inited ) 
+    {
+        inited = pptr->on_init() ;
+    }
+    return inited ;
+}
+
+//*********************************************************
+bool_t presentation::transition_info::on_release( void_t ) 
+{
+    if( inited )
+    {
+        inited = so_core::is_not( pptr->on_release() ) ;
+    }
+    return inited ;
+}
+
+//*********************************************************
 bool_t presentation::transition_info::do_update( update_data_in_t ud ) 
 {
-    if( !loaded ) 
-    {
-        loaded = pptr->on_load() ;
-        return loaded ;
-    }
+    if( !on_load() ) return false ;
+    if( !on_init() ) return false ;
     
     pptr->on_update( ud ) ;
 
@@ -99,11 +116,12 @@ bool_t presentation::transition_info::do_update( update_data_in_t ud )
 //*********************************************************
 bool_t presentation::transition_info::do_render( render_data_in_t rd ) 
 {
-    if( loaded ) 
-    {
-        pptr->on_render( rd ) ;
-    }
-    return loaded ;
+    if( !on_load() ) return false ;
+    if( !on_init() ) return false ;
+
+    pptr->on_render( rd ) ;
+
+    return true ;
 }
 
 //*********************************************************
@@ -221,15 +239,10 @@ void_t presentation::update( void_t ) noexcept
         {
             this_t::cur_transition( [&] ( transition_info_ref_t ti )
             {
-                ti.on_load() ;
+                dur = std::chrono::duration_cast< std::chrono::microseconds >(
+                    ti.pptr->get_duration() ) ;
 
-
-                {
-                    dur = std::chrono::duration_cast< std::chrono::microseconds >(
-                        ti.pptr->get_duration() ) ;
-
-                    ti.do_update( ud ) ;
-                }
+                ti.do_update( ud ) ;
             } ) ;
 
             // is transition done?
@@ -257,7 +270,6 @@ void_t presentation::update( void_t ) noexcept
         this_t::nxt_page( [&] ( page_info_ref_t pi )
         {
             pi.on_load() ;
-
         } ) ;
     }
 
@@ -283,6 +295,11 @@ void_t presentation::change_to_target( void_t ) noexcept
     this_t::cur_page( [&] ( page_info_ref_t pi )
     {
         pi.on_release() ;
+    } ) ;
+
+    this_t::cur_transition( [&] ( transition_info_ref_t ti )
+    {
+        ti.on_release() ;
     } ) ;
 
     _cur_index = _tgt_index ;

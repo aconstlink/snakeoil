@@ -30,6 +30,9 @@ namespace sox_presentation
         virtual bool_t on_load() noexcept  ;
         virtual bool_t on_unload() noexcept  ;
 
+        virtual bool_t on_init() noexcept ;
+        virtual bool_t on_release() noexcept ;
+
     public:
 
         virtual std::chrono::milliseconds get_duration( void_t ) noexcept ;

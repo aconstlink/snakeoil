@@ -37,11 +37,14 @@ namespace sox_presentation
         {
             itransition_ptr_t pptr = nullptr ;
             bool_t loaded = false ;
+            bool_t inited = false ;
 
             bool_t on_load( void_t ) ;
             void_t on_unload( void_t ) ;
             bool_t do_update( update_data_in_t ) ;
             bool_t do_render( render_data_in_t ) ;
+            bool_t on_init( void_t ) ;
+            bool_t on_release( void_t ) ;
 
         };
         so_typedef( transition_info ) ;
@@ -155,7 +158,7 @@ namespace sox_presentation
             if( _transitions.size() == 0 )
                 return nullptr ;
 
-            if( _transitions.size() >= i )
+            if( _transitions.size() <= i )
             {
                 i = 0 ;
             }

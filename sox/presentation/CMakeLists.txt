@@ -3,6 +3,12 @@
 #. Distributed under the MIT license
 #.............................................................
 
+if( SNAKEOIL_TARGET_GRAPHICS_OPENGL_33 )
+  set( GRAPHICS_SOURCES 
+    post/gl33/gl33_post_plug.h
+    post/gl33/gl33_post_plug.cpp )
+endif()
+
 set( SOURCES
     api.h
     result.h
@@ -23,7 +29,16 @@ set( SOURCES
     content/log/log_page.cpp
     content/log/log_transition.h
     content/log/log_transition.cpp
+
+    post/post.h
+    post/post.cpp
+    post/post_plug_factory.h
+    post/post_plug_factory.cpp
+    post/post_shared_data.h
+    post/protos.h
     )
+
+list( APPEND SOURCES ${GRAPHICS_SOURCES} )
 
 set( SOURCES ${SOURCES} )
 so_vs_src_dir( SOURCES )

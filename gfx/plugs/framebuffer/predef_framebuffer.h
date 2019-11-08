@@ -82,6 +82,10 @@ namespace so_gfx
 
     public:
 
+        this_ref_t operator = ( this_rref_t ) ;
+
+    public:
+
         so_flow::variable_set_ptr_t get_varset( void_t ) ;
 
         void_t init( so_std::string_cref_t name, size_t const w, size_t const h, size_t const nc=1 ) ;

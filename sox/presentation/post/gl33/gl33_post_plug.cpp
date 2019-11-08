@@ -54,8 +54,6 @@ gl33_post_plug::gl33_post_plug( this_rref_t rhv ) :
     so_move_member_ptr( _config, rhv ) ;
 
     so_move_member_ptr( _sd, rhv ) ;
-
-    _bar_datas = std::move( rhv._bar_datas ) ;
 }
 
 //*************************************************************************************
@@ -78,13 +76,6 @@ gl33_post_plug::~gl33_post_plug( void_t )
 
     if( so_core::is_not_nullptr( _config ) )
         so_gpu::config_t::destroy( _config ) ;
-
-    for( auto * item : _bar_datas )
-    {
-        if( so_core::is_not_nullptr( item->vs ) )
-            item->vs->destroy() ;
-    }
-    _bar_datas.clear() ;
 }
 
 //*************************************************************************************
@@ -188,25 +179,6 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
                 return so_gpx::plug_result::failed ;
             }
         }
-
-        // the variable sets do not need to be destroyed and removed from
-        // the config. Its just easier for now and we have another use-case.
-        // the variable sets could also just be released by gpu layer and 
-        // recreated by gpu layer
-        for( auto * item : _bar_datas )
-        {
-            auto const res = this_t::api()->release_variable( item->vs ) ;
-            if( so_gpu::no_success( res ) )
-            {
-                so_log::global_t::error( "[gl33_rects_plug::on_initialize] : release variable set" ) ;
-                return so_gpx::plug_result::failed ;
-            }
-            _config->remove_variable_set( item->vs ) ;
-            item->vs->destroy() ;
-        }
-        
-        _bar_datas.clear() ;
-        _num_bars = 0 ;
     }
     else
     {
@@ -323,33 +295,6 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
 }
 
 //*************************************************************************************
-void_t gl33_post_plug::create_bar_data( size_t const num_bars ) 
-{
-    for( size_t i=_num_bars; i<num_bars; ++i )
-    {
-        this_t::bar_data_ptr_t bd = so_memory::global_t::alloc( 
-            this_t::bar_data_t(), "[bar_data]" ) ;
-
-        so_gpu::variable_set_t vs ;
-        auto const res = this_t::api()->create_variable( &vs ) ;
-
-        vs.bind_data< so_math::mat4f_t >( "u_view", &_sd->view ) ;
-        vs.bind_data< so_math::mat4f_t >( "u_proj", &_sd->proj ) ;
-        vs.bind_data< so_math::vec4f_t >( "u_pos_wh", &bd->pos_wh ) ;
-        
-        auto * new_ptr = so_gpu::variable_set_t::create( std::move( vs ),
-            "[gl33_post_plug::create_bar_data] : variable_set" );
-
-        bd->vs = new_ptr ;
-
-        _config->add_variable_set( new_ptr ) ;
-        _bar_datas.push_back( bd ) ;
-    }
-
-    _num_bars = num_bars ;
-}
-
-//*************************************************************************************
 so_gpx::plug_result gl33_post_plug::on_release( void_t )
 {
     this_t::api()->release_buffer( _vb ) ;
@@ -359,25 +304,12 @@ so_gpx::plug_result gl33_post_plug::on_release( void_t )
     this_t::api()->release_program( _prog ) ;
     this_t::api()->release_config( _config ) ;
 
-    for( auto * bd : _bar_datas )
-    {
-        this_t::api()->release_variable( bd->vs ) ;
-        //so_memory::global_t::dealloc( bd ) ;
-    }
-
     return so_gpx::plug_result::ok ;
 }
 
 //*************************************************************************************
 so_gpx::plug_result gl33_post_plug::on_execute( execute_info_cref_t ei )
 {
-    size_t i = 0; 
-    for( auto * bd : _bar_datas )
-    {
-        this_t::api()->load_variable( bd->vs ) ;
-        this_t::api()->execute( so_gpu::render_config_info( _config, i++ ) ) ;
-    }
-
     return so_gpx::plug_result::ok ;
 }
 

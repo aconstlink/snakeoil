@@ -3,6 +3,9 @@
 #include "../content/ipage.h"
 #include "../content/itransition.h"
 
+#include <snakeoil/gfx/protos.h>
+#include <snakeoil/gpx/protos.h>
+
 namespace sox_presentation
 {
     class SNAKEOILX_PRESENTATION_API presentation
@@ -42,7 +45,7 @@ namespace sox_presentation
             bool_t on_load( void_t ) ;
             void_t on_unload( void_t ) ;
             bool_t do_update( update_data_in_t ) ;
-            bool_t do_render( render_data_in_t ) ;
+            bool_t do_render( itransition::render_type const rt, render_data_in_t ) ;
             bool_t on_init( void_t ) ;
             bool_t on_release( void_t ) ;
 
@@ -67,6 +70,15 @@ namespace sox_presentation
             so_core::clock_t::now() ;
 
         bool_t _abort_transition = false ;
+
+    private: // techniques/gfx
+
+        so_gpx::render_system_ptr_t _rs = nullptr ;
+
+        so_gfx::predef_framebuffer_ptr_t _fb_c0 ; // scene 0
+        so_gfx::predef_framebuffer_ptr_t _fb_c1 ; // scene 1
+        so_gfx::predef_framebuffer_ptr_t _fb_cx ; // cross 
+        so_gfx::predef_framebuffer_ptr_t _fb_cm ; // mask
 
     private:
 
@@ -177,16 +189,17 @@ namespace sox_presentation
 
     public:
 
-        presentation( void_t ) noexcept ;
+        presentation( so_gpx::render_system_ptr_t ) noexcept ;
         presentation( this_cref_t ) = delete ;
         presentation( this_rref_t ) noexcept ;
         ~presentation( void_t ) noexcept ;
 
-        static this_ptr_t create( so_memory::purpose_cref_t ) noexcept ;
+        static this_ptr_t create( this_rref_t, so_memory::purpose_cref_t ) noexcept ;
         static void_t destroy( this_ptr_t ) noexcept ;
 
     public:
 
+        void_t init( void ) noexcept ;
         void_t render( void_t ) noexcept ;
         void_t update( void_t ) noexcept ;
 

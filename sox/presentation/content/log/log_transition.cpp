@@ -91,7 +91,7 @@ void_t log_transition::on_update( sox_presentation::update_data_in_t ) noexcept
 }
 
 //**************************************************
-void_t log_transition::on_render( sox_presentation::render_data_in_t ) noexcept
+void_t log_transition::on_render( render_type const, sox_presentation::render_data_in_t ) noexcept
 {
     if( so_core::is_not( _render ) )
     {

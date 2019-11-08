@@ -13,6 +13,14 @@ namespace sox_presentation
     {
     public:
 
+        enum class render_type
+        {
+            scene,
+            mask
+        };
+
+    public:
+
         virtual std::chrono::milliseconds get_duration( void_t ) noexcept = 0 ;
 
     public:
@@ -29,7 +37,7 @@ namespace sox_presentation
     public:
 
         virtual void_t on_update( update_data_in_t ) noexcept = 0 ;
-        virtual void_t on_render( render_data_in_t ) noexcept = 0 ;
+        virtual void_t on_render( render_type const, render_data_in_t ) noexcept = 0 ;
         virtual void_t destroy( void_t ) noexcept = 0 ;
     };
     so_typedef( itransition ) ;

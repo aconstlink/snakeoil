@@ -1,5 +1,8 @@
 #include "presentation.h"
 
+#include <snakeoil/gfx/plugs/framebuffer/predef_framebuffer.h>
+#include <snakeoil/gpx/system/render_system.h>
+
 #include <snakeoil/log/global.h>
 
 using namespace sox_presentation ;
@@ -114,19 +117,38 @@ bool_t presentation::transition_info::do_update( update_data_in_t ud )
 }
 
 //*********************************************************
-bool_t presentation::transition_info::do_render( render_data_in_t rd ) 
+bool_t presentation::transition_info::do_render( 
+    itransition::render_type const rt, render_data_in_t rd ) 
 {
     if( !on_load() ) return false ;
     if( !on_init() ) return false ;
 
-    pptr->on_render( rd ) ;
+    pptr->on_render( rt, rd ) ;
 
     return true ;
 }
 
 //*********************************************************
-presentation::presentation( void_t ) noexcept 
-{}
+presentation::presentation( so_gpx::render_system_ptr_t ptr ) noexcept 
+{
+    _rs = ptr ;
+
+    _fb_c0 = so_gfx::predef_framebuffer_t::create( 
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        "[presentation::presentation] : predef framebuffer" ) ;
+
+    _fb_c1 = so_gfx::predef_framebuffer_t::create(
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        "[presentation::presentation] : predef framebuffer" ) ;
+
+    _fb_cx = so_gfx::predef_framebuffer_t::create(
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        "[presentation::presentation] : predef framebuffer" ) ;
+
+    _fb_cm = so_gfx::predef_framebuffer_t::create(
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        "[presentation::presentation] : predef framebuffer" ) ;
+}
 
 //*********************************************************
 presentation::presentation( this_rref_t rhv ) noexcept
@@ -136,6 +158,11 @@ presentation::presentation( this_rref_t rhv ) noexcept
 
     _cur_index = rhv._cur_index ;
     _tgt_index = rhv._tgt_index ;
+
+    so_move_member_ptr( _fb_c0, rhv ) ;
+    so_move_member_ptr( _fb_c1, rhv ) ;
+    so_move_member_ptr( _fb_cx, rhv ) ;
+    so_move_member_ptr( _fb_cm, rhv ) ;
 }
 
 //*********************************************************
@@ -150,18 +177,32 @@ presentation::~presentation( void_t ) noexcept
     {
         item.pptr->destroy() ;
     }
+
+    so_gfx::predef_framebuffer_t::destroy( _fb_c0 ) ;
+    so_gfx::predef_framebuffer_t::destroy( _fb_c1 ) ;
+    so_gfx::predef_framebuffer_t::destroy( _fb_cx ) ;
+    so_gfx::predef_framebuffer_t::destroy( _fb_cm ) ;
 }
 
 //*********************************************************
-presentation::this_ptr_t presentation::create( so_memory::purpose_cref_t p ) noexcept
+presentation::this_ptr_t presentation::create( this_rref_t rhv, so_memory::purpose_cref_t p ) noexcept
 {
-    return so_memory::global_t::alloc( this_t(), p ) ;
+    return so_memory::global_t::alloc( std::move( rhv ), p ) ;
 }
 
 //*********************************************************
 void_t presentation::destroy( this_ptr_t ptr ) noexcept
 {
     so_memory::global_t::dealloc( ptr ) ;
+}
+
+//*********************************************************
+void_t presentation::init( void ) noexcept 
+{
+    _fb_c0->init( "presentation.scene.0", 1920, 1080 ) ;
+    _fb_c1->init( "presentation.scene.1", 1920, 1080 ) ;
+    _fb_cx->init( "presentation.cross", 1920, 1080 ) ;
+    _fb_cm->init( "presentation.mask", 1920, 1080 ) ;
 }
 
 //*********************************************************
@@ -173,30 +214,39 @@ void_t presentation::render( void_t ) noexcept
     {
         this_t::cur_page( [&] ( page_info_ref_t pi )
         {
+            _fb_c0->schedule_for_begin() ;
             pi.do_render( rd ) ;
         } ) ;
     }
 
     // 2. do transition
+    if( this_t::in_transition() )
     {
         bool_t const res = this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
-            if( this_t::in_transition() )
-            {
-                
-                ti.do_render( rd ) ;
-            }
+            _fb_cx->schedule_for_begin() ;
+            ti.do_render( itransition::render_type::scene, rd ) ;
+
+            // how to say that the mask should be rendered?
+            _fb_cm->schedule_for_begin() ;
+            ti.do_render( itransition::render_type::mask, rd ) ;
             
         } ) ;
     }
 
     // 3. do next page
+    if( this_t::in_transition() )
     {
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
-            if( this_t::in_transition() )
-                pi.do_render( rd ) ;
+            _fb_c1->schedule_for_begin() ;
+            pi.do_render( rd ) ;
         } ) ;
+    }
+
+    // 4. do post
+    {
+
     }
 }
 

@@ -58,15 +58,11 @@ namespace sox_presentation
             };
             so_typedef( bar_data ) ;
 
-            so_std::vector< bar_data_ptr_t > _bar_datas ;
-
             sox_presentation::post_shared_data_ptr_t _sd ;
-
-            size_t _num_bars = 0 ;
+           
             so_math::vec2f_t _dims ;
-        private:
 
-            void_t create_bar_data( size_t const num_bars ) ;
+        private:
 
         public:
 

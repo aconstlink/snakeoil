@@ -82,6 +82,20 @@ predef_framebuffer::~predef_framebuffer( void_t )
 }
 
 //*************************************************************************************
+predef_framebuffer::this_ref_t predef_framebuffer::operator = ( this_rref_t rhv ) 
+{
+    so_move_member_ptr( _sd, rhv ) ;
+    so_move_member_ptr( _rs, rhv ) ;
+    so_move_member_ptr( _fac_ptr, rhv ) ;
+    _tid = std::move( rhv._tid ) ;
+    rhv._tid = so_gpx::technique_id_t( -1 ) ;
+
+    _type = rhv._type ;
+
+    return *this ;
+}
+
+//*************************************************************************************
 predef_framebuffer::this_ptr_t predef_framebuffer::create( this_rref_t rhv, so_memory::purpose_cref_t p )
 {
     return so_gfx::memory::alloc( std::move( rhv ), p ) ;

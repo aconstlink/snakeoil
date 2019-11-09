@@ -7,6 +7,8 @@
 #include "../post.h"
 #include "../post_shared_data.h"
 
+#include "sox_config.h"
+
 #include <snakeoil/gpx/plug/plug.h>
 #include <snakeoil/gpx/system/render_system.h>
 #include <snakeoil/gpu/protos.h>
@@ -39,25 +41,27 @@ namespace sox_presentation
             so_typedefs( so_gpu::vertex_buffer< vertex_t >, vb ) ;
             so_typedefs( so_gpu::index_buffer<uint_t>, ib ) ;
 
-            so_std::string_t _vss ;
-            so_std::string_t _pss ;
+            so_std::string_t _vss_mix ;
+            so_std::string_t _pss_mix ;
+
+            so_std::string_t _vss_blit ;
+            so_std::string_t _pss_blit ;
 
             vb_ptr_t _vb ;
             ib_ptr_t _ib ;
 
-            so_gpu::vertex_shader_ptr_t _vs ;
-            so_gpu::pixel_shader_ptr_t _ps ;
+            so_gpu::vertex_shader_ptr_t _vs_mix ;
+            so_gpu::pixel_shader_ptr_t _ps_mix ;
 
-            so_gpu::program_ptr_t _prog ;
-            so_gpu::config_ptr_t _config ;
+            so_gpu::vertex_shader_ptr_t _vs_blit ;
+            so_gpu::pixel_shader_ptr_t _ps_blit ;
 
-            struct bar_data
-            {
-                so_math::vec4f_t pos_wh;
-                so_gpu::variable_set_ptr_t vs ;
-            };
-            so_typedef( bar_data ) ;
+            so_gpu::program_ptr_t _prog_mix ;
+            so_gpu::config_ptr_t _config_mix ;
 
+            so_gpu::program_ptr_t _prog_blit ;
+            so_gpu::config_ptr_t _config_blit ;
+            
             sox_presentation::post_shared_data_ptr_t _sd ;
            
             so_math::vec2f_t _dims ;

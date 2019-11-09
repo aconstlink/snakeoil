@@ -34,10 +34,15 @@ gl33_post_plug::gl33_post_plug( sox_presentation::post_shared_data_ptr_t sd,
 {
     _vb = vb_t::create( "vertex buffer" ) ;
     _ib = ib_t::create( "index buffer" ) ;
-    _vs = so_gpu::vertex_shader_t::create( "vertex shader" ) ;
-    _ps = so_gpu::pixel_shader_t::create( "pixel shader" ) ;
-    _prog = so_gpu::program_t::create( "program" ) ;
-    _config = so_gpu::config_t::create( "config" ) ;    
+    _vs_mix = so_gpu::vertex_shader_t::create( "vertex shader" ) ;
+    _ps_mix = so_gpu::pixel_shader_t::create( "pixel shader" ) ;
+    _prog_mix = so_gpu::program_t::create( "program" ) ;
+    _config_mix = so_gpu::config_t::create( "config" ) ;    
+
+    _vs_blit = so_gpu::vertex_shader_t::create( "vertex shader" ) ;
+    _ps_blit = so_gpu::pixel_shader_t::create( "pixel shader" ) ;
+    _prog_blit = so_gpu::program_t::create( "program" ) ;
+    _config_blit = so_gpu::config_t::create( "config" ) ;
 
     _sd = sd ;
 }
@@ -48,10 +53,15 @@ gl33_post_plug::gl33_post_plug( this_rref_t rhv ) :
 {
     so_move_member_ptr( _vb, rhv ) ;
     so_move_member_ptr( _ib, rhv ) ;
-    so_move_member_ptr( _vs, rhv ) ;
-    so_move_member_ptr( _ps, rhv ) ;
-    so_move_member_ptr( _prog, rhv ) ;
-    so_move_member_ptr( _config, rhv ) ;
+    so_move_member_ptr( _vs_mix, rhv ) ;
+    so_move_member_ptr( _ps_mix, rhv ) ;
+    so_move_member_ptr( _prog_mix, rhv ) ;
+    so_move_member_ptr( _config_mix, rhv ) ;
+
+    so_move_member_ptr( _vs_blit, rhv ) ;
+    so_move_member_ptr( _ps_blit, rhv ) ;
+    so_move_member_ptr( _prog_blit, rhv ) ;
+    so_move_member_ptr( _config_blit, rhv ) ;
 
     so_move_member_ptr( _sd, rhv ) ;
 }
@@ -65,17 +75,29 @@ gl33_post_plug::~gl33_post_plug( void_t )
     if( so_core::is_not_nullptr( _ib ) )
         _ib->destroy() ;
 
-    if( so_core::is_not_nullptr( _vs ) )
-        so_gpu::vertex_shader_t::destroy( _vs ) ;
+    if( so_core::is_not_nullptr( _vs_mix ) )
+        so_gpu::vertex_shader_t::destroy( _vs_mix ) ;
 
-    if( so_core::is_not_nullptr( _ps ) )
-        so_gpu::pixel_shader_t::destroy( _ps ) ;
+    if( so_core::is_not_nullptr( _ps_mix ) )
+        so_gpu::pixel_shader_t::destroy( _ps_mix ) ;
 
-    if( so_core::is_not_nullptr( _prog ) )
-        so_gpu::program_t::destroy( _prog ) ;
+    if( so_core::is_not_nullptr( _prog_mix ) )
+        so_gpu::program_t::destroy( _prog_mix ) ;
 
-    if( so_core::is_not_nullptr( _config ) )
-        so_gpu::config_t::destroy( _config ) ;
+    if( so_core::is_not_nullptr( _config_mix ) )
+        so_gpu::config_t::destroy( _config_mix ) ;
+
+    if( so_core::is_not_nullptr( _vs_blit ) )
+        so_gpu::vertex_shader_t::destroy( _vs_blit ) ;
+
+    if( so_core::is_not_nullptr( _ps_blit ) )
+        so_gpu::pixel_shader_t::destroy( _ps_blit ) ;
+
+    if( so_core::is_not_nullptr( _prog_blit ) )
+        so_gpu::program_t::destroy( _prog_blit ) ;
+
+    if( so_core::is_not_nullptr( _config_blit ) )
+        so_gpu::config_t::destroy( _config_blit ) ;
 }
 
 //*************************************************************************************
@@ -94,12 +116,12 @@ void_t gl33_post_plug::destroy( this_ptr_t ptr )
 //*************************************************************************************
 so_gpx::plug_result gl33_post_plug::on_load( load_info_cref_t li )
 {
-    auto const base = "";// SHADER_BASE ;
+    auto const base = sox::find_shader_path("/presentation/post/gl33/shader/") ;
 
-    // load shader
+    // load shader mix
     {
-        auto const vs_path = base / so_io::path_t( "render/post/gl33/shader/post.vs" ) ;
-        auto const ps_path = base / so_io::path_t( "render/post/gl33/shader/post.ps" ) ;
+        auto const vs_path = base / so_io::path_t( "post.vs" ) ;
+        auto const ps_path = base / so_io::path_t( "post.ps" ) ;
 
         so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
         so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;
@@ -114,7 +136,7 @@ so_gpx::plug_result gl33_post_plug::on_load( load_info_cref_t li )
 
                 vs = so_std::string_t( din, sib ) ;
             } ) ;
-            _vss = vs ;
+            _vss_mix = vs ;
         }
 
         {
@@ -126,7 +148,41 @@ so_gpx::plug_result gl33_post_plug::on_load( load_info_cref_t li )
 
                 ps = so_std::string_t( din, sib ) ;
             } ) ;
-            _pss = ps ;
+            _pss_mix = ps ;
+        }
+    }
+
+    // load shader blit
+    {
+        auto const vs_path = base / so_io::path_t( "post.vs" ) ;
+        auto const ps_path = base / so_io::path_t( "post.ps" ) ;
+
+        so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
+        so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;
+
+        {
+            so_std::string_t vs ;
+
+            vsh.wait_for_operation( [&] ( char_cptr_t din, size_t sib, so_io::result res )
+            {
+                so_log::global::error_and_exit( so_io::no_success( res ),
+                    "Vertex shader required" ) ;
+
+                vs = so_std::string_t( din, sib ) ;
+            } ) ;
+            _vss_blit = vs ;
+        }
+
+        {
+            so_std::string_t ps ;
+            psh.wait_for_operation( [&] ( char_cptr_t din, size_t sib, so_io::result res )
+            {
+                so_log::global::error_and_exit( so_io::no_success( res ),
+                    "Pixel shader required" ) ;
+
+                ps = so_std::string_t( din, sib ) ;
+            } ) ;
+            _pss_blit = ps ;
         }
     }
 
@@ -164,7 +220,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
     if( ii.reinit )
     {
         {
-            auto const res = this_t::api()->release_program( _prog ) ;
+            auto const res = this_t::api()->release_program( _prog_mix ) ;
             if( so_gpu::no_success( res ) )
             {
                 so_log::global_t::error( "[gl33_rects_plug::on_initialize] : release program" ) ;
@@ -172,7 +228,24 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
             }
         }
         {
-            auto const res = this_t::api()->release_config( _config ) ;
+            auto const res = this_t::api()->release_config( _config_mix ) ;
+            if( so_gpu::no_success( res ) )
+            {
+                so_log::global_t::error( "[gl33_rects_plug::on_initialize] : release config" ) ;
+                return so_gpx::plug_result::failed ;
+            }
+        }
+
+        {
+            auto const res = this_t::api()->release_program( _prog_blit ) ;
+            if( so_gpu::no_success( res ) )
+            {
+                so_log::global_t::error( "[gl33_rects_plug::on_initialize] : release program" ) ;
+                return so_gpx::plug_result::failed ;
+            }
+        }
+        {
+            auto const res = this_t::api()->release_config( _config_blit ) ;
             if( so_gpu::no_success( res ) )
             {
                 so_log::global_t::error( "[gl33_rects_plug::on_initialize] : release config" ) ;
@@ -199,7 +272,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
             }
         }
         {
-            auto const res = this_t::api()->create_shader( _vs ) ;
+            auto const res = this_t::api()->create_shader( _vs_mix ) ;
             if( so_gpu::no_success( res ) )
             {
                 so_log::global_t::error( "[gl33_rects_plug::on_initialize] : vertex shader creation" ) ;
@@ -207,7 +280,23 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
             }
         }
         {
-            auto const res = this_t::api()->create_shader( _ps ) ;
+            auto const res = this_t::api()->create_shader( _ps_mix ) ;
+            if( so_gpu::no_success( res ) )
+            {
+                so_log::global_t::error( "[gl33_rects_plug::on_initialize] : pixel shader creation" ) ;
+                return so_gpx::plug_result::failed ;
+            }
+        }
+        {
+            auto const res = this_t::api()->create_shader( _vs_blit ) ;
+            if( so_gpu::no_success( res ) )
+            {
+                so_log::global_t::error( "[gl33_rects_plug::on_initialize] : vertex shader creation" ) ;
+                return so_gpx::plug_result::failed ;
+            }
+        }
+        {
+            auto const res = this_t::api()->create_shader( _ps_blit ) ;
             if( so_gpu::no_success( res ) )
             {
                 so_log::global_t::error( "[gl33_rects_plug::on_initialize] : pixel shader creation" ) ;
@@ -217,7 +306,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
     }
 
     {
-        auto const res = this_t::api()->create_program( _prog ) ;
+        auto const res = this_t::api()->create_program( _prog_mix ) ;
         if( so_gpu::no_success( res ) )
         {
             so_log::global_t::error( "[gl33_rects_plug::on_initialize] : create program" ) ;
@@ -225,7 +314,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         }
     }
     {
-        auto const res = this_t::api()->create_config( _config ) ;
+        auto const res = this_t::api()->create_config( _config_mix ) ;
         if( so_gpu::no_success( res ) )
         {
             so_log::global_t::error( "[gl33_rects_plug::on_initialize] : create config" ) ;
@@ -233,35 +322,35 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         }
     }
     {
-        _prog->set_shader( _vs ) ;
-        _prog->set_shader( _ps ) ;
+        _prog_mix->set_shader( _vs_mix ) ;
+        _prog_mix->set_shader( _ps_mix ) ;
     }
     {
-        auto tmp_vs = _vs->get_code() ;
-        auto tmp_ps = _ps->get_code() ;
+        auto tmp_vs = _vs_mix->get_code() ;
+        auto tmp_ps = _ps_mix->get_code() ;
 
-        _vs->set_code( _vss ) ;
-        _ps->set_code( _pss ) ;
+        _vs_mix->set_code( _vss_mix ) ;
+        _ps_mix->set_code( _pss_mix ) ;
 
         if( ii.reinit )
         {
-            _vss = tmp_vs ;
-            _pss = tmp_ps ;
+            _vss_mix = tmp_vs ;
+            _pss_mix = tmp_ps ;
         }
 
 
         bool_t suc = true ;
         {
-            auto const res = this_t::api()->compile( _vs )  ;
+            auto const res = this_t::api()->compile( _vs_mix )  ;
             suc = suc && so_gpu::success( res ) ;
 
         }
         {
-            auto const res = this_t::api()->compile( _ps )  ;
+            auto const res = this_t::api()->compile( _ps_mix )  ;
             suc = suc && so_gpu::success( res ) ;
         }
         {
-            auto const res = this_t::api()->link( _prog ) ;
+            auto const res = this_t::api()->link( _prog_mix ) ;
             suc = suc && so_gpu::success( res ) ;
         }
 
@@ -270,11 +359,11 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
             so_log::global_t::error( "[gl33_rects_plug::on_initialize] : "
                 "compile/link shaders - using old shaders" ) ;
 
-            _vs->set_code( _vss ) ;
-            _ps->set_code( _pss ) ;
-            this_t::api()->compile( _vs )  ;
-            this_t::api()->compile( _ps )  ;
-            this_t::api()->link( _prog ) ;
+            _vs_mix->set_code( _vss_mix ) ;
+            _ps_mix->set_code( _pss_mix ) ;
+            this_t::api()->compile( _vs_mix )  ;
+            this_t::api()->compile( _ps_mix )  ;
+            this_t::api()->link( _prog_mix ) ;
         }
         else if( so_core::is_not( suc ) && so_core::is_not( ii.reinit ) )
         {
@@ -284,11 +373,86 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
     }
 
     {
-        _config->set_program( _prog ) ;
-        _config->bind( so_gpu::vertex_attribute::position, "in_pos" ) ;
-        _config->bind( so_gpu::primitive_type::triangles, _vb, _ib ) ;
+        _config_mix->set_program( _prog_mix ) ;
+        _config_mix->bind( so_gpu::vertex_attribute::position, "in_pos" ) ;
+        _config_mix->bind( so_gpu::primitive_type::triangles, _vb, _ib ) ;
     }
     
+
+    // blit
+
+    {
+        auto const res = this_t::api()->create_program( _prog_blit ) ;
+        if( so_gpu::no_success( res ) )
+        {
+            so_log::global_t::error( "[gl33_rects_plug::on_initialize] : create program" ) ;
+            return so_gpx::plug_result::failed ;
+        }
+    }
+    {
+        auto const res = this_t::api()->create_config( _config_blit ) ;
+        if( so_gpu::no_success( res ) )
+        {
+            so_log::global_t::error( "[gl33_rects_plug::on_initialize] : create config" ) ;
+            return so_gpx::plug_result::failed ;
+        }
+    }
+    {
+        _prog_blit->set_shader( _vs_blit ) ;
+        _prog_blit->set_shader( _ps_blit ) ;
+    }
+    {
+        auto tmp_vs = _vs_blit->get_code() ;
+        auto tmp_ps = _ps_blit->get_code() ;
+
+        _vs_blit->set_code( _vss_blit ) ;
+        _ps_blit->set_code( _pss_blit ) ;
+
+        if( ii.reinit )
+        {
+            _vss_blit = tmp_vs ;
+            _pss_blit = tmp_ps ;
+        }
+
+
+        bool_t suc = true ;
+        {
+            auto const res = this_t::api()->compile( _vs_blit )  ;
+            suc = suc && so_gpu::success( res ) ;
+
+        }
+        {
+            auto const res = this_t::api()->compile( _ps_blit )  ;
+            suc = suc && so_gpu::success( res ) ;
+        }
+        {
+            auto const res = this_t::api()->link( _prog_blit ) ;
+            suc = suc && so_gpu::success( res ) ;
+        }
+
+        if( so_core::is_not( suc ) && ii.reinit )
+        {
+            so_log::global_t::error( "[gl33_rects_plug::on_initialize] : "
+                "compile/link shaders - using old shaders" ) ;
+
+            _vs_blit->set_code( _vss_blit ) ;
+            _ps_blit->set_code( _pss_blit ) ;
+            this_t::api()->compile( _vs_blit )  ;
+            this_t::api()->compile( _ps_blit )  ;
+            this_t::api()->link( _prog_blit ) ;
+        }
+        else if( so_core::is_not( suc ) && so_core::is_not( ii.reinit ) )
+        {
+            so_log::global_t::error( "[gl33_post_plug::on_initialize] : compile/link shaders" ) ;
+            return so_gpx::plug_result::failed ;
+        }
+    }
+
+    {
+        _config_blit->set_program( _prog_blit ) ;
+        _config_blit->bind( so_gpu::vertex_attribute::position, "in_pos" ) ;
+        _config_blit->bind( so_gpu::primitive_type::triangles, _vb, _ib ) ;
+    }
     
 
     return so_gpx::plug_result::ok ;
@@ -299,10 +463,16 @@ so_gpx::plug_result gl33_post_plug::on_release( void_t )
 {
     this_t::api()->release_buffer( _vb ) ;
     this_t::api()->release_buffer( _ib ) ;
-    this_t::api()->release_shader( _vs ) ;
-    this_t::api()->release_shader( _ps ) ;
-    this_t::api()->release_program( _prog ) ;
-    this_t::api()->release_config( _config ) ;
+
+    this_t::api()->release_shader( _vs_mix ) ;
+    this_t::api()->release_shader( _ps_mix ) ;
+    this_t::api()->release_program( _prog_mix ) ;
+    this_t::api()->release_config( _config_mix ) ;
+
+    this_t::api()->release_shader( _vs_blit ) ;
+    this_t::api()->release_shader( _ps_blit ) ;
+    this_t::api()->release_program( _prog_blit ) ;
+    this_t::api()->release_config( _config_blit ) ;
 
     return so_gpx::plug_result::ok ;
 }

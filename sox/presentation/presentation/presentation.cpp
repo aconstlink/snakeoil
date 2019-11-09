@@ -1,5 +1,7 @@
 #include "presentation.h"
 
+#include "../post/post.h"
+
 #include <snakeoil/gfx/plugs/framebuffer/predef_framebuffer.h>
 #include <snakeoil/gpx/system/render_system.h>
 
@@ -148,6 +150,10 @@ presentation::presentation( so_gpx::render_system_ptr_t ptr ) noexcept
     _fb_cm = so_gfx::predef_framebuffer_t::create(
         so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
         "[presentation::presentation] : predef framebuffer" ) ;
+
+    _post = sox_presentation::post_t::create( 
+        sox_presentation::post_t(_rs ), 
+        "[presentation::presentation] : sox_presentation::post_t" ) ;
 }
 
 //*********************************************************
@@ -163,6 +169,7 @@ presentation::presentation( this_rref_t rhv ) noexcept
     so_move_member_ptr( _fb_c1, rhv ) ;
     so_move_member_ptr( _fb_cx, rhv ) ;
     so_move_member_ptr( _fb_cm, rhv ) ;
+    so_move_member_ptr( _post, rhv ) ;
 }
 
 //*********************************************************
@@ -182,6 +189,8 @@ presentation::~presentation( void_t ) noexcept
     so_gfx::predef_framebuffer_t::destroy( _fb_c1 ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cx ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cm ) ;
+
+    sox_presentation::post_t::destroy( _post ) ;
 }
 
 //*********************************************************
@@ -203,6 +212,7 @@ void_t presentation::init( void ) noexcept
     _fb_c1->init( "presentation.scene.1", 1920, 1080 ) ;
     _fb_cx->init( "presentation.cross", 1920, 1080 ) ;
     _fb_cm->init( "presentation.mask", 1920, 1080 ) ;
+    _post->init() ;
 }
 
 //*********************************************************
@@ -246,7 +256,7 @@ void_t presentation::render( void_t ) noexcept
 
     // 4. do post
     {
-
+        _post->render() ;
     }
 }
 

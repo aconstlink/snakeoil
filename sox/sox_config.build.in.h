@@ -9,13 +9,13 @@
 #include <snakeoil/io/typedefs.h>
 #include <snakeoil/std/filesystem/filesystem.hpp>
 
-namespace so_gfx
+namespace sox
 {
     namespace so_internal
     {
         so_std::string_t const __shader_search_path_base[] = 
         {
-            "./gfx",
+            "./sox",
             "@CMAKE_CURRENT_SOURCE_DIR@"
         } ;
     }

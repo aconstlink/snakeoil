@@ -11,5 +11,6 @@ namespace sox_presentation
     so_class_proto_typedefs( ipage ) ;
     so_class_proto_typedefs( itransition ) ;
     so_class_proto_typedefs( presentation ) ;
+    so_class_proto_typedefs( post ) ;
 }
 

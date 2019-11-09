@@ -1,8 +1,22 @@
 
+
+
+##########################################################
+# configure config.h
+configure_file( "${SNAKEOIL_SOURCE_DIR}/sox/sox_config.build.in.h"
+  "${SNAKEOIL_BINARY_DIR}/sox/sox_config.h" @ONLY )
+
+set( SOURCES_CONFIG ${SNAKEOIL_BINARY_DIR}/sox/sox_config.h )
+
+include_directories( "${SNAKEOIL_BINARY_DIR}/sox" )
+##########################################################
+
 set( SUBDIRS
     "presentation"
 )
+
 foreach( _SUBDIR ${SUBDIRS} )
+
     set( CUR_LIB_NAME_SHORT "${_SUBDIR}" )
     set( CUR_LIB_NAME "${_SUBDIR}" )
     string(TOUPPER ${CUR_LIB_NAME} CUR_LIB_NAME_UPPER)
@@ -27,3 +41,4 @@ foreach( _SUBDIR ${SUBDIRS} )
     
     target_link_libraries( complete INTERFACE ${CUR_LIB_NAME} )
 endforeach()
+

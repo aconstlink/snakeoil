@@ -22,6 +22,11 @@ namespace sox_presentation
         so_flow::variable_set_t vs ;
         so_flow::variable_node_t vn ;
 
+        so_std::string_t fb0_name ; // scene 0
+        so_std::string_t fb1_name ; // scene 1
+        so_std::string_t fbx_name ; // cross fade scene name
+        so_std::string_t fbm_name ; // cross fade mask name
+
         post_shared_data( void_t )
         {
             win_vp = so_flow::variable<so_gpu::viewport_2d_t>::create(

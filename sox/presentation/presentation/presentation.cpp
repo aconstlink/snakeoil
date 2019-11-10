@@ -212,7 +212,8 @@ void_t presentation::init( void ) noexcept
     _fb_c1->init( "presentation.scene.1", 1920, 1080 ) ;
     _fb_cx->init( "presentation.cross", 1920, 1080 ) ;
     _fb_cm->init( "presentation.mask", 1920, 1080 ) ;
-    _post->init() ;
+    _post->init( "presentation.scene.0", "presentation.scene.1", 
+       "presentation.cross", "presentation.mask" ) ;
 }
 
 //*********************************************************

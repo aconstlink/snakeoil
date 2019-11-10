@@ -44,10 +44,13 @@ namespace sox_presentation
         static this_ptr_t create( this_rref_t, so_memory::purpose_cref_t ) ;
         static void_t destroy( this_ptr_t ) ;
 
-        void_t init( void_t ) ;
+        void_t init( so_std::string_cref_t fb0, so_std::string_cref_t fb1, 
+            so_std::string_cref_t fbx, so_std::string_cref_t fbm ) ;
+
         void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 
         so_flow::variable_node_ptr_t get_var_node( void ) ;
+
 
     public: // render
 

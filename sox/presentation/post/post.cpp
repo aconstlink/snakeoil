@@ -55,10 +55,16 @@ void_t post::destroy( this_ptr_t ptr )
 }
 
 //*****************************************************
-void_t post::init( void_t )
+void_t post::init( so_std::string_cref_t fb0, so_std::string_cref_t fb1,
+    so_std::string_cref_t fbx, so_std::string_cref_t fbm )
 {
     if( _tid == so_gpx::technique_id_t( -1 ) )
         _tid = _gpxr->register_technique( _fac_ptr ) ;
+
+    _sd_ptr->fb0_name = fb0 ;
+    _sd_ptr->fb1_name = fb1 ;
+    _sd_ptr->fbx_name = fbx ;
+    _sd_ptr->fbm_name = fbm ;
 }
 
 //*****************************************************

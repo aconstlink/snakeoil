@@ -43,6 +43,7 @@ gl33_post_plug::gl33_post_plug( sox_presentation::post_shared_data_ptr_t sd,
     _ps_blit = so_gpu::pixel_shader_t::create( "pixel shader" ) ;
     _prog_blit = so_gpu::program_t::create( "program" ) ;
     _config_blit = so_gpu::config_t::create( "config" ) ;
+    _vars_blit = so_gpu::variable_set_t::create("[gl33_post_plug::gl33_post_plug] : varset 0") ;
 
     _sd = sd ;
 }
@@ -62,6 +63,7 @@ gl33_post_plug::gl33_post_plug( this_rref_t rhv ) :
     so_move_member_ptr( _ps_blit, rhv ) ;
     so_move_member_ptr( _prog_blit, rhv ) ;
     so_move_member_ptr( _config_blit, rhv ) ;
+    so_move_member_ptr( _vars_blit, rhv ) ;
 
     so_move_member_ptr( _sd, rhv ) ;
 }
@@ -98,6 +100,11 @@ gl33_post_plug::~gl33_post_plug( void_t )
 
     if( so_core::is_not_nullptr( _config_blit ) )
         so_gpu::config_t::destroy( _config_blit ) ;
+
+    if( so_core::is_not_nullptr( _vars_blit ) )
+        so_gpu::variable_set_t::destroy( _vars_blit ) ;
+
+    
 }
 
 //*************************************************************************************
@@ -120,8 +127,8 @@ so_gpx::plug_result gl33_post_plug::on_load( load_info_cref_t li )
 
     // load shader mix
     {
-        auto const vs_path = base / so_io::path_t( "post.vs" ) ;
-        auto const ps_path = base / so_io::path_t( "post.ps" ) ;
+        auto const vs_path = base / so_io::path_t( "gl33_post_mix.vs.glsl" ) ;
+        auto const ps_path = base / so_io::path_t( "gl33_post_mix.ps.glsl" ) ;
 
         so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
         so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;
@@ -154,8 +161,8 @@ so_gpx::plug_result gl33_post_plug::on_load( load_info_cref_t li )
 
     // load shader blit
     {
-        auto const vs_path = base / so_io::path_t( "post.vs" ) ;
-        auto const ps_path = base / so_io::path_t( "post.ps" ) ;
+        auto const vs_path = base / so_io::path_t( "gl33_post_blit.vs.glsl" ) ;
+        auto const ps_path = base / so_io::path_t( "gl33_post_blit.ps.glsl" ) ;
 
         so_io::load_handle_t vsh = so_io::global::load( so_io::path_t( vs_path ) ) ;
         so_io::load_handle_t psh = so_io::global::load( so_io::path_t( ps_path ) ) ;
@@ -452,8 +459,41 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         _config_blit->set_program( _prog_blit ) ;
         _config_blit->bind( so_gpu::vertex_attribute::position, "in_pos" ) ;
         _config_blit->bind( so_gpu::primitive_type::triangles, _vb, _ib ) ;
+        _config_blit->add_variable_set( _vars_blit ) ;
     }
     
+    {
+        so_gpu::texture_ptr_t color_ptr ;
+        so_std::string_t const name = _sd->fb0_name + "_color_0" ;
+
+        so_gpu::gpu_manager::tx2d_manager_t::handle_t hnd ;
+        auto const res = ii.mgr->get_tx2d_mgr()->acquire(
+            name, "[gl33_post_plug::on_initialize]", hnd ) ;
+        if( so_core::is_not( res ) )
+        {
+            so_log::global::error( "[gl33_post_plug::on_initialize] : "
+                "color texture name incorrect" ) ;
+            return so_gpx::plug_result::failed ;
+        }
+
+        color_ptr = hnd.get_ptr() ;
+
+        so_gpu::iimage_2d_ptr_t ptr = dynamic_cast< so_gpu::iimage_2d_ptr_t >( color_ptr->get_image() );
+        if( so_core::is_not_nullptr( ptr ) )
+        {
+            //_bb_dims = so_math::vec2f_t( float_t( ptr->get_width() ), float_t( ptr->get_height() ) ) ;
+        }
+        else
+        {
+            so_log::global::error( "[gl33_post_plug::on_initialize] : "
+                "color texture is not a 2d image" ) ;
+        }
+
+    }
+
+
+    auto const res = this_t::api()->create_variable( _vars_blit ) ;
+   
 
     return so_gpx::plug_result::ok ;
 }
@@ -480,6 +520,22 @@ so_gpx::plug_result gl33_post_plug::on_release( void_t )
 //*************************************************************************************
 so_gpx::plug_result gl33_post_plug::on_execute( execute_info_cref_t ei )
 {
+    if( ei.rnd_id == 0 )
+    {
+        so_gpu::viewport_2d_t fb_dims = so_gpu::viewport_2d_t(0,0,1920,1080) ;// _var_fb_dims->get_data().zw() ;
+
+        this_t::api()->use_framebuffer( nullptr ) ;
+        this_t::api()->set_viewport( so_gpu::viewport_2d_t( 0, 0,
+            size_t( fb_dims.get_width() ), size_t( fb_dims.get_height() ) ) ) ;
+
+        this_t::api()->load_variable( _vars_blit ) ;
+        this_t::api()->execute( so_gpu::render_config_info( _config_blit ) ) ;
+    }
+    else if( ei.rnd_id == 1 )
+    {
+        // do mix
+    }
+
     return so_gpx::plug_result::ok ;
 }
 

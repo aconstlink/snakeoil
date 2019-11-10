@@ -209,9 +209,13 @@ void_t presentation::destroy( this_ptr_t ptr ) noexcept
 void_t presentation::init( void ) noexcept 
 {
     _fb_c0->init( "presentation.scene.0", 1920, 1080 ) ;
+    _fb_c0->schedule_for_init() ;
     _fb_c1->init( "presentation.scene.1", 1920, 1080 ) ;
+    _fb_c1->schedule_for_init() ;
     _fb_cx->init( "presentation.cross", 1920, 1080 ) ;
+    _fb_cx->schedule_for_init() ;
     _fb_cm->init( "presentation.mask", 1920, 1080 ) ;
+    _fb_cm->schedule_for_init() ;
     _post->init( "presentation.scene.0", "presentation.scene.1", 
        "presentation.cross", "presentation.mask" ) ;
 }
@@ -257,7 +261,7 @@ void_t presentation::render( void_t ) noexcept
 
     // 4. do post
     {
-        _post->render() ;
+        _post->render( this_t::in_transition() ) ;
     }
 }
 

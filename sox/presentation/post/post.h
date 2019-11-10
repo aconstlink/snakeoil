@@ -55,7 +55,7 @@ namespace sox_presentation
     public: // render
 
         void_t reload( void_t ) ;
-        void_t render( void_t ) ;
+        void_t render( bool_t const ) ;
         void_t release( void_t ) ;
 
     };

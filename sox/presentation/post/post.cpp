@@ -81,12 +81,12 @@ void_t post::reload( void_t )
 }
 
 //*****************************************************
-void_t post::render( void_t )
+void_t post::render( bool_t const transition )
 {
     
 
     so_gpx::schedule_instance_t si ;
-    si.render_id = 0 ;
+    si.render_id = transition ? 1 : 0 ;
     _gpxr->schedule( _tid, 0, si ) ;
 }
 

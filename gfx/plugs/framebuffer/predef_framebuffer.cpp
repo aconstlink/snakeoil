@@ -145,6 +145,12 @@ so_flow::variable_set_ptr_t predef_framebuffer::get_varset( void_t )
 }
 
 //*************************************************************************************
+void_t predef_framebuffer::schedule_for_init( void_t ) 
+{
+    _rs->schedule_for_init( _tid, 0 ) ;
+}
+
+//*************************************************************************************
 void_t predef_framebuffer::schedule_for_clear( void_t ) 
 {
     so_gpx::schedule_instance_t si ;

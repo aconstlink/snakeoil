@@ -63,6 +63,7 @@ namespace sox_presentation
             so_gpu::config_ptr_t _config_blit ;
             
             so_gpu::variable_set_ptr_t _vars_blit ;
+            so_gpu::variable_set_ptr_t _vars_mix ;
 
             sox_presentation::post_shared_data_ptr_t _sd ;
            

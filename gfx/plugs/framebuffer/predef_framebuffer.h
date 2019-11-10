@@ -92,6 +92,7 @@ namespace so_gfx
         void_t set_viewport( so_gpu::viewport_2d_cref_t ) ;
         void_t set_clear_color( so_math::vec4f_cref_t ) ;
 
+        void_t schedule_for_init( void_t ) ;
         void_t schedule_for_clear( void_t ) ;
         void_t schedule_for_begin( void_t ) ;
         void_t schedule_for_end( void_t ) ;

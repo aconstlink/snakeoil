@@ -2,8 +2,14 @@
 
 #include "../post/post.h"
 
+#include <snakeoil/gfx/render/render_2d.h>
+#include <snakeoil/gfx/text/text_render_2d.h>
 #include <snakeoil/gfx/plugs/framebuffer/predef_framebuffer.h>
 #include <snakeoil/gpx/system/render_system.h>
+
+#include <snakeoil/gpu/viewport/viewport_2d.h>
+
+#include <snakeoil/math/utility/3d/orthographic_projection.hpp>
 
 #include <snakeoil/log/global.h>
 
@@ -154,6 +160,12 @@ presentation::presentation( so_gpx::render_system_ptr_t ptr ) noexcept
     _post = sox_presentation::post_t::create( 
         sox_presentation::post_t(_rs ), 
         "[presentation::presentation] : sox_presentation::post_t" ) ;
+
+    _rnd_2d = so_gfx::render_2d_t::create( so_gfx::render_2d_t( _rs ), 
+        "[presentation::presentation] : so_gfx::render_2d_t" ) ;
+
+    _txt_rnd = so_gfx::text_render_2d_t::create( so_gfx::text_render_2d_t( _rs ), 
+        "[presentation::presentation] : so_gfx::render_2d_t" ) ;
 }
 
 //*********************************************************
@@ -170,6 +182,8 @@ presentation::presentation( this_rref_t rhv ) noexcept
     so_move_member_ptr( _fb_cx, rhv ) ;
     so_move_member_ptr( _fb_cm, rhv ) ;
     so_move_member_ptr( _post, rhv ) ;
+    so_move_member_ptr( _rnd_2d, rhv ) ;
+    so_move_member_ptr( _txt_rnd, rhv ) ;
 }
 
 //*********************************************************
@@ -189,6 +203,8 @@ presentation::~presentation( void_t ) noexcept
     so_gfx::predef_framebuffer_t::destroy( _fb_c1 ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cx ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cm ) ;
+    so_gfx::render_2d_t::destroy( _rnd_2d ) ;
+    so_gfx::text_render_2d_t::destroy( _txt_rnd ) ;
 
     sox_presentation::post_t::destroy( _post ) ;
 }
@@ -206,7 +222,7 @@ void_t presentation::destroy( this_ptr_t ptr ) noexcept
 }
 
 //*********************************************************
-void_t presentation::init( void ) noexcept 
+void_t presentation::init( so_io::path_cref_t path ) noexcept 
 {
     _fb_c0->init( "presentation.scene.0", 1920, 1080 ) ;
     _fb_c0->schedule_for_init() ;
@@ -218,33 +234,83 @@ void_t presentation::init( void ) noexcept
     _fb_cm->schedule_for_init() ;
     _post->init( "presentation.scene.0", "presentation.scene.1", 
        "presentation.cross", "presentation.mask" ) ;
+
+    _rnd_2d->init() ;
+    _txt_rnd->init_fonts( 50, { path } ) ;
 }
 
 //*********************************************************
 void_t presentation::render( void_t ) noexcept
 {
+
+    {
+        so_gfx::text_render_2d_t::canvas_info_t ci ;
+        ci.vp = so_gpu::viewport_2d_t( 0, 0, 1920, 1080 ) ;
+
+        _txt_rnd->set_canvas_info( ci ) ;
+        //_txt_rnd->set_view_projection( so_math::mat4f_t().identity(),
+            //so_math::mat4f_t().identity() ) ;
+          //  so_math::so_3d::orthographic<float_t>::create( 1920.0f, 1080.0f, 0.1f, 1000.0f ) ) ;
+    }
+
     render_data_t rd ;
+    rd.rnd_2d = _rnd_2d ;
+    rd.txt_rnd = _txt_rnd ;
 
     // 1. do current page
     {
         this_t::cur_page( [&] ( page_info_ref_t pi )
         {
+            rd.layer_start = 0 ;
+            rd.layer_end = 10 ;
+            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f) ) ;
+            
             _fb_c0->schedule_for_begin() ;
+            _fb_c0->schedule_for_clear() ;
+
             pi.do_render( rd ) ;
+
+            rd.rnd_2d->prepare_for_rendering() ;
+            rd.txt_rnd->prepare_for_rendering() ;
+            for( size_t i=rd.layer_start; i<=rd.layer_end; ++i )
+            {
+                rd.rnd_2d->render( i ) ;
+                rd.txt_rnd->render( i ) ;
+            }
         } ) ;
     }
 
     // 2. do transition
     if( this_t::in_transition() )
     {
+        
+
         bool_t const res = this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
-            _fb_cx->schedule_for_begin() ;
-            ti.do_render( itransition::render_type::scene, rd ) ;
+            {
+                rd.layer_start = rd.layer_end + 1 ;
+                rd.layer_end = rd.layer_start + 10 ;
 
-            // how to say that the mask should be rendered?
-            _fb_cm->schedule_for_begin() ;
-            ti.do_render( itransition::render_type::mask, rd ) ;
+                _fb_cx->set_clear_color( so_math::vec4f_t(1.0f) ) ;
+                _fb_cx->schedule_for_begin() ;
+                _fb_cx->schedule_for_clear() ;
+
+                ti.do_render( itransition::render_type::scene, rd ) ;
+
+                rd.rnd_2d->prepare_for_rendering() ;
+                rd.txt_rnd->prepare_for_rendering() ;
+                for( size_t i = rd.layer_start; i <= rd.layer_end; ++i )
+                {
+                    rd.rnd_2d->render( i ) ;
+                    rd.txt_rnd->render( i ) ;
+                }
+            }
+
+            {
+                // how to say that the mask should be rendered?
+                _fb_cm->schedule_for_begin() ;
+                ti.do_render( itransition::render_type::mask, rd ) ;
+            }
             
         } ) ;
     }
@@ -252,10 +318,21 @@ void_t presentation::render( void_t ) noexcept
     // 3. do next page
     if( this_t::in_transition() )
     {
+        rd.layer_start = rd.layer_end + 1 ;
+        rd.layer_end = rd.layer_start + 10 ;
+
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
             _fb_c1->schedule_for_begin() ;
             pi.do_render( rd ) ;
+
+            rd.rnd_2d->prepare_for_rendering() ;
+            rd.txt_rnd->prepare_for_rendering() ;
+            for( size_t i = rd.layer_start; i <= rd.layer_end; ++i )
+            {
+                rd.rnd_2d->render( i ) ;
+                rd.txt_rnd->render( i ) ;
+            }
         } ) ;
     }
 

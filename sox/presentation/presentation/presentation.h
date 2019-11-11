@@ -76,6 +76,9 @@ namespace sox_presentation
 
         so_gpx::render_system_ptr_t _rs = nullptr ;
 
+        so_gfx::render_2d_ptr_t _rnd_2d ;
+        so_gfx::text_render_2d_ptr_t _txt_rnd ;
+
         so_gfx::predef_framebuffer_ptr_t _fb_c0 ; // scene 0
         so_gfx::predef_framebuffer_ptr_t _fb_c1 ; // scene 1
         so_gfx::predef_framebuffer_ptr_t _fb_cx ; // cross 
@@ -202,7 +205,7 @@ namespace sox_presentation
 
     public:
 
-        void_t init( void ) noexcept ;
+        void_t init( so_io::path_cref_t path ) noexcept ;
         void_t render( void_t ) noexcept ;
         void_t update( void_t ) noexcept ;
 

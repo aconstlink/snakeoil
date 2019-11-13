@@ -6,6 +6,7 @@
 
 #include <snakeoil/gfx/protos.h>
 #include <snakeoil/gpx/protos.h>
+#include <snakeoil/gpu/viewport/viewport_2d.h>
 
 namespace sox_presentation
 {
@@ -71,6 +72,8 @@ namespace sox_presentation
             so_core::clock_t::now() ;
 
         bool_t _abort_transition = false ;
+
+        so_gpu::viewport_2d_t _vp ;
 
     private: // techniques/gfx
 
@@ -205,9 +208,10 @@ namespace sox_presentation
 
     public:
 
-        void_t init( so_io::path_cref_t path ) noexcept ;
+        void_t init( so_gpu::viewport_2d_cref_t, so_io::path_cref_t path ) noexcept ;
         void_t render( void_t ) noexcept ;
         void_t update( void_t ) noexcept ;
+        void_t release( void_t ) ;
 
     public:
 

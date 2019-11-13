@@ -184,6 +184,8 @@ presentation::presentation( this_rref_t rhv ) noexcept
     so_move_member_ptr( _post, rhv ) ;
     so_move_member_ptr( _rnd_2d, rhv ) ;
     so_move_member_ptr( _txt_rnd, rhv ) ;
+
+    _vp = rhv._vp ;
 }
 
 //*********************************************************
@@ -222,15 +224,17 @@ void_t presentation::destroy( this_ptr_t ptr ) noexcept
 }
 
 //*********************************************************
-void_t presentation::init( so_io::path_cref_t path ) noexcept 
+void_t presentation::init( so_gpu::viewport_2d_cref_t vp, so_io::path_cref_t path ) noexcept 
 {
-    _fb_c0->init( "presentation.scene.0", 1920, 1080 ) ;
+    _vp = vp ;
+
+    _fb_c0->init( "presentation.scene.0", _vp.get_width(), _vp.get_height() ) ;
     _fb_c0->schedule_for_init() ;
-    _fb_c1->init( "presentation.scene.1", 1920, 1080 ) ;
+    _fb_c1->init( "presentation.scene.1", _vp.get_width(), _vp.get_height() ) ;
     _fb_c1->schedule_for_init() ;
-    _fb_cx->init( "presentation.cross", 1920, 1080 ) ;
+    _fb_cx->init( "presentation.cross", _vp.get_width(), _vp.get_height() ) ;
     _fb_cx->schedule_for_init() ;
-    _fb_cm->init( "presentation.mask", 1920, 1080 ) ;
+    _fb_cm->init( "presentation.mask", _vp.get_width(), _vp.get_height() ) ;
     _fb_cm->schedule_for_init() ;
     _post->init( "presentation.scene.0", "presentation.scene.1", 
        "presentation.cross", "presentation.mask" ) ;
@@ -245,7 +249,7 @@ void_t presentation::render( void_t ) noexcept
 
     {
         so_gfx::text_render_2d_t::canvas_info_t ci ;
-        ci.vp = so_gpu::viewport_2d_t( 0, 0, 1920, 1080 ) ;
+        ci.vp = _vp ; // so_gpu::viewport_2d_t( 0, 0, 1920, 1080 ) ;
 
         _txt_rnd->set_canvas_info( ci ) ;
         //_txt_rnd->set_view_projection( so_math::mat4f_t().identity(),
@@ -429,6 +433,15 @@ void_t presentation::update( void_t ) noexcept
         _tdur += dt ;
     }
     
+}
+
+//*********************************************************
+void_t presentation::release( void_t ) 
+{
+    _fb_c0->schedule_for_release() ;
+    _fb_c1->schedule_for_release() ;
+    _fb_cx->schedule_for_release() ;
+    _fb_cm->schedule_for_release() ;
 }
 
 //*********************************************************

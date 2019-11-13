@@ -97,6 +97,7 @@ namespace so_gfx
         void_t schedule_for_begin( void_t ) ;
         void_t schedule_for_end( void_t ) ;
         void_t schedule_for_reload( void_t ) ;
+        void_t schedule_for_release( void_t ) ;
 
     public:
 

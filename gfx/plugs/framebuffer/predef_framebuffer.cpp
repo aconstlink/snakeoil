@@ -127,6 +127,12 @@ void_t predef_framebuffer::schedule_for_reload( void_t )
 }
 
 //*************************************************************************************
+void_t predef_framebuffer::schedule_for_release( void_t ) 
+{
+    _rs->schedule_for_release( _tid ) ;
+}
+
+//*************************************************************************************
 void_t predef_framebuffer::set_viewport( so_gpu::viewport_2d_cref_t vp ) 
 {
     _sd->vp = vp ;

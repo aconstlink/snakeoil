@@ -157,6 +157,10 @@ presentation::presentation( so_gpx::render_system_ptr_t ptr ) noexcept
         so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
         "[presentation::presentation] : predef framebuffer" ) ;
 
+    _fb_blt = so_gfx::predef_framebuffer_t::create(
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::invalid, _rs ),
+        "[presentation::presentation] : predef framebuffer blt" ) ;
+
     _post = sox_presentation::post_t::create( 
         sox_presentation::post_t(_rs ), 
         "[presentation::presentation] : sox_presentation::post_t" ) ;
@@ -181,6 +185,7 @@ presentation::presentation( this_rref_t rhv ) noexcept
     so_move_member_ptr( _fb_c1, rhv ) ;
     so_move_member_ptr( _fb_cx, rhv ) ;
     so_move_member_ptr( _fb_cm, rhv ) ;
+    so_move_member_ptr( _fb_blt, rhv ) ;
     so_move_member_ptr( _post, rhv ) ;
     so_move_member_ptr( _rnd_2d, rhv ) ;
     so_move_member_ptr( _txt_rnd, rhv ) ;
@@ -205,6 +210,7 @@ presentation::~presentation( void_t ) noexcept
     so_gfx::predef_framebuffer_t::destroy( _fb_c1 ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cx ) ;
     so_gfx::predef_framebuffer_t::destroy( _fb_cm ) ;
+    so_gfx::predef_framebuffer_t::destroy( _fb_blt ) ;
     so_gfx::render_2d_t::destroy( _rnd_2d ) ;
     so_gfx::text_render_2d_t::destroy( _txt_rnd ) ;
 
@@ -236,8 +242,9 @@ void_t presentation::init( so_gpu::viewport_2d_cref_t vp, so_io::path_cref_t pat
     _fb_cx->schedule_for_init() ;
     _fb_cm->init( "presentation.mask", _vp.get_width(), _vp.get_height() ) ;
     _fb_cm->schedule_for_init() ;
+    _fb_blt->init( "scene", _vp.get_width(), _vp.get_height(), 0 ) ;
     _post->init( "presentation.scene.0", "presentation.scene.1", 
-       "presentation.cross", "presentation.mask" ) ;
+       "presentation.cross", "presentation.mask", "" ) ;
 
     _rnd_2d->init() ;
     _txt_rnd->init_fonts( 50, { path } ) ;
@@ -246,7 +253,6 @@ void_t presentation::init( so_gpu::viewport_2d_cref_t vp, so_io::path_cref_t pat
 //*********************************************************
 void_t presentation::render( void_t ) noexcept
 {
-
     {
         so_gfx::text_render_2d_t::canvas_info_t ci ;
         ci.vp = _vp ; // so_gpu::viewport_2d_t( 0, 0, 1920, 1080 ) ;
@@ -295,7 +301,7 @@ void_t presentation::render( void_t ) noexcept
                 rd.layer_start = rd.layer_end + 1 ;
                 rd.layer_end = rd.layer_start + 10 ;
 
-                _fb_cx->set_clear_color( so_math::vec4f_t(1.0f) ) ;
+                _fb_cx->set_clear_color( so_math::vec4f_t(0.8f) ) ;
                 _fb_cx->schedule_for_begin() ;
                 _fb_cx->schedule_for_clear() ;
 
@@ -342,6 +348,7 @@ void_t presentation::render( void_t ) noexcept
 
     // 4. do post
     {
+        _fb_blt->schedule_for_begin() ;
         _post->render( this_t::in_transition() ) ;
     }
 }

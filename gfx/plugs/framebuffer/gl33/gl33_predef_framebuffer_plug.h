@@ -12,6 +12,7 @@
 #include <snakeoil/gpx/plug/plug.h>
 
 #include <snakeoil/gpu/protos.h>
+#include <snakeoil/gpu/manager/gpu_manager.h>
 #include <snakeoil/gpu/image/color_image_2d.hpp>
 #include <snakeoil/gpu/image/depth_image_2d.hpp>
 #include <snakeoil/gpu/buffer/vertex_buffer.hpp>
@@ -36,6 +37,7 @@ namespace so_gfx
 
         private:
 
+            so_gpu::gpu_manager_t::fb2d_manager_t::handle_t _fb_hnd ;
             so_gpu::framebuffer_2d_ptr_t _fb_ptr = nullptr ;
 
             so_typedefs( so_gpu::color_image_2d<so_math::vec4uc_t>, color_image ) ;
@@ -49,8 +51,7 @@ namespace so_gfx
 
             so_flow::variable< so_gpu::viewport_2d_t > * _vp_window ;
             so_flow::variable< so_gpu::viewport_2d_t > * _vp_back ;
-
-            so_gfx::predef_framebuffer_type _pfb_type ;
+            
             predef_framebuffer_t::shared_data_ptr_t _sd ;
 
             so_math::vec4f_t _color ;

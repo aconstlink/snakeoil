@@ -115,7 +115,10 @@ void_t predef_framebuffer::init( so_std::string_cref_t name, size_t const width,
     _sd->width = width ;
     _sd->height = height ;
     _sd->num_color = nc ;
-    _sd->type = _type ;
+
+    // no color/no depth
+    // => check framebuffer manager
+    _sd->type = nc != 0 ? _type : so_gfx::predef_framebuffer_type::invalid ;
 
     this_t::set_viewport( so_gpu::viewport_2d( 0, 0, width, height ) ) ;
 }

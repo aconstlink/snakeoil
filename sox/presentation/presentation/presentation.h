@@ -86,6 +86,7 @@ namespace sox_presentation
         so_gfx::predef_framebuffer_ptr_t _fb_c1 ; // scene 1
         so_gfx::predef_framebuffer_ptr_t _fb_cx ; // cross 
         so_gfx::predef_framebuffer_ptr_t _fb_cm ; // mask
+        so_gfx::predef_framebuffer_ptr_t _fb_blt ; // blit to main
 
         sox_presentation::post_ptr_t _post ;
 

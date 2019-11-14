@@ -45,7 +45,8 @@ namespace sox_presentation
         static void_t destroy( this_ptr_t ) ;
 
         void_t init( so_std::string_cref_t fb0, so_std::string_cref_t fb1, 
-            so_std::string_cref_t fbx, so_std::string_cref_t fbm ) ;
+            so_std::string_cref_t fbx, so_std::string_cref_t fbm,
+            so_std::string_cref_t target ) ;
 
         void_t set_view_projection( so_math::mat4f_cref_t view, so_math::mat4f_cref_t proj ) ;
 

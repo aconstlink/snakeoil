@@ -658,7 +658,7 @@ so_gpx::plug_result gl33_post_plug::on_execute( execute_info_cref_t ei )
     {
         so_gpu::viewport_2d_t fb_dims = so_gpu::viewport_2d_t(0,0,1920,1080) ;// _var_fb_dims->get_data().zw() ;
 
-        this_t::api()->use_framebuffer( nullptr ) ;
+        //this_t::api()->use_framebuffer( nullptr ) ;
         this_t::api()->set_viewport( so_gpu::viewport_2d_t( 0, 0,
             size_t( fb_dims.get_width() ), size_t( fb_dims.get_height() ) ) ) ;
 
@@ -669,7 +669,7 @@ so_gpx::plug_result gl33_post_plug::on_execute( execute_info_cref_t ei )
     {
         so_gpu::viewport_2d_t fb_dims = so_gpu::viewport_2d_t(0,0,1920,1080) ;// _var_fb_dims->get_data().zw() ;
 
-        this_t::api()->use_framebuffer( nullptr ) ;
+        //this_t::api()->use_framebuffer( nullptr ) ;
         this_t::api()->set_viewport( so_gpu::viewport_2d_t( 0, 0,
             size_t( fb_dims.get_width() ), size_t( fb_dims.get_height() ) ) ) ;
 

@@ -40,7 +40,6 @@ gl33_predef_framebuffer_plug::gl33_predef_framebuffer_plug( predef_framebuffer_t
 gl33_predef_framebuffer_plug::gl33_predef_framebuffer_plug( this_rref_t rhv ) : 
     this_base_t( std::move(rhv) )
 {
-    _pfb_type = rhv._pfb_type ;
     so_move_member_ptr( _sd, rhv ) ;
     so_move_member_ptr( _fb_ptr, rhv ) ;
     so_move_member_ptr( _image_ptr, rhv ) ;
@@ -56,7 +55,7 @@ gl33_predef_framebuffer_plug::gl33_predef_framebuffer_plug( this_rref_t rhv ) :
 //*************************************************************************************
 gl33_predef_framebuffer_plug::~gl33_predef_framebuffer_plug( void_t )
 {
-    if( so_core::is_not_nullptr( _fb_ptr ) )
+    if( so_core::is_not_nullptr( _fb_ptr ) && so_core::is_not(_fb_hnd.is_valid()) )
         _fb_ptr->destroy() ;
 
     if( so_core::is_not_nullptr( _image_ptr ) )
@@ -109,6 +108,23 @@ so_gpx::plug_result gl33_predef_framebuffer_plug::on_initialize( init_info_cref_
 
     size_t const width = _viewport.get_width<size_t>() ;
     size_t const height = _viewport.get_height<size_t>() ;
+
+    if( so_core::is_not( with_color ) && so_core::is_not( with_depth ) ) 
+    {
+        so_gpu::gpu_manager_t::fb2d_manager_t::handle_t hnd ;
+        auto const res = ii.mgr->get_fb2d_mgr()->acquire( 
+            _sd->fb_name, "[gl33_predef_framebuffer_plug]", hnd ) ;
+
+        if( so_core::is_not( res ) )
+        {
+            return so_gpx::plug_result::failed ;
+        }
+
+
+        _fb_hnd = std::move( hnd ) ;
+        _fb_ptr = _fb_hnd.get_ptr() ;
+        return so_gpx::plug_result::ok ;
+    }
 
     // color image
     if( with_color )
@@ -252,7 +268,10 @@ so_gpx::plug_result gl33_predef_framebuffer_plug::on_initialize( init_info_cref_
 //*************************************************************************************
 so_gpx::plug_result gl33_predef_framebuffer_plug::on_release( void_t )
 {
-    this_t::api()->release_framebuffer( _fb_ptr ) ;
+    if( so_core::is_not(_fb_hnd.is_valid()) )
+    {
+        this_t::api()->release_framebuffer( _fb_ptr ) ;
+    }
     this_t::api()->release_texture( _dtx_ptr ) ;
     this_t::api()->release_texture( _tx_ptr ) ;
     this_t::api()->release_image( _image_ptr ) ;

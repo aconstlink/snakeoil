@@ -26,6 +26,7 @@ namespace sox_presentation
         so_std::string_t fb1_name ; // scene 1
         so_std::string_t fbx_name ; // cross fade scene name
         so_std::string_t fbm_name ; // cross fade mask name
+        so_std::string_t trg_name ; // the target framebuffer
 
         post_shared_data( void_t )
         {

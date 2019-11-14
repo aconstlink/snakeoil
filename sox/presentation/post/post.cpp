@@ -56,7 +56,8 @@ void_t post::destroy( this_ptr_t ptr )
 
 //*****************************************************
 void_t post::init( so_std::string_cref_t fb0, so_std::string_cref_t fb1,
-    so_std::string_cref_t fbx, so_std::string_cref_t fbm )
+    so_std::string_cref_t fbx, so_std::string_cref_t fbm,
+    so_std::string_cref_t target )
 {
     if( _tid == so_gpx::technique_id_t( -1 ) )
         _tid = _gpxr->register_technique( _fac_ptr ) ;
@@ -65,6 +66,7 @@ void_t post::init( so_std::string_cref_t fb0, so_std::string_cref_t fb1,
     _sd_ptr->fb1_name = fb1 ;
     _sd_ptr->fbx_name = fbx ;
     _sd_ptr->fbm_name = fbm ;
+    _sd_ptr->trg_name = target ;
 }
 
 //*****************************************************
@@ -83,8 +85,6 @@ void_t post::reload( void_t )
 //*****************************************************
 void_t post::render( bool_t const transition )
 {
-    
-
     so_gpx::schedule_instance_t si ;
     si.render_id = transition ? 1 : 0 ;
     _gpxr->schedule( _tid, 0, si ) ;

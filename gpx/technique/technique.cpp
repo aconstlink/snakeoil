@@ -130,6 +130,17 @@ so_gpx::technique_transition_result technique::part_00( technique_schedule_goal 
     }
 
     
+    // fix same technique with multiple schedule instance infos
+    // this means, a single technique is scheduled multiple times 
+    // with different schedule infos.
+    {
+        auto const res1 = pd->ts == so_gpx::technique_transition_state::executing ;
+        auto const res2 = pd->rs == so_gpx::technique_rest_state::online ;
+        if( res1 && res2 )
+        {
+            return so_gpx::technique_transition_result::goal_reached ;
+        }
+    }
 
     // do not do anything if the technique is 
     // other then none transition

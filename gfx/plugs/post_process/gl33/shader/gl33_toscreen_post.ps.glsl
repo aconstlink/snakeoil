@@ -13,5 +13,5 @@ in vertex_data
 void main()
 {
     vec4 color_image = texture( u_smp_color, psi.tx );
-    out_color = color_image ;    
+    out_color = color_image ;
 }

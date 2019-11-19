@@ -14,5 +14,5 @@ void main()
 {
     vec4 color_image = texture( u_smp_color_x, psi.tx );
     out_color = color_image ;    
-    //out_color = vec4(1.0,0.0,1.0,1.0);
+    //out_color = vec4(.8,0.8,.8,1.0);
 }

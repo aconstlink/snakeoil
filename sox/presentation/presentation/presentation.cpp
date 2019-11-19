@@ -273,7 +273,7 @@ void_t presentation::render( void_t ) noexcept
         {
             rd.layer_start = 0 ;
             rd.layer_end = 10 ;
-            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f) ) ;
+            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 1.0f, 1.0f, 1.0f) ) ;
             
             _fb_c0->schedule_for_begin() ;
             _fb_c0->schedule_for_clear() ;
@@ -287,26 +287,26 @@ void_t presentation::render( void_t ) noexcept
                 rd.rnd_2d->render( i ) ;
                 rd.txt_rnd->render( i ) ;
             }
+            _fb_c0->schedule_for_end() ;
         } ) ;
     }
 
     // 2. do transition
     if( this_t::in_transition() )
     {
-        
-
         bool_t const res = this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
             {
                 rd.layer_start = rd.layer_end + 1 ;
                 rd.layer_end = rd.layer_start + 10 ;
 
-                _fb_cx->set_clear_color( so_math::vec4f_t(0.8f) ) ;
+                _fb_cx->set_clear_color( so_math::vec4f_t( 1.0f,1.0f,1.0f,1.0f ) ) ;
                 _fb_cx->schedule_for_begin() ;
                 _fb_cx->schedule_for_clear() ;
-
+                
                 ti.do_render( itransition::render_type::scene, rd ) ;
 
+                
                 rd.rnd_2d->prepare_for_rendering() ;
                 rd.txt_rnd->prepare_for_rendering() ;
                 for( size_t i = rd.layer_start; i <= rd.layer_end; ++i )
@@ -314,27 +314,37 @@ void_t presentation::render( void_t ) noexcept
                     rd.rnd_2d->render( i ) ;
                     rd.txt_rnd->render( i ) ;
                 }
+                _fb_cx->schedule_for_end() ;
+                
             }
-
+            #if 0
             {
                 // how to say that the mask should be rendered?
                 _fb_cm->schedule_for_begin() ;
                 ti.do_render( itransition::render_type::mask, rd ) ;
             }
-            
+            #endif
+
         } ) ;
     }
 
     // 3. do next page
+    #if 0
     if( this_t::in_transition() )
     {
         rd.layer_start = rd.layer_end + 1 ;
         rd.layer_end = rd.layer_start + 10 ;
 
+
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
+            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 0.0f, 1.0f, 1.0f ) ) ;
             _fb_c1->schedule_for_begin() ;
+            _fb_c1->schedule_for_clear() ;
+
             pi.do_render( rd ) ;
+
+            _fb_c1->schedule_for_end() ;
 
             rd.rnd_2d->prepare_for_rendering() ;
             rd.txt_rnd->prepare_for_rendering() ;
@@ -345,6 +355,7 @@ void_t presentation::render( void_t ) noexcept
             }
         } ) ;
     }
+    #endif 
 
     // 4. do post
     {
@@ -379,9 +390,8 @@ void_t presentation::update( void_t ) noexcept
     }
 
     // 2. do transition
-    
     {
-        std::chrono::microseconds dur = std::chrono::microseconds(0) ;
+        std::chrono::microseconds dur = std::chrono::microseconds( 0 ) ;
 
         this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {

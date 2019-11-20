@@ -236,6 +236,8 @@ add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
 target_link_libraries( ${CUR_LIB_NAME}
+  PRIVATE rapidxml
+  PRIVATE stb
         PUBLIC snakeoil::property
         PUBLIC snakeoil::shade
         PUBLIC snakeoil::geometry

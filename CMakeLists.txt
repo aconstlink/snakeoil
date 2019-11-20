@@ -61,12 +61,7 @@ so_export_clear()
 ################################################################
 
 # lua
-
-set( LUA_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/lua-5.3.3 )
-set( LUA_VERSION 5.3.3 )
-set( LUA_ENABLE ON )
-set_target_properties( lua PROPERTIES FOLDER "snakeoil/externals" )
+add_subdirectory( "externals/lua" )
 
 # khronos
 set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
@@ -74,63 +69,29 @@ add_subdirectory( externals/khronos )
 
 # rapidxml
 # also see find_package
-set( RAPIDXML_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/rapidxml-1.13 )
+add_subdirectory( "externals/rapidxml" )
 
 # rapidjson
 # todo
 
 # stb
 # also see find_package
-set( STB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals/stb-2.31" )
-add_subdirectory( externals/stb-2.31 )
+add_subdirectory( "externals/stb" )
 
 # ogg
-set( OGG_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-set( OGG_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
-add_subdirectory( externals/ogg-1.3.1 )
-set_target_properties( ogg PROPERTIES FOLDER "snakeoil/externals/xiph" )
+add_subdirectory( "externals/ogg" )
 
 # vorbis
-set( VORBIS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-set( VORBIS_BUILD_SHARED_LIBS ${SNAKEOIL_LIBRARY_BUILD_SHARED} )
-
-add_subdirectory( externals/vorbis-1.3.5 )
-set_target_properties( vorbis PROPERTIES FOLDER "snakeoil/externals/xiph" )
-set_target_properties( vorbisenc PROPERTIES FOLDER "snakeoil/externals/xiph" )
-set_target_properties( vorbisfile PROPERTIES FOLDER "snakeoil/externals/xiph" )
+add_subdirectory( "externals/vorbis" )
 
 # imgui
-set( IMGUI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/imgui-1.7.2 )
-set( IMGUI_VERSION 1.7.2 )
-set_target_properties( imgui PROPERTIES FOLDER "snakeoil/externals" )
-set( IMGUI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/imgui-1.7.2/include" )
+add_subdirectory( "externals/imgui" )
 
 # rtmidi
-set( RTMIDI_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-add_subdirectory( externals/rtmidi-3.0.0 )
-set( RTMIDI_VERSION 3.0.0 )
-set_target_properties( rtmidi PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
-set_target_properties( rtmidi_static PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
-set_target_properties( uninstall PROPERTIES FOLDER "snakeoil/externals/rtmidi" )
-set( RTMIDI_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/rtmidi-3.0.0" )
-
-target_compile_definitions( rtmidi PRIVATE RTMIDI_DO_NOT_ENSURE_UNIQUE_PORTNAMES )
-target_compile_definitions( rtmidi_static PRIVATE RTMIDI_DO_NOT_ENSURE_UNIQUE_PORTNAMES )
-
-if( SNAKEOIL_COMPILER_MSC )
-  target_compile_options( rtmidi PRIVATE /wd4267 /wd4996 )
-  target_compile_options( rtmidi_static PRIVATE /wd4267 /wd4996 )
-endif()
+add_subdirectory( "externals/rtmidi" )
 
 # libusb
-#set( LIBUSB_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-#add_subdirectory( externals/libusb-1.0.22 )
-#set( LIBUSB_VERSION 1.0.22 )
-#set( LIBUSB_ENABLE ON )
-#set_target_properties( libusb PROPERTIES FOLDER "snakeoil/externals" )
-#set( LIBUSB_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/externals/libusb-1.0.22/libusb" )
+add_subdirectory( "externals/libusb" )
 
 #zlib
 # todo
@@ -277,12 +238,6 @@ export(TARGETS complete NAMESPACE snakeoil:: APPEND FILE ${PROJECT_NAME}-targets
 ################################################################
 # SECTION : Export externals
 ################################################################
-
-# do externals
-# TODO this should be done in the libs respective target files and 
-# included in snakeoils config file
-list( APPEND TO_BE_EXPORTED lua imgui )
-export( TARGETS ${TO_BE_EXPORTED} NAMESPACE snakeoil:: APPEND FILE snakeoil-targets.cmake )
 
 ################################################################
 # SECTION: in build tree fing_package generation

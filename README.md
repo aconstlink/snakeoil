@@ -1,5 +1,6 @@
 # snakeoil
 
+snakeoil is an experimental audio/visual programming framework written in C++ for creative coding. Its main purpose is to provide an experimental playground for testing, learning and experiencing topics in the realm of real-time interactive audio/visual applications.
 
 ## How to build
 
@@ -21,6 +22,8 @@ A C++11 Compiler is required
 
 - Windows 7/8/10 64 bit
 - Linux 64 bit (only low level library support) (tested on Fedora 25)  
+
+> Linux is currently only experimental. Base compoments are compiling and are usable though. You can not do rendering or sound on Linux yet.
 
 ## Build-In External Libraries
 

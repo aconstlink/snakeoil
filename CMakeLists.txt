@@ -229,6 +229,7 @@ foreach( _SUBDIR ${SUBDIRS_HEADER_ONLY} )
     set_target_properties( ${CUR_LIB_NAME} PROPERTIES FOLDER "snakeoil" )
 
     set_target_properties( ${CUR_LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+    set_target_properties( ${CUR_LIB_NAME} PROPERTIES CXX_STANDARD ${SNAKEOIL_CXX_STANDARD} )
 endforeach()
 
 #

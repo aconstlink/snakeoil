@@ -11,6 +11,10 @@
 
 set( SNAKEOIL_COMPILER_CONFIGURED FALSE )
 
+#just set the cxx version to 11 for now
+#it need to be used in the target property CXX_STANDARD
+set( SNAKEOIL_CXX_STANDARD 11 )
+
 # Microsoft compiler
 set( SNAKEOIL_COMPILER_MSC OFF )
 set( SNAKEOIL_COMPILER_MSC_14 OFF ) # vs 2015

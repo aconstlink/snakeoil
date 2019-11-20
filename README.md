@@ -2,8 +2,6 @@
 
 snakeoil is an experimental audio/visual programming framework written in C++ for creative coding. Its main purpose is to provide an experimental playground for testing, learning and experiencing topics in the realm of real-time interactive audio/visual applications.
 
-# Architecture
-
 # General
 
 ## How to build

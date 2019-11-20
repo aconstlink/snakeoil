@@ -35,7 +35,8 @@ Build-in means that these libraries are shipped with the framework code and that
 [ImGui](https://github.com/ocornut/imgui/)  
 
 ## Travis CI (experimental)
-https://travis-ci.com/aconstlink/snakeoil.svg?branch=master
+
+[![Build Status](https://travis-ci.com/aconstlink/snakeoil.svg?branch=master)](https://travis-ci.com/aconstlink/snakeoil)
 
 ## Contribution
 

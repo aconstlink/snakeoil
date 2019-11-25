@@ -2,6 +2,8 @@
 
 snakeoil is an experimental audio/visual programming framework written in C++ for creative coding. Its main purpose is to provide an experimental playground for testing, learning and experiencing topics in the realm of real-time interactive audio/visual applications.
 
+At the beginning of this projects several year back, I wanted to experience mostly all of the engine from scratch as in implementing it from the very scratch. Meanwhile, this became too time consuming so I started focusing on topics that are really interesting to me and I will keep doing those from scratch. There are externals used in snakeoil, which can be observed in the externals folder of the project. Those libs are used throughout the engine and should be ussable by the user of snakeoil.
+
 # General
 
 ## How to build
@@ -26,18 +28,6 @@ A C++11 Compiler is required
 - Linux 64 bit (only low level library support) (tested on Fedora 25)  
 
 > Linux is currently only experimental. Base compoments are compiling and are usable though. You can not do rendering or sound on Linux yet.
-
-## Build-In External Libraries
-
-Build-in means that these libraries are shipped with the framework code and that you have access to it during development. These libraries are stored in the /externals directory.
-
-[RapidXML](http://rapidxml.sourceforge.net/) 
-[RapidJSON](https://github.com/Tencent/rapidjson) 
-[LUA](https://www.lua.org/)  
-[STB](https://github.com/nothings/stb)  
-[Ogg](https://www.xiph.org/ogg/)  
-[Vorbis](https://xiph.org/vorbis/)  
-[ImGui](https://github.com/ocornut/imgui/)  
 
 ## CI (experimental)
 

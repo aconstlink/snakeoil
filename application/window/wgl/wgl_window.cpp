@@ -41,6 +41,8 @@ wgl_window::wgl_window( gl_info_cref_t gli, window_info_cref_t wi )
             "[wgl_window::wgl_window] : gl_33_api" ) ;
     }
 
+    _vsync = gli.vsync_enabled ;
+
 #if 0
     // create and initialize the gl driver
     {
@@ -90,6 +92,8 @@ wgl_window::wgl_window( this_rref_t rhv ) : decorator_window( std::move(rhv) )
 {
     so_move_member_ptr( _context_ptr, rhv ) ;
     so_move_member_ptr( _gl_api_ptr, rhv ) ;
+
+    _vsync = rhv._vsync ;
 }
 
 //***********************************************************************
@@ -169,6 +173,9 @@ void_t wgl_window::render_thread_end( void_t )
 //***********************************************************************
 void_t wgl_window::end_frame( void_t )
 {
+    if( _tgl_vsync )
+        _context_ptr->vsync( _vsync ) ;
+
     _context_ptr->swap() ;
 }
 
@@ -182,4 +189,11 @@ so_gpu::iapi_ptr_t wgl_window::get_api( void_t )
 so_gpu::api_type wgl_window::get_api_type( void_t )
 {
     return so_gpu::api_type::gl_33 ;
+}
+
+//***********************************************************************
+void_t wgl_window::send_toggle_vsync( void_t ) 
+{
+    _tgl_vsync = true ;
+    _vsync = !_vsync ;
 }

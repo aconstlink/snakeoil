@@ -39,6 +39,9 @@ namespace so_app
 
             /// the rendering context using the wgl.
             wgl_context_ptr_t _context_ptr = nullptr ;
+            
+            bool_t _tgl_vsync = false ;
+            bool_t _vsync = false ;
 
         private:
 
@@ -63,6 +66,8 @@ namespace so_app
             
             virtual irender_context_ptr_t get_support_context( size_t i ) ;
             virtual so_gpu::iapi_ptr_t get_support_driver( size_t i ) ;
+
+            virtual void_t send_toggle_vsync( void_t ) ;
 
         public: // so_gpu interface
 

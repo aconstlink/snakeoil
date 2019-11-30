@@ -56,6 +56,8 @@ namespace so_appx
 
         so_imex::system_ptr_t _imexs_ptr = nullptr ;
         
+        so_appx::window_event_manager_str_t _wnd_evt_mgr = nullptr ;
+
     private: // window data
 
         size_t _window_id = 0 ;
@@ -71,7 +73,7 @@ namespace so_appx
     private:
         
         /// non-copyable
-        appx_system( this_cref_t ) {}
+        appx_system( this_cref_t ) = delete ;
         
     public:
 
@@ -92,6 +94,7 @@ namespace so_appx
         size_t register_window( std::string const & name ) ;
 
         so_appx::result set_render_system( so_gpx::render_system_ptr_t ) ;
+        so_appx::result set_window_event_manager( so_appx::window_event_manager_str_t ) ;
 
     public:
 

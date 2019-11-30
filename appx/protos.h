@@ -16,6 +16,7 @@ namespace so_appx
     so_class_proto_typedefs( iappx_context ) ;
     so_class_proto_typedefs( appx_context ) ;   
     so_class_proto_typedefs( iwindow_state_informer ) ;
+    so_class_proto_typedefs( window_event_manager ) ;
 }
 
 #endif

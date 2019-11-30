@@ -60,38 +60,19 @@ so_export_clear()
 # SECTION : Build in and compilable externals
 ################################################################
 
-# lua
-add_subdirectory( "externals/lua" )
 
-# khronos
+add_subdirectory( "externals/lua" )
 set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
 add_subdirectory( externals/khronos )
-
-# rapidxml
-# also see find_package
 add_subdirectory( "externals/rapidxml" )
-
-# rapidjson
-# todo
-
-# stb
-# also see find_package
 add_subdirectory( "externals/stb" )
-
-# ogg
 add_subdirectory( "externals/ogg" )
-
-# vorbis
 add_subdirectory( "externals/vorbis" )
-
-# imgui
 add_subdirectory( "externals/imgui" )
-
-# rtmidi
 add_subdirectory( "externals/rtmidi" )
-
-# libusb
 add_subdirectory( "externals/libusb" )
+add_subdirectory( "externals/glm" )
+add_subdirectory( "externals/assimp" )
 
 #zlib
 # todo

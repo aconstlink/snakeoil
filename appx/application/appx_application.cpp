@@ -8,6 +8,7 @@
 #include "../system/update_data.h"
 
 #include "../system/window_state_informer.h"
+#include "../window/window_event_manager.h"
 
 #include <snakeoil/application/application/application.h>
 #include <snakeoil/application/window/gl_window.h>
@@ -62,6 +63,9 @@ appx_application::appx_application( void_t )
         "[appx_application::create_window] : audio_system" ) ;
 
     _appx_ptr->set_render_system( _rs_ptr ) ;
+
+    _wnd_evt_mgr = so_appx::window_event_manager_t::create() ;
+    _appx_ptr->set_window_event_manager( _wnd_evt_mgr ) ;
 }
 
 //***********************************************************************
@@ -74,6 +78,7 @@ appx_application::appx_application( this_rref_t rhv )
     so_move_member_ptr( _win_app_ptr, rhv ) ;
     so_move_member_ptr( _rs_ptr, rhv ) ;
     so_move_member_ptr( _as_ptr, rhv ) ;
+    so_move_member_ptr( _wnd_evt_mgr, rhv ) ;
 }
 
 //***********************************************************************
@@ -93,6 +98,7 @@ appx_application::~appx_application( void_t )
     appx_system::destroy( _appx_ptr ) ;
     so_gpx::render_system_t::destroy( _rs_ptr ) ;
     so_audiox::audio_system_t::destroy( _as_ptr ) ;
+    so_appx::window_event_manager_t::destroy( _wnd_evt_mgr ) ;
 }
 
 //***********************************************************************
@@ -247,7 +253,28 @@ so_app::result appx_application::exec( void_t )
                 }
             }
 
-            
+            //
+            // 2.1 do window state setter
+            //
+
+            {
+                for( auto & data : _rwindows )
+                {
+                    auto const sdata = _wnd_evt_mgr->swap( data.appx_wid ) ;
+                    if( sdata.toggle_fullscreen )
+                    {
+                        // send command to window
+                        data.window_ptr->send_toggle_fullscreen() ;
+                    }
+
+                    if( sdata.toggle_vsync )
+                    {
+                        // send command to window
+                        data.window_ptr->send_toggle_vsync() ;
+                    }
+                }
+            }
+
             // for each render window
             // wait for render sync
             shared_captured->rsystem_ptr->render_begin() ;

@@ -40,6 +40,8 @@ namespace so_app
         virtual so_std::string_cref_t get_name( void_t ) const final ;
 
         virtual void_t send_close( void_t ) ;
+        virtual void_t send_toggle_fullscreen( void_t ) ;
+        virtual void_t send_toggle_vsync( void_t ) ;
 
     public:
 

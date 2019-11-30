@@ -110,6 +110,14 @@ so_appx::result appx_system::set_render_system( so_gpx::render_system_ptr_t ptr 
 }
 
 //*************************************************************************************
+so_appx::result appx_system::set_window_event_manager( so_appx::window_event_manager_str_t ptr ) 
+{
+    _wnd_evt_mgr = ptr ;
+    _ctx->set_window_event_manager( ptr ) ;
+    return so_appx::ok ;
+}
+
+//*************************************************************************************
 so_appx::result appx_system::update( size_t wid, so_app::iwindow_message_listener_ptr_t iptr ) 
 {
     auto iter = std::find_if( _window_datas.begin(), _window_datas.end(), [&]( window_data const & data )

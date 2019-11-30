@@ -108,8 +108,6 @@ gl33_post_plug::~gl33_post_plug( void_t )
 
     if( so_core::is_not_nullptr( _vars_blit ) )
         so_gpu::variable_set_t::destroy( _vars_blit ) ;
-
-    
 }
 
 //*************************************************************************************

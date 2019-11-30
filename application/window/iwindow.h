@@ -28,6 +28,9 @@ namespace so_app
         virtual so_std::string_cref_t get_name( void_t ) const = 0 ;
 
         virtual void_t send_close( void_t ) = 0 ;
+
+        virtual void_t send_toggle_fullscreen( void_t ) = 0 ;
+        virtual void_t send_toggle_vsync( void_t ) = 0 ;
     };
     so_typedef( iwindow ) ;
     

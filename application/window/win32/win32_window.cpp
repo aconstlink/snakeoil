@@ -30,6 +30,7 @@ win32_window::win32_window( this_rref_t rhv )
 
     _msg_listeners = std::move( rhv._msg_listeners ) ;
     _name = std::move( rhv._name ) ;
+    _is_fullscreen = rhv._is_fullscreen;
 }
 
 //***********************************************************************
@@ -119,6 +120,57 @@ void_t win32_window::send_close( void_t )
 }
 
 //***********************************************************************
+void_t win32_window::send_toggle_fullscreen( void_t ) 
+{
+    _is_fullscreen = !_is_fullscreen ;
+
+    {
+        DWORD ws_ex_style = WS_EX_APPWINDOW /*& ~(WS_EX_DLGMODALFRAME |
+                      WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE )*/ ;
+        SetWindowLongPtrA( _handle.get_handle(), GWL_EXSTYLE, ws_ex_style ) ;
+    }
+
+    {
+        DWORD ws_style = 0 ;
+
+        if( _is_fullscreen )
+        {
+            ws_style = WS_POPUP | SW_SHOWNORMAL ;
+        }
+        else
+        {
+            ws_style = WS_OVERLAPPEDWINDOW ;
+        }
+
+        SetWindowLongPtrA( _handle.get_handle(), GWL_STYLE, ws_style ) ;
+    }
+
+    {
+        int_t start_x = 0, start_y = 0 ;
+        int_t width = GetSystemMetrics( SM_CXSCREEN ) ;
+        int_t height = GetSystemMetrics( SM_CYSCREEN ) ;
+
+        if( so_core::is_not(_is_fullscreen) )
+            height += GetSystemMetrics( SM_CYCAPTION ) ;
+
+        if( so_core::is_not( _is_fullscreen ) )
+        {
+            width /= 2 ;
+            height /= 2 ;
+        }
+
+        SetWindowPos( _handle.get_handle(), HWND_TOP, start_x,
+            start_y, width, height, SWP_SHOWWINDOW ) ;
+    }
+}
+
+//***********************************************************************
+void_t win32_window::send_toggle_vsync( void_t ) 
+{
+    // not done here
+}
+
+//***********************************************************************
 HWND win32_window::create_window( window_info const & wi ) 
 {
     window_info wil = wi ;
@@ -166,6 +218,7 @@ HWND win32_window::create_window( window_info const & wi )
         start_x = start_y = 0 ;        
         width = GetSystemMetrics(SM_CXSCREEN) ;
         height = GetSystemMetrics(SM_CYSCREEN) ;
+        _is_fullscreen = true ;
     }
     else
     {

@@ -17,6 +17,7 @@ namespace so_appx
 
         so_gpx::render_system_ptr_t _rsys_ptr = nullptr ;
         so_imex::isystem_ptr_t _imexs_ptr = nullptr ;
+        so_appx::window_event_manager_ptr_t _wnd_evt_mgr = nullptr ;
 
     private:
 
@@ -29,11 +30,13 @@ namespace so_appx
         
         so_appx::result set_render_system( so_gpx::render_system_ptr_t ) ;
         so_appx::result set_imexs( so_imex::isystem_ptr_t ) ;
+        so_appx::result set_window_event_manager( so_appx::window_event_manager_ptr_t ) ;
 
     public: // interface
 
         virtual so_gpx::render_system_ptr_t render_system( void_t ) ;
         virtual so_imex::isystem_ptr_t  imexsys( void_t ) ;
+        virtual so_appx::window_state_setter_t wnd_state_setter( void_t ) ;
         
     };
 }

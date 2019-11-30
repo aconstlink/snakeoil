@@ -8,6 +8,7 @@
 #include "../typedefs.h"
 #include "../protos.h"
 #include "../result.h"
+#include "../window/window_state_setter.h"
 
 #include <snakeoil/imex/system/isystem.h>
 #include <snakeoil/gpx/protos.h>
@@ -27,6 +28,8 @@ namespace so_appx
         
         /// request the imex system for im/export stuff
         virtual so_imex::isystem_ptr_t  imexsys( void_t ) = 0 ;
+
+        virtual so_appx::window_state_setter_t wnd_state_setter( void_t ) = 0 ;
 
     };
 }

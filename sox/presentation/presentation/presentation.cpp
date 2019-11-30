@@ -317,19 +317,16 @@ void_t presentation::render( void_t ) noexcept
                 _fb_cx->schedule_for_end() ;
                 
             }
-            #if 0
             {
                 // how to say that the mask should be rendered?
                 _fb_cm->schedule_for_begin() ;
+                _fb_cm->schedule_for_clear() ;
                 ti.do_render( itransition::render_type::mask, rd ) ;
             }
-            #endif
-
         } ) ;
     }
 
     // 3. do next page
-    #if 0
     if( this_t::in_transition() )
     {
         rd.layer_start = rd.layer_end + 1 ;
@@ -355,7 +352,6 @@ void_t presentation::render( void_t ) noexcept
             }
         } ) ;
     }
-    #endif 
 
     // 4. do post
     {

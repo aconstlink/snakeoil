@@ -88,6 +88,18 @@ void_t decorator_window::send_close( void_t )
 }
 
 //***********************************************************************
+void_t decorator_window::send_toggle_fullscreen( void_t ) 
+{
+    return _decorated_ptr->send_toggle_fullscreen() ;
+}
+
+//***********************************************************************
+void_t decorator_window::send_toggle_vsync( void_t ) 
+{
+    return _decorated_ptr->send_toggle_vsync() ;
+}
+
+//***********************************************************************
 bool_t decorator_window::has_decorated( void_t ) const 
 {
     return _decorated_ptr != nullptr ;

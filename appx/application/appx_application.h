@@ -8,6 +8,7 @@
 #include "../typedefs.h"
 #include "../result.h"
 #include "../api.h"
+#include "../window/window_event_manager.h"
 
 #include <snakeoil/application/protos.h>
 #include <snakeoil/application/application/iapplication.h>
@@ -36,6 +37,8 @@ namespace so_appx
         };
 
         typedef so_std::vector< rwindow_data > rwindows_t ;
+
+        window_event_manager_ptr_t _wnd_evt_mgr = nullptr ;
 
     private:
 

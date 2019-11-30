@@ -31,7 +31,11 @@ set( SOURCES
     system/window_state_informer.h
     system/window_state_informer.cpp
     system/event_data.h
-    
+    window/window_event_manager.h
+    window/window_event_manager.cpp
+    window/window_state_setter.h
+    window/window_state_setter.cpp
+
     app/iapp.h
     app/app.h
     app/app.cpp

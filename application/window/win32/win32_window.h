@@ -33,6 +33,9 @@ namespace so_app
             so_std::string _name ;
 
             bool_t _is_fullscreen = false ;
+            bool_t _is_cursor = false ;
+
+            HCURSOR _cursor = NULL ;
 
         public:
 

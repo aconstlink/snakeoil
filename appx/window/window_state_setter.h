@@ -29,6 +29,8 @@ namespace so_appx
 
         void_t toggle_fullscreen( size_t const wid ) ;
 
+        void_t toggle_cursor( size_t const wid ) ;
+
     };
     so_typedef( window_state_setter ) ;
 }

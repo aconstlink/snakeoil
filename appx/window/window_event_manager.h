@@ -19,6 +19,7 @@ namespace so_appx
             size_t wid = size_t( -1 );
             bool_t toggle_fullscreen = false ;
             bool_t toggle_vsync = false ;
+            bool_t toggle_cursor = false ;
 
             data( void_t ) {}
             data( size_t const wid_ ) { wid = wid_ ; }
@@ -38,6 +39,7 @@ namespace so_appx
 
         void_t toggle_vsync( size_t const wid ) ;
         void_t toggle_fullscreen( size_t const wid ) ;
+        void_t toggle_cursor( size_t const wid ) ;
 
     public:
 

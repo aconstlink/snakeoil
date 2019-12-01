@@ -31,6 +31,7 @@ win32_window::win32_window( this_rref_t rhv )
     _msg_listeners = std::move( rhv._msg_listeners ) ;
     _name = std::move( rhv._name ) ;
     _is_fullscreen = rhv._is_fullscreen;
+    _is_cursor = rhv._is_cursor ;
 }
 
 //***********************************************************************
@@ -165,6 +166,25 @@ void_t win32_window::send_toggle( so_app::toggle_window_in_t di )
                 start_y, width, height, SWP_SHOWWINDOW ) ;
         }
     }
+
+    /// @todo make it work.
+    if( di.toggle_show_cursor )
+    {
+        _is_cursor = !_is_cursor ;
+        if( so_core::is_not( _is_cursor ) )
+        {
+            _cursor = GetCursor() ;
+            SetCursor( NULL ) ;
+            while( ShowCursor( FALSE ) > 0 ) ;
+        }
+        else
+        {
+            SetCursor( _cursor ) ;
+            _cursor = NULL ;
+            ShowCursor( TRUE ) ;
+        }
+        
+    }
 }
 
 //***********************************************************************
@@ -186,7 +206,7 @@ HWND win32_window::create_window( window_info const & wi )
     wndclass.cbWndExtra = 0 ;
     wndclass.hInstance = hinst ;
     wndclass.hIcon = LoadIcon(0, IDI_APPLICATION ) ;
-    wndclass.hCursor = LoadCursor(0, IDC_ARROW) ;
+    wndclass.hCursor = LoadCursor( 0, IDC_ARROW ) ;
     wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH) ;
     wndclass.lpszMenuName = 0 ;
     wndclass.lpszClassName = class_name.c_str() ;
@@ -205,7 +225,10 @@ HWND win32_window::create_window( window_info const & wi )
     int width = wi.w ; // GetSystemMetrics(SM_CXSCREEN) >> 1 ;
     int height = wi.h ; // GetSystemMetrics(SM_CYSCREEN) >> 1 ;
 
-    ShowCursor( wil.show_cursor ) ;
+    {
+        ShowCursor( wil.show_cursor ) ;
+        _is_cursor = wil.show_cursor ;
+    }
 
     if( wil.fullscreen )
     {

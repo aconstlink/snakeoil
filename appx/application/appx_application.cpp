@@ -274,6 +274,13 @@ so_app::result appx_application::exec( void_t )
                         tgl.toggle_vsync = true ;
                         data.window_ptr->send_toggle( tgl ) ;
                     }
+
+                    if( sdata.toggle_cursor )
+                    {
+                        so_app::toggle_window_t tgl ;
+                        tgl.toggle_show_cursor = true ;
+                        data.window_ptr->send_toggle( tgl ) ;
+                    }
                 }
             }
 

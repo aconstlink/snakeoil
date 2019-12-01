@@ -31,3 +31,9 @@ void_t window_state_setter::toggle_fullscreen( size_t const wid )
 {
     _mgr->toggle_fullscreen( wid ) ;
 }
+
+//******************************************************
+void_t window_state_setter::toggle_cursor( size_t const wid ) 
+{
+    _mgr->toggle_cursor( wid ) ;
+}

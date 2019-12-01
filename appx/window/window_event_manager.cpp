@@ -56,6 +56,24 @@ void_t window_event_manager::toggle_fullscreen( size_t const wid )
 }
 
 //***************************************************
+void_t window_event_manager::toggle_cursor( size_t const wid ) 
+{
+    auto iter = std::find_if( _datas.begin(), _datas.end(),
+        [&] ( data_in_t d )
+    {
+        return d.wid == wid ;
+    } ) ;
+
+    if( iter == _datas.end() )
+    {
+        _datas.emplace_back( this_t::data_t( wid ) ) ;
+        iter = --_datas.end() ;
+    }
+
+    iter->toggle_cursor = !iter->toggle_cursor ;
+}
+
+//***************************************************
 window_event_manager::data_t window_event_manager::swap( size_t const wid )
 {
     auto iter = std::find_if( _datas.begin(), _datas.end(),

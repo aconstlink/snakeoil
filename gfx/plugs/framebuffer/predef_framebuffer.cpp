@@ -124,15 +124,15 @@ void_t predef_framebuffer::init( so_std::string_cref_t name, size_t const width,
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_reload( void_t ) 
+void_t predef_framebuffer::schedule_for_reload( size_t const wid  ) 
 {
-    _rs->schedule_for_reload( _tid, 0 ) ;
+    _rs->schedule_for_reload( _tid, wid ) ;
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_release( void_t ) 
+void_t predef_framebuffer::schedule_for_release( size_t const wid  ) 
 {
-    _rs->schedule_for_release( _tid ) ;
+    _rs->schedule_for_release( _tid, wid ) ;
 }
 
 //*************************************************************************************
@@ -154,33 +154,33 @@ so_flow::variable_set_ptr_t predef_framebuffer::get_varset( void_t )
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_init( void_t ) 
+void_t predef_framebuffer::schedule_for_init( size_t const wid ) 
 {
-    _rs->schedule_for_init( _tid, 0 ) ;
+    _rs->schedule_for_init( _tid, wid ) ;
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_clear( void_t ) 
+void_t predef_framebuffer::schedule_for_clear( size_t const wid ) 
 {
     so_gpx::schedule_instance_t si ;
     si.render_id = 0 ;
-    _rs->schedule( _tid, 0, si ) ;
+    _rs->schedule( _tid, wid, si ) ;
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_begin( void_t )
+void_t predef_framebuffer::schedule_for_begin( size_t const wid )
 {
     so_gpx::schedule_instance_t si ;
     si.render_id = 1 ;
-    _rs->schedule( _tid, 0, si ) ;
+    _rs->schedule( _tid, wid, si ) ;
 }
 
 //*************************************************************************************
-void_t predef_framebuffer::schedule_for_end( void_t )
+void_t predef_framebuffer::schedule_for_end( size_t const wid )
 {
     so_gpx::schedule_instance_t si ;
     si.render_id = 2 ;
-    _rs->schedule( _tid, 0, si ) ;
+    _rs->schedule( _tid, wid, si ) ;
 }
 
 //*************************************************************************************

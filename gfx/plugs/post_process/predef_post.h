@@ -85,8 +85,8 @@ namespace so_gfx
 
     public:
 
-        void_t schedule( void_t ) ;
-        void_t schedule_for_reload( void_t ) ;
+        void_t schedule( size_t const wid = 0 ) ;
+        void_t schedule_for_reload( size_t const wid = 0 ) ;
     };
     so_typedef( predef_post ) ;
 }

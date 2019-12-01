@@ -263,14 +263,16 @@ so_app::result appx_application::exec( void_t )
                     auto const sdata = _wnd_evt_mgr->swap( data.appx_wid ) ;
                     if( sdata.toggle_fullscreen )
                     {
-                        // send command to window
-                        data.window_ptr->send_toggle_fullscreen() ;
+                        so_app::toggle_window_t tgl ;
+                        tgl.toggle_fullscreen = true ;
+                        data.window_ptr->send_toggle( tgl ) ;
                     }
 
                     if( sdata.toggle_vsync )
                     {
-                        // send command to window
-                        data.window_ptr->send_toggle_vsync() ;
+                        so_app::toggle_window_t tgl ;
+                        tgl.toggle_vsync = true ;
+                        data.window_ptr->send_toggle( tgl ) ;
                     }
                 }
             }

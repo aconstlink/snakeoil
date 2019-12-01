@@ -192,8 +192,13 @@ so_gpu::api_type wgl_window::get_api_type( void_t )
 }
 
 //***********************************************************************
-void_t wgl_window::send_toggle_vsync( void_t ) 
+void_t wgl_window::send_toggle( so_app::toggle_window_in_t di )
 {
-    _tgl_vsync = true ;
-    _vsync = !_vsync ;
+    if( di.toggle_vsync )
+    {
+        _tgl_vsync = true ;
+        _vsync = !_vsync ;
+    }
+
+    return decorator_window::send_toggle( di ) ;
 }

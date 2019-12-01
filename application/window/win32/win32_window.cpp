@@ -120,54 +120,51 @@ void_t win32_window::send_close( void_t )
 }
 
 //***********************************************************************
-void_t win32_window::send_toggle_fullscreen( void_t ) 
+void_t win32_window::send_toggle( so_app::toggle_window_in_t di ) 
 {
-    _is_fullscreen = !_is_fullscreen ;
-
+    if( di.toggle_fullscreen )
     {
-        DWORD ws_ex_style = WS_EX_APPWINDOW /*& ~(WS_EX_DLGMODALFRAME |
-                      WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE )*/ ;
-        SetWindowLongPtrA( _handle.get_handle(), GWL_EXSTYLE, ws_ex_style ) ;
-    }
+        _is_fullscreen = !_is_fullscreen ;
 
-    {
-        DWORD ws_style = 0 ;
-
-        if( _is_fullscreen )
         {
-            ws_style = WS_POPUP | SW_SHOWNORMAL ;
-        }
-        else
-        {
-            ws_style = WS_OVERLAPPEDWINDOW ;
+            DWORD ws_ex_style = WS_EX_APPWINDOW /*& ~(WS_EX_DLGMODALFRAME |
+                          WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE )*/ ;
+            SetWindowLongPtrA( _handle.get_handle(), GWL_EXSTYLE, ws_ex_style ) ;
         }
 
-        SetWindowLongPtrA( _handle.get_handle(), GWL_STYLE, ws_style ) ;
-    }
-
-    {
-        int_t start_x = 0, start_y = 0 ;
-        int_t width = GetSystemMetrics( SM_CXSCREEN ) ;
-        int_t height = GetSystemMetrics( SM_CYSCREEN ) ;
-
-        if( so_core::is_not(_is_fullscreen) )
-            height += GetSystemMetrics( SM_CYCAPTION ) ;
-
-        if( so_core::is_not( _is_fullscreen ) )
         {
-            width /= 2 ;
-            height /= 2 ;
+            DWORD ws_style = 0 ;
+
+            if( _is_fullscreen )
+            {
+                ws_style = WS_POPUP | SW_SHOWNORMAL ;
+            }
+            else
+            {
+                ws_style = WS_OVERLAPPEDWINDOW ;
+            }
+
+            SetWindowLongPtrA( _handle.get_handle(), GWL_STYLE, ws_style ) ;
         }
 
-        SetWindowPos( _handle.get_handle(), HWND_TOP, start_x,
-            start_y, width, height, SWP_SHOWWINDOW ) ;
-    }
-}
+        {
+            int_t start_x = 0, start_y = 0 ;
+            int_t width = GetSystemMetrics( SM_CXSCREEN ) ;
+            int_t height = GetSystemMetrics( SM_CYSCREEN ) ;
 
-//***********************************************************************
-void_t win32_window::send_toggle_vsync( void_t ) 
-{
-    // not done here
+            if( so_core::is_not(_is_fullscreen) )
+                height += GetSystemMetrics( SM_CYCAPTION ) ;
+
+            if( so_core::is_not( _is_fullscreen ) )
+            {
+                width /= 2 ;
+                height /= 2 ;
+            }
+
+            SetWindowPos( _handle.get_handle(), HWND_TOP, start_x,
+                start_y, width, height, SWP_SHOWWINDOW ) ;
+        }
+    }
 }
 
 //***********************************************************************

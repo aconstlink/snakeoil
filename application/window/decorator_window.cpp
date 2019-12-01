@@ -88,15 +88,9 @@ void_t decorator_window::send_close( void_t )
 }
 
 //***********************************************************************
-void_t decorator_window::send_toggle_fullscreen( void_t ) 
+void_t decorator_window::send_toggle( so_app::toggle_window_in_t di ) 
 {
-    return _decorated_ptr->send_toggle_fullscreen() ;
-}
-
-//***********************************************************************
-void_t decorator_window::send_toggle_vsync( void_t ) 
-{
-    return _decorated_ptr->send_toggle_vsync() ;
+    return _decorated_ptr->send_toggle( di ) ;
 }
 
 //***********************************************************************

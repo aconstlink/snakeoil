@@ -72,6 +72,8 @@ set( SOURCES
     window/null/null_window.cpp
     window/null/null_window_handle.h
     window/null/null_window_handle.cpp
+
+    event/toggle_window.h
     )
 
 if( SNAKEOIL_WINDOW_SYSTEM_WIN32 )

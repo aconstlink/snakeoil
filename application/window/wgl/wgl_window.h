@@ -67,7 +67,7 @@ namespace so_app
             virtual irender_context_ptr_t get_support_context( size_t i ) ;
             virtual so_gpu::iapi_ptr_t get_support_driver( size_t i ) ;
 
-            virtual void_t send_toggle_vsync( void_t ) ;
+            virtual void_t send_toggle( so_app::toggle_window_in_t ) ;
 
         public: // so_gpu interface
 

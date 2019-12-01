@@ -92,17 +92,17 @@ void_t predef_post::destroy( this_ptr_t ptr )
 }
 
 //*************************************************************************************
-void_t predef_post::schedule( void_t )
+void_t predef_post::schedule( size_t const wid )
 {
     so_gpx::schedule_instance_t si ;
     si.render_id = 0 ;
-    _rs->schedule( _tid, 0, si ) ;
+    _rs->schedule( _tid, wid, si ) ;
 }
 
 //*************************************************************************************
-void_t predef_post::schedule_for_reload( void_t ) 
+void_t predef_post::schedule_for_reload( size_t const wid ) 
 {
-    _rs->schedule_for_reload( _tid, 0 ) ;
+    _rs->schedule_for_reload( _tid, wid ) ;
 }
 
 //*************************************************************************************

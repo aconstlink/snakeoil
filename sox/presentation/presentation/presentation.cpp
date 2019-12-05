@@ -267,22 +267,26 @@ void_t presentation::render( void_t ) noexcept
     rd.rnd_2d = _rnd_2d ;
     rd.txt_rnd = _txt_rnd ;
 
+    size_t layer_start = 0 ;
+    size_t layer_end = 10 ;
+
+    _rnd_2d->prepare_for_rendering() ;
+    _txt_rnd->prepare_for_rendering() ;
+
     // 1. do current page
     {
         this_t::cur_page( [&] ( page_info_ref_t pi )
         {
-            rd.layer_start = 0 ;
-            rd.layer_end = 10 ;
+            layer_start = 0 ;
+            layer_end = 10 ;
             _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 1.0f, 1.0f, 1.0f) ) ;
             
             _fb_c0->schedule_for_begin() ;
             _fb_c0->schedule_for_clear() ;
 
             pi.do_render( rd ) ;
-
-            rd.rnd_2d->prepare_for_rendering() ;
-            rd.txt_rnd->prepare_for_rendering() ;
-            for( size_t i=rd.layer_start; i<=rd.layer_end; ++i )
+            
+            for( size_t i=layer_start; i<=layer_end; ++i )
             {
                 rd.rnd_2d->render( i ) ;
                 rd.txt_rnd->render( i ) ;
@@ -297,19 +301,16 @@ void_t presentation::render( void_t ) noexcept
         bool_t const res = this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
             {
-                rd.layer_start = rd.layer_end + 1 ;
-                rd.layer_end = rd.layer_start + 10 ;
+                layer_start = layer_end + 1 ;
+                layer_end = layer_start + 10 ;
 
-                _fb_cx->set_clear_color( so_math::vec4f_t( 1.0f,1.0f,1.0f,1.0f ) ) ;
+                _fb_cx->set_clear_color( so_math::vec4f_t( 0.0f,0.0f,1.0f,1.0f ) ) ;
                 _fb_cx->schedule_for_begin() ;
                 _fb_cx->schedule_for_clear() ;
                 
                 ti.do_render( itransition::render_type::scene, rd ) ;
-
                 
-                rd.rnd_2d->prepare_for_rendering() ;
-                rd.txt_rnd->prepare_for_rendering() ;
-                for( size_t i = rd.layer_start; i <= rd.layer_end; ++i )
+                for( size_t i = layer_start; i <= layer_end; ++i )
                 {
                     rd.rnd_2d->render( i ) ;
                     rd.txt_rnd->render( i ) ;
@@ -317,42 +318,43 @@ void_t presentation::render( void_t ) noexcept
                 _fb_cx->schedule_for_end() ;
                 
             }
+            #if 0
             {
                 // how to say that the mask should be rendered?
                 _fb_cm->schedule_for_begin() ;
                 _fb_cm->schedule_for_clear() ;
                 ti.do_render( itransition::render_type::mask, rd ) ;
             }
+            #endif
         } ) ;
     }
 
+    //#if 0
     // 3. do next page
     if( this_t::in_transition() )
     {
-        rd.layer_start = rd.layer_end + 1 ;
-        rd.layer_end = rd.layer_start + 10 ;
+        layer_start = layer_end + 1 ;
+        layer_end = layer_start + 10 ;
 
 
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
-            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 0.0f, 1.0f, 1.0f ) ) ;
+            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 0.0f, 0.0f, 1.0f ) ) ;
             _fb_c1->schedule_for_begin() ;
             _fb_c1->schedule_for_clear() ;
 
             pi.do_render( rd ) ;
-
-            _fb_c1->schedule_for_end() ;
-
-            rd.rnd_2d->prepare_for_rendering() ;
-            rd.txt_rnd->prepare_for_rendering() ;
-            for( size_t i = rd.layer_start; i <= rd.layer_end; ++i )
+            //#if 0
+            for( size_t i = layer_start; i <= layer_end; ++i )
             {
                 rd.rnd_2d->render( i ) ;
                 rd.txt_rnd->render( i ) ;
             }
+            //#endif
+            _fb_c1->schedule_for_end() ;
         } ) ;
     }
-
+    //#endif 
     // 4. do post
     {
         _fb_blt->schedule_for_begin() ;
@@ -369,6 +371,8 @@ void_t presentation::update( void_t ) noexcept
     _utime = so_core::clock_t::now() ;
 
     update_data_t ud ;
+    ud.rnd_2d = _rnd_2d ;
+    ud.txt_rnd = _txt_rnd ;
 
     // 0. check for abort transition
     if( _abort_transition )
@@ -377,8 +381,30 @@ void_t presentation::update( void_t ) noexcept
         _abort_transition = false ;
     }
 
+    std::chrono::microseconds dur(0) ;
+
+    // x. check transition
+    if( this_t::in_transition() )
+    {
+        this_t::cur_transition( [&] ( transition_info_ref_t ti )
+        {
+            dur = std::chrono::duration_cast< std::chrono::microseconds >(
+                ti.pptr->get_duration() ) ;
+        } ) ;
+
+        // is transition done?
+        if( dur <= _tdur )
+        {
+            change_to_target() ;
+            _tdur = std::chrono::microseconds( 0 ) ;
+        }
+    }
+
     // 1. do current page
     {
+        ud.layer_start = 0 ;
+        ud.layer_end = 10 ;
+
         this_t::cur_page( [&] ( page_info_ref_t pi )
         {
             pi.do_update( ud ) ;
@@ -387,8 +413,6 @@ void_t presentation::update( void_t ) noexcept
 
     // 2. do transition
     {
-        std::chrono::microseconds dur = std::chrono::microseconds( 0 ) ;
-
         this_t::cur_transition( [&] ( transition_info_ref_t ti )
         {
             ti.on_load() ;
@@ -396,20 +420,13 @@ void_t presentation::update( void_t ) noexcept
 
         if( this_t::in_transition() )
         {
+            ud.layer_start = ud.layer_end + 1 ;
+            ud.layer_end = ud.layer_start + 10 ;
+
             this_t::cur_transition( [&] ( transition_info_ref_t ti )
             {
-                dur = std::chrono::duration_cast< std::chrono::microseconds >(
-                    ti.pptr->get_duration() ) ;
-
                 ti.do_update( ud ) ;
             } ) ;
-
-            // is transition done?
-            if( dur <= _tdur )
-            {
-                change_to_target() ;
-                _tdur = std::chrono::microseconds( 0 ) ;
-            }
         }
     }
 
@@ -420,7 +437,12 @@ void_t presentation::update( void_t ) noexcept
             pi.on_load() ;
 
             if( this_t::in_transition() )
+            {
+                ud.layer_start = ud.layer_end + 1 ;
+                ud.layer_end = ud.layer_start + 10 ;
                 pi.do_update( ud ) ;
+            }
+                
         } ) ;
     }
 

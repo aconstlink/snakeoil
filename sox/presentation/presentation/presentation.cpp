@@ -114,6 +114,12 @@ bool_t presentation::transition_info::on_release( void_t )
 }
 
 //*********************************************************
+bool_t presentation::transition_info::on_clear( void_t ) const 
+{
+    return pptr->on_clear() ;
+}
+
+//*********************************************************
 bool_t presentation::transition_info::do_update( update_data_in_t ud ) 
 {
     if( !on_load() ) return false ;
@@ -316,16 +322,17 @@ void_t presentation::render( void_t ) noexcept
                     rd.txt_rnd->render( i ) ;
                 }
                 _fb_cx->schedule_for_end() ;
-                
             }
-            #if 0
+
             {
-                // how to say that the mask should be rendered?
                 _fb_cm->schedule_for_begin() ;
-                _fb_cm->schedule_for_clear() ;
+                if( ti.on_clear() )
+                    _fb_cm->schedule_for_clear() ;
+
                 ti.do_render( itransition::render_type::mask, rd ) ;
+                _fb_cm->schedule_for_end() ;
             }
-            #endif
+
         } ) ;
     }
 
@@ -393,7 +400,7 @@ void_t presentation::update( void_t ) noexcept
         } ) ;
 
         // is transition done?
-        if( dur <= _tdur )
+        if( _tdur > dur )
         {
             change_to_target() ;
             _tdur = std::chrono::microseconds( 0 ) ;
@@ -422,6 +429,7 @@ void_t presentation::update( void_t ) noexcept
         {
             ud.layer_start = ud.layer_end + 1 ;
             ud.layer_end = ud.layer_start + 10 ;
+            ud.ms = std::chrono::duration_cast<std::chrono::milliseconds>(_tdur) ;
 
             this_t::cur_transition( [&] ( transition_info_ref_t ti )
             {
@@ -465,14 +473,26 @@ void_t presentation::update( void_t ) noexcept
 
     // 6. update transition duration
     {
-        _tdur += dt ;
+        auto const tmp = _tdur + dt ;
+        _tdur = _tdur != dur && tmp > dur ? dur : tmp ;
     }
-    
 }
 
 //*********************************************************
 void_t presentation::release( void_t ) 
 {
+    for( auto & item : _pages )
+    {
+        item.pptr->on_release() ;
+        item.pptr->on_unload() ;
+    }
+
+    for( auto item : _transitions ) 
+    {
+        item.pptr->on_release() ;
+        item.pptr->on_unload() ;
+    }
+
     _fb_c0->schedule_for_release() ;
     _fb_c1->schedule_for_release() ;
     _fb_cx->schedule_for_release() ;

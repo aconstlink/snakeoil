@@ -14,6 +14,8 @@ namespace sox_presentation
         size_t layer_start = 0 ;
         size_t layer_end = 10 ;
 
+        std::chrono::milliseconds ms = std::chrono::milliseconds(0) ;
+
     };
     so_typedef( update_data ) ;
 

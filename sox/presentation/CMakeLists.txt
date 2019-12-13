@@ -36,6 +36,15 @@ set( SOURCES
     post/post_plug_factory.cpp
     post/post_shared_data.h
     post/protos.h
+
+    transitions/sdf_a/sdf_a.h
+    transitions/sdf_a/sdf_a.cpp
+    transitions/sdf_a/protos.h
+    transitions/sdf_a/sdf_a_plug_factory.h
+    transitions/sdf_a/sdf_a_plug_factory.cpp
+    transitions/sdf_a/sdf_a_shared_data.h
+    transitions/sdf_a/gl33/gl33_sdf_a_plug.h
+    transitions/sdf_a/gl33/gl33_sdf_a_plug.cpp
     )
 
 list( APPEND SOURCES ${GRAPHICS_SOURCES} )

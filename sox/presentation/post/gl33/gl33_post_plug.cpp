@@ -409,7 +409,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         if( so_core::is_not_nullptr( ptr ) )
         {
             //_bb_dims = so_math::vec2f_t( float_t( ptr->get_width() ), float_t( ptr->get_height() ) ) ;
-            _vars_blit->bind_texture( "u_smp_color", color_ptr ) ;
+            _vars_mix->bind_texture( "u_smp_color_a", color_ptr ) ;
         }
         else
         {
@@ -440,6 +440,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         if( so_core::is_not_nullptr( ptr ) )
         {
             //_bb_dims = so_math::vec2f_t( float_t( ptr->get_width() ), float_t( ptr->get_height() ) ) ;
+            _vars_mix->bind_texture( "u_smp_color_b", color_ptr ) ;
         }
         else
         {
@@ -501,6 +502,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         if( so_core::is_not_nullptr( ptr ) )
         {
             //_bb_dims = so_math::vec2f_t( float_t( ptr->get_width() ), float_t( ptr->get_height() ) ) ;
+            _vars_mix->bind_texture( "u_smp_mask", color_ptr ) ;
         }
         else
         {
@@ -610,6 +612,7 @@ so_gpx::plug_result gl33_post_plug::on_initialize( init_info_cref_t ii )
         if( so_core::is_not_nullptr( ptr ) )
         {
             //_bb_dims = so_math::vec2f_t( float_t( ptr->get_width() ), float_t( ptr->get_height() ) ) ;
+            _vars_blit->bind_texture( "u_smp_color", color_ptr ) ;
         }
         else
         {

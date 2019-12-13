@@ -35,9 +35,10 @@ namespace sox_presentation
 
     public:
 
-        virtual std::chrono::milliseconds get_duration( void_t ) noexcept ;
+        virtual std::chrono::milliseconds get_duration( void_t ) const noexcept ;
         virtual void_t on_update( sox_presentation::update_data_in_t ) noexcept ;
         virtual void_t on_render( render_type const, sox_presentation::render_data_in_t ) noexcept  ;
+        virtual bool_t on_clear( void_t ) const noexcept { return true ; }
         virtual void_t destroy( void_t ) noexcept ;
     };
     so_typedef( log_transition ) ;

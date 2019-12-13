@@ -75,7 +75,7 @@ bool_t log_transition::on_release() noexcept
 }
 
 //**************************************************
-std::chrono::milliseconds log_transition::get_duration( void_t ) noexcept 
+std::chrono::milliseconds log_transition::get_duration( void_t ) const noexcept 
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>( std::chrono::seconds( 2 ) ) ;
 }

@@ -3,7 +3,10 @@
 
 layout( location = 0 ) out vec4 out_color ;
 
-uniform sampler2D u_smp_color_x ;
+uniform sampler2D u_smp_color_a ; // scene a
+uniform sampler2D u_smp_color_b ; // scene b
+uniform sampler2D u_smp_color_x ; // transition color
+uniform sampler2D u_smp_mask ; // transition mask
 
 in vertex_data
 {
@@ -12,7 +15,15 @@ in vertex_data
 
 void main()
 {
-    vec4 color_image = texture( u_smp_color_x, psi.tx );
-    out_color = color_image ;    
+    vec4 tex_a = texture( u_smp_color_a, psi.tx );
+    vec4 tex_b = texture( u_smp_color_b, psi.tx );
+
+    vec4 tex_x = texture( u_smp_color_x, psi.tx );
+    vec4 tex_m = texture( u_smp_mask, psi.tx );
+
+    vec4 color_a = mix( tex_x, tex_a, tex_m.r ) ;
+    vec4 color_b = mix( tex_x, tex_b, tex_m.b ) ;
+        
+    out_color = mix( color_a, color_b, tex_x.a) ;    
     //out_color = vec4(.8,0.8,.8,1.0);
 }

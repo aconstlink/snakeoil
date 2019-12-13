@@ -50,6 +50,7 @@ namespace sox_presentation
             bool_t do_render( itransition::render_type const rt, render_data_in_t ) ;
             bool_t on_init( void_t ) ;
             bool_t on_release( void_t ) ;
+            bool_t on_clear( void_t ) const ;
 
         };
         so_typedef( transition_info ) ;

@@ -434,6 +434,7 @@ bool_t rawinput_api::handle_input_event( HWND hwnd, UINT msg, WPARAM wParam, LPA
         return true ;
     }
     // some other device
+    #if 0
     else
     {
         uint_t num_devices = 0 ;
@@ -639,7 +640,7 @@ bool_t rawinput_api::handle_input_event( HWND hwnd, UINT msg, WPARAM wParam, LPA
             }
         }
     }
-
+    #endif
     //DefRawInputProc( &raw, sib/sizeof(RAWINPUT), sizeof(RAWINPUTHEADER) ) ;
 
     return true ;

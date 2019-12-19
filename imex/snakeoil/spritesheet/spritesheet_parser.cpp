@@ -96,7 +96,7 @@ spritesheet_t spritesheet_parser::from_string( so_std::string_in_t din )
                 rapidxml::xml_attribute<> * attr = n->first_attribute( "speed" ) ;
                 if( so_core::is_not_nullptr( attr ) )
                 {
-                    speed = std::atof( attr->value() ) ;
+                    speed = (float_t)std::atof( attr->value() ) ;
                 }
 
                 seq.speed = speed ;

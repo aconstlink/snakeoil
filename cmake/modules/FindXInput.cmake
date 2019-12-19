@@ -33,11 +33,13 @@ elseif( SNAKEOIL_TARGET_OS_WIN81 OR SNAKEOIL_TARGET_OS_WIN10 )
 
     set( SEARCH_XINPUT_INCLUDE_PATHS 
         "C:/Program Files (x86)/Windows Kits/8.1/Include/um"
+        "c:/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um"
         $ENV{XINPUT_INCLUDEDIR_UM}
     )
 
     set( XINPUT_LIBRARIES_SEARCH_PATHS 
         "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um${INT_ARCH}"
+        "c:/Program Files (x86)/Windows Kits/10/Lib/10.0.18362.0/um${INT_ARCH}"
         $ENV{XINPUT_LIBRARYDIR_UM}
     )
 endif()

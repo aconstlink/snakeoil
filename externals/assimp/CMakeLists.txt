@@ -8,7 +8,10 @@ mark_as_advanced( FORCE BUILD_DOCS BUILD_FRAMEWORK HUNTER_ENABLED HUNTER_STATUS_
 add_subdirectory( assimp )
 
 set_target_properties( assimp PROPERTIES FOLDER "snakeoil/externals/assimp" )
-set_target_properties( assimp_cmd PROPERTIES FOLDER "snakeoil/externals/assimp" )
+
+if( TARGET assimp_cmd )
+    set_target_properties( assimp_cmd PROPERTIES FOLDER "snakeoil/externals/assimp" )
+endif()
 set_target_properties( IrrXML PROPERTIES FOLDER "snakeoil/externals/assimp" )
 set_target_properties( UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "snakeoil/externals/assimp" )
 set_target_properties( zlib PROPERTIES FOLDER "snakeoil/externals/assimp" )

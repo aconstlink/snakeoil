@@ -17,4 +17,7 @@ if( SNAKEOIL_COMPILER_MSC )
   target_compile_options( rtmidi_static PRIVATE /wd4267 /wd4996 )
 endif()
 
+target_include_directories( rtmidi PUBLIC $<BUILD_INTERFACE:${RTMIDI_INCLUDE_DIRS}> )
+target_include_directories( rtmidi_static PUBLIC $<BUILD_INTERFACE:${RTMIDI_INCLUDE_DIRS}> )
+
 export( TARGETS rtmidi NAMESPACE snakeoil:: APPEND FILE ${SNAKEOIL_BINARY_DIR}/snakeoil-targets.cmake )

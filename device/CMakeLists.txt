@@ -190,14 +190,24 @@ if( SNAKEOIL_TARGET_OS_WIN )
         ${WIN32_API_SOURCES}
         ${WIN32_SYSTEM_SOURCES}
     )	
-    set( OS_SPECIFIC_LIBS winmm.lib ${WDDK_LIBRARIES} )
+    set( OS_SPECIFIC_LIBS winmm.lib 
+       )
+
+     if( WDDK )
+       # ${WDDK_LIBRARIES}
+     endif()
 
     # keep WDDK include up front because on Win7 the
     # the SDK needs to appear in front of the xinput stuff
     include_directories( 
-      ${WDDK_INCLUDE_DIRS}
+      
       ${XINPUT_INCLUDE_DIRS}
     )
+
+   if( WDDK )
+      
+      # ${WDDK_INCLUDE_DIRS}
+     endif()
     
 endif()
 

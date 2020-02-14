@@ -2,8 +2,7 @@
 // snakeoil (c) Alexis Constantin Link
 // Distributed under the MIT license
 //------------------------------------------------------------
-#ifndef _SNAKEOIL_GEOMETRY_MESH_FLAT_TRI_MESH_H_
-#define _SNAKEOIL_GEOMETRY_MESH_FLAT_TRI_MESH_H_
+#pragma once
 
 #include "../typedefs.h"
 #include "../api.h"
@@ -12,6 +11,9 @@
 #include "imesh.h"
 
 #include "../enums/component_formats.h"
+
+#include <snakeoil/math/vector/vector2.hpp>
+#include <snakeoil/math/vector/vector3.hpp>
 
 namespace so_geo
 {
@@ -64,6 +66,12 @@ namespace so_geo
         size_t get_num_normals( void_t ) const ;
         size_t get_num_texcoords( size_t const ) const ;
 
+    public: // if you know the type is a 3d mesh, use these shortcut functions
+
+        so_math::vec3f_t get_vertex_position_3d( size_t const i ) const noexcept ;
+        so_math::vec3f_t get_vertex_normal_3d( size_t const i ) const noexcept ;
+        so_math::vec2f_t get_vertex_texcoord( size_t const l, size_t const i ) const noexcept ;
+
     public:
 
         virtual void_t destroy( void_t ) ;
@@ -71,5 +79,3 @@ namespace so_geo
     };
     so_typedef( flat_tri_mesh ) ;
 }
-
-#endif

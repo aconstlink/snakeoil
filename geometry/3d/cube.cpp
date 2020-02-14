@@ -275,7 +275,7 @@ so_geo::result cube::make( tri_mesh_ptr_t mesh_ptr, input_params_cref_t params_i
 
         for(size_t i = 0; i < g_num_tri_indices; ++i)
         {
-            amesh.normals_indices[0][i] = position_tri_indices[i] ;
+            amesh.normals_indices[0][i] = normal_tri_indices[i] ;
         }
     }
 

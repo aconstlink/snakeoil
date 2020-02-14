@@ -176,6 +176,27 @@ size_t flat_tri_mesh::get_num_texcoords( size_t const l ) const
 }
 
 //*******************************************************************
+so_math::vec3f_t flat_tri_mesh::get_vertex_position_3d( size_t const i ) const noexcept 
+{
+    if( i >= positions.size() ) return so_math::vec3f_t( 0.0f ) ;
+    return so_math::vec3f_t( positions[ i + 0 ], positions[ i + 1 ], positions[ i + 2 ] ) ;
+}
+
+//*******************************************************************
+so_math::vec3f_t flat_tri_mesh::get_vertex_normal_3d( size_t const i ) const noexcept 
+{
+    if( i >= normals.size() ) return so_math::vec3f_t( 0.0f ) ;
+    return so_math::vec3f_t( normals[ i + 0 ], normals[ i + 1 ], normals[ i + 2 ] ) ;
+}
+
+//*******************************************************************
+so_math::vec2f_t flat_tri_mesh::get_vertex_texcoord( size_t const l, size_t const i ) const noexcept 
+{
+    if( l >= texcoords.size() || i >= texcoords[ l ].size() ) return so_math::vec2f_t() ;
+    return so_math::vec2f_t( texcoords[ l ][ i + 0 ], texcoords[ l ][ i + 1 ] ) ;
+}
+
+//*******************************************************************
 void_t flat_tri_mesh::destroy( void_t )
 {
     this_t::destroy( this ) ;

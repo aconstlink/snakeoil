@@ -334,25 +334,25 @@ namespace so_math
 
             static this_t translation( vec3_cref_t t )
             {
-                return this_t( so_math::so_matrix::with_identity ).
+                return this_t( so_math::so_matrix::with_identity{} ).
                     set_translation( t ) ;
             }
 
             static this_t rotation_by_euler( vec3_cref_t angles ) 
             {
-                return this_t( so_math::so_matrix::with_identity ).
+                return this_t( so_math::so_matrix::with_identity{} ).
                     rotate_by_angle_fr( angles ) ;
             }
 
             static this_t rotation_by_axis( vec3_cref_t axis, float_t angle ) 
             {
-                return this_t( so_math::so_matrix::with_identity ).
+                return this_t( so_math::so_matrix::with_identity{} ).
                     rotate_by_axis_fr( axis, angle ) ;
             }
 
             static this_t rotation_by_matrix( mat3_cref_t m ) 
             {
-                return this_t( so_math::so_matrix::with_identity ).
+                return this_t( so_math::so_matrix::with_identity{} ).
                     rotate_by_matrix_fr( m ) ;
             }
 

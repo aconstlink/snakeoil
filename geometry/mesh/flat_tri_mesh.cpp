@@ -178,22 +178,28 @@ size_t flat_tri_mesh::get_num_texcoords( size_t const l ) const
 //*******************************************************************
 so_math::vec3f_t flat_tri_mesh::get_vertex_position_3d( size_t const i ) const noexcept 
 {
-    if( i >= positions.size() ) return so_math::vec3f_t( 0.0f ) ;
-    return so_math::vec3f_t( positions[ i + 0 ], positions[ i + 1 ], positions[ i + 2 ] ) ;
+    size_t const index = i * 3 ;
+
+    if( index+2 >= positions.size() ) return so_math::vec3f_t( 0.0f ) ;
+    return so_math::vec3f_t( positions[ index + 0 ], positions[ index + 1 ], positions[ index + 2 ] ) ;
 }
 
 //*******************************************************************
 so_math::vec3f_t flat_tri_mesh::get_vertex_normal_3d( size_t const i ) const noexcept 
 {
-    if( i >= normals.size() ) return so_math::vec3f_t( 0.0f ) ;
-    return so_math::vec3f_t( normals[ i + 0 ], normals[ i + 1 ], normals[ i + 2 ] ) ;
+    size_t const index = i * 3 ;
+    
+    if( i+2 >= normals.size() ) return so_math::vec3f_t( 0.0f ) ;
+    return so_math::vec3f_t( normals[ index + 0 ], normals[ index + 1 ], normals[ index + 2 ] ) ;
 }
 
 //*******************************************************************
 so_math::vec2f_t flat_tri_mesh::get_vertex_texcoord( size_t const l, size_t const i ) const noexcept 
 {
-    if( l >= texcoords.size() || i >= texcoords[ l ].size() ) return so_math::vec2f_t() ;
-    return so_math::vec2f_t( texcoords[ l ][ i + 0 ], texcoords[ l ][ i + 1 ] ) ;
+    size_t const index = i * 2 ;
+
+    if( l >= texcoords.size() || index+2 >= texcoords[ l ].size() ) return so_math::vec2f_t() ;
+    return so_math::vec2f_t( texcoords[ l ][ index + 0 ], texcoords[ l ][ index + 1 ] ) ;
 }
 
 //*******************************************************************

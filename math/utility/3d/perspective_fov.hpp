@@ -66,7 +66,7 @@ namespace so_math
                 // make column vectors
                 // but they are the row vectors of
                 // the dx projection matrix.
-                vec4_t const vcX( -type_t( 2 )*n / w, type_t( 0 ), type_t( 0 ), type_t( 0 ) ) ;
+                vec4_t const vcX( type_t( 2 )*n / w, type_t( 0 ), type_t( 0 ), type_t( 0 ) ) ;
                 vec4_t const vcY( type_t( 0 ), type_t( 2 )*n / h, type_t( 0 ), type_t( 0 ) ) ;
                 vec4_t const vcZ( type_t( 0 ), type_t( 0 ), (f) / (f - n), -(2 * n*f) / (f - n) ) ;
                 vec4_t const vcW( type_t( 0 ), type_t( 0 ), type_t( 1 ), type_t( 0 ) ) ;

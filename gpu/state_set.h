@@ -76,7 +76,7 @@ namespace so_gpu
         front_face ff = so_gpu::front_face::clock_wise ;
 
         // fill mode
-        cull_mode cm_fill = so_gpu::cull_mode::front ;
+        cull_mode cm_fill = so_gpu::cull_mode::front_back ;
         fill_mode fm = so_gpu::fill_mode::fill ;
     };
 

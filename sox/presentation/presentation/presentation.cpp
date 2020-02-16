@@ -148,15 +148,15 @@ presentation::presentation( so_gpx::render_system_ptr_t ptr ) noexcept
     _rs = ptr ;
 
     _fb_c0 = so_gfx::predef_framebuffer_t::create( 
-        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8_depth32, _rs ),
         "[presentation::presentation] : predef framebuffer" ) ;
 
     _fb_c1 = so_gfx::predef_framebuffer_t::create(
-        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8_depth32, _rs ),
         "[presentation::presentation] : predef framebuffer" ) ;
 
     _fb_cx = so_gfx::predef_framebuffer_t::create(
-        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8, _rs ),
+        so_gfx::predef_framebuffer_t( so_gfx::predef_framebuffer_type::color888_alpha8_depth32, _rs ),
         "[presentation::presentation] : predef framebuffer" ) ;
 
     _fb_cm = so_gfx::predef_framebuffer_t::create(
@@ -285,7 +285,7 @@ void_t presentation::render( void_t ) noexcept
         {
             layer_start = 0 ;
             layer_end = 10 ;
-            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 1.0f, 1.0f, 1.0f) ) ;
+            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 0.0f, 1.0f, 1.0f) ) ;
             
             _fb_c0->schedule_for_begin() ;
             _fb_c0->schedule_for_clear() ;
@@ -336,7 +336,6 @@ void_t presentation::render( void_t ) noexcept
         } ) ;
     }
 
-    //#if 0
     // 3. do next page
     if( this_t::in_transition() )
     {
@@ -346,7 +345,7 @@ void_t presentation::render( void_t ) noexcept
 
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
-            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 0.0f, 0.0f, 1.0f ) ) ;
+            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 1.0f, 0.0f, 1.0f ) ) ;
             _fb_c1->schedule_for_begin() ;
             _fb_c1->schedule_for_clear() ;
 
@@ -361,7 +360,7 @@ void_t presentation::render( void_t ) noexcept
             _fb_c1->schedule_for_end() ;
         } ) ;
     }
-    //#endif 
+
     // 4. do post
     {
         _fb_blt->schedule_for_begin() ;

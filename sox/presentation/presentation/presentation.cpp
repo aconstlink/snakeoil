@@ -285,7 +285,7 @@ void_t presentation::render( void_t ) noexcept
         {
             layer_start = 0 ;
             layer_end = 10 ;
-            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 0.0f, 1.0f, 1.0f) ) ;
+            _fb_c0->set_clear_color( so_math::vec4f_t(1.0f, 1.0f, 1.0f, 1.0f) ) ;
             
             _fb_c0->schedule_for_begin() ;
             _fb_c0->schedule_for_clear() ;
@@ -310,7 +310,7 @@ void_t presentation::render( void_t ) noexcept
                 layer_start = layer_end + 1 ;
                 layer_end = layer_start + 10 ;
 
-                _fb_cx->set_clear_color( so_math::vec4f_t( 0.0f,0.0f,1.0f,1.0f ) ) ;
+                _fb_cx->set_clear_color( so_math::vec4f_t( 1.0f,1.0f,1.0f,1.0f ) ) ;
                 _fb_cx->schedule_for_begin() ;
                 _fb_cx->schedule_for_clear() ;
                 
@@ -345,7 +345,7 @@ void_t presentation::render( void_t ) noexcept
 
         this_t::tgt_page( [&] ( page_info_ref_t pi )
         {
-            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 1.0f, 0.0f, 1.0f ) ) ;
+            _fb_c1->set_clear_color( so_math::vec4f_t( 1.0f, 1.0f, 1.0f, 1.0f ) ) ;
             _fb_c1->schedule_for_begin() ;
             _fb_c1->schedule_for_clear() ;
 

@@ -227,7 +227,7 @@ so_gpu::result gl_33_api::save_image_memory(
 //*****************************************************************************************************
 so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::idata_buffer_ptr_t ptr, memory_alloc_info_cref_t info )
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::alloc_buffer_memory] : data_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -270,7 +270,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::idata_buffer_ptr_t ptr, m
 //*****************************************************************************************************
 so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, memory_alloc_info_cref_t info )
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::alloc_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -299,7 +299,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr,
 //*****************************************************************************************************
 so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, memory_alloc_info_cref_t info )
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::alloc_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -326,7 +326,7 @@ so_gpu::result gl_33_api::alloc_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, 
 //*****************************************************************************************************
 void_ptr_t gl_33_api::map_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, memory_mapping_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::map_buffer_memory] : vertex_buffer - no valid driver object") ;
         return nullptr ;
@@ -352,7 +352,7 @@ void_ptr_t gl_33_api::map_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, memor
 //*****************************************************************************************************
 so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr )
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::unmap_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -376,7 +376,7 @@ so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr 
 //*****************************************************************************************************            
 void_ptr_t gl_33_api::map_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, memory_mapping_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::map_buffer_memory] : index_buffer - no valid driver object") ;
         return nullptr ;
@@ -400,7 +400,7 @@ void_ptr_t gl_33_api::map_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, memory
 //*****************************************************************************************************
 so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::unmap_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -424,7 +424,7 @@ so_gpu::result gl_33_api::unmap_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr )
 //*****************************************************************************************************
 so_gpu::result gl_33_api::load_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, memory_load_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::load_buffer_memory] : vertex_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -461,7 +461,7 @@ so_gpu::result gl_33_api::load_buffer_memory( so_gpu::ivertex_buffer_ptr_t ptr, 
 //*****************************************************************************************************
 so_gpu::result gl_33_api::load_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, memory_load_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::load_buffer_memory] : index_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;
@@ -489,7 +489,7 @@ so_gpu::result gl_33_api::load_buffer_memory( so_gpu::iindex_buffer_ptr_t ptr, m
 //*****************************************************************************************************
 so_gpu::result gl_33_api::load_buffer_memory( so_gpu::idata_buffer_ptr_t ptr, so_gpu::memory_load_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(ptr) ) 
+    if( so_gpu::no_success( this_t::create_buffer(ptr) ) )
     {
         so_log::global::warning("[gl_33_api::load_buffer_memory] : data_buffer - no valid driver object") ;
         return so_gpu::invalid_argument ;

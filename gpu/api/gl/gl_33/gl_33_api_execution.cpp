@@ -88,8 +88,8 @@ so_gpu::result gl_33_api::clear( bool_t color, bool_t depth, bool_t stencil )
 //*****************************************************************************************************
 so_gpu::result gl_33_api::execute( render_config_info_cref_t info ) 
 {
-    if( api_object_helper_t::has_no_driver_object(info.config_ptr) ) 
-        return so_gpu::invalid_argument ;
+    if( so_gpu::no_success( this_t::create_config( info.config_ptr ) ) )
+        return so_gpu::result::invalid_argument ;
 
     so_gpu::primitive_type const pt = info.config_ptr->get_primitive_type() ;
 
@@ -520,6 +520,10 @@ so_gpu::result gl_33_api::prepare_config( GLuint vao_id, config_ptr_t config_ptr
     {
         this_t::bind_attributes( vao_id, config_ptr ) ;
         config_ptr->set_config_changed( false ) ;
+    }
+
+    {
+        this_t::create_variable( config_ptr->get_variable_set( var_set_id ) ) ;
     }
 
     /// @todo can this be evaluated outside of this function

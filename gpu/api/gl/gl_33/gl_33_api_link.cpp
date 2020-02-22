@@ -290,7 +290,8 @@ void_t gl_33_api::delete_shader_variable( so_gpu::shader_variable_ptr_t var_ptr 
 //**********************************************************************************************
 so_gpu::result gl_33_api::link( so_gpu::program_ptr_t ptr ) 
 {
-    if( api_object_helper_t::has_no_driver_object( ptr ) ) return so_gpu::invalid_argument ;
+    if( so_gpu::no_success( this_t::create_program( ptr ) ) )
+        return so_gpu::result::failed_shader_link ;
 
     auto * api_obj = api_object_helper_t::get_cast_api_object<drv::program>(ptr) ;
     

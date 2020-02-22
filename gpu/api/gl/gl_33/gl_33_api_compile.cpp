@@ -88,7 +88,8 @@ so_gpu::result gl_33_api::compile( GLuint shader_id, so_gpu::shader_ptr_t shd_pt
 //*****************************************************************************************************
 so_gpu::result gl_33_api::compile( so_gpu::vertex_shader_ptr_t ptr ) 
 {
-    if( api_object_helper_t::has_no_driver_object( ptr ) ) return so_gpu::invalid_argument ;
+    if( so_gpu::no_success( this_t::create_shader( ptr ) ) ) 
+        return so_gpu::result::failed_shader_compile ;
 
     auto * api_obj = api_object_helper_t::get_cast_api_object<drv::vertex_shader>(ptr) ;
 
@@ -98,7 +99,8 @@ so_gpu::result gl_33_api::compile( so_gpu::vertex_shader_ptr_t ptr )
 //*****************************************************************************************************
 so_gpu::result gl_33_api::compile( so_gpu::geometry_shader_ptr_t ptr ) 
 {
-    if( api_object_helper_t::has_no_driver_object( ptr ) ) return so_gpu::invalid_argument ;
+    if( so_gpu::no_success( this_t::create_shader( ptr ) ) )
+        return so_gpu::result::failed_shader_compile ;
 
     auto * api_obj = api_object_helper_t::get_cast_api_object<drv::geometry_shader>(ptr) ;
 
@@ -108,7 +110,8 @@ so_gpu::result gl_33_api::compile( so_gpu::geometry_shader_ptr_t ptr )
 //*****************************************************************************************************
 so_gpu::result gl_33_api::compile( so_gpu::pixel_shader_ptr_t ptr ) 
 {
-    if( api_object_helper_t::has_no_driver_object( ptr ) ) return so_gpu::invalid_argument ;
+    if( so_gpu::no_success( this_t::create_shader( ptr ) ) )
+        return so_gpu::result::failed_shader_compile ;
 
     auto * api_obj = api_object_helper_t::get_cast_api_object<drv::pixel_shader>(ptr) ;
 

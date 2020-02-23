@@ -5,24 +5,10 @@
 
 set( FMOD_FOUND False )
 
-#
-# SECTION : Option
-#
-option( FMOD_ENABLE "Enable Fmod Sound System" ${FMOD_ENABLE} )
-
-if( FMOD_ENABLE )
-	message( STATUS "[Enabled] : FMOD SDK" )
-else()
-	message( STATUS "[Disabled] : FMOD SDK" )
-	return()
+option( SNAKEOIL_FMOD_ENABLE "Enable Fmod Sound System" OFF )
+if( NOT SNAKEOIL_FMOD_ENABLE )
+  return()
 endif()
-
-set( FBXSDK_DEFINITIONS 
-	-DFBXSDK_ENABLE
-	)
+message( STATUS "[Enabled] : FMOD SDK" )
 
 find_package( fmod CONFIG REQUIRED )
-	
-	
-
-

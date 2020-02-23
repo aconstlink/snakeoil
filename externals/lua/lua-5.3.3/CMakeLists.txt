@@ -21,11 +21,9 @@ set( LUA_PATCH_VERSION 3 )
 set( LUA_VERSION "${LUA_MAJOR_VERSION}.${LUA_MINOR_VERSION}.${LUA_PATCH_VERSION}" )
 
 set( LUA_BUILD_TYPE STATIC )
-set( LUA_BUILD_AS_DLL OFF CACHE BOOL "Build lua as dynamically linked library" )
-if( ${LUA_BUILD_AS_DLL} )
-    add_definitions( -DLUA_BUILD_AS_DLL -DLUA_USE_LONGJMP )
-    set( LUA_BUILD_TYPE SHARED )
-endif()
+option( LUA_BUILD_AS_DLL "Build lua as dynamically linked library" OFF )
+
+
 
 set( CMAKE_DEBUG_POSTFIX d )
 
@@ -111,13 +109,18 @@ set( SOURCES
     ${INCLUDES}
 )
 
-include_directories( "./include" ) 
+set( INCLUDES "${CMAKE_CURRENT_LIST_DIR}/include" )
+
+if( LUA_BUILD_AS_DLL )    
+    set( LUA_BUILD_TYPE SHARED )
+endif()
 
 add_library( lua ${LUA_BUILD_TYPE} ${SOURCES} )
 set_target_properties( lua PROPERTIES LINKER_LANGUAGE C )
+target_include_directories( lua PUBLIC $<BUILD_INTERFACE:${INCLUDES}> )
 
-if( ${LUA_BUILD_AS_DLL} )
-    target_compile_definitions( lua PUBLIC -DLUA_BUILD_AS_DLL ) 
+if( LUA_BUILD_AS_DLL )
+    target_compile_options( lua PUBLIC -LUA_BUILD_AS_DLL -LUA_USE_LONGJMP) 
 endif()
 
 

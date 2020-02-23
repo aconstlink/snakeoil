@@ -89,5 +89,13 @@ endif()
 set( XINPUT_LIBRARIES 
     general ${XINPUT_LIBRARY_GENERAL}
 )
+
+add_library( xinput INTERFACE )
+target_include_directories( xinput INTERFACE ${XINPUT_INCLUDE_DIRS} )
+target_link_libraries( xinput INTERFACE ${XINPUT_LIBRARY_GENERAL} )
+
+unset( XINPUT_INCLUDE_DIRECTORY CACHE )
+unset( XINPUT_LIBRARY_GENERAL CACHE )
+
 set( XINPUT_FOUND True )
 

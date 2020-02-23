@@ -199,11 +199,7 @@ if( SNAKEOIL_TARGET_OS_WIN )
 
     # keep WDDK include up front because on Win7 the
     # the SDK needs to appear in front of the xinput stuff
-    include_directories( 
-      
-      ${XINPUT_INCLUDE_DIRS}
-    )
-
+    
    if( WDDK )
       
       # ${WDDK_INCLUDE_DIRS}
@@ -235,25 +231,17 @@ so_vs_src_dir( SOURCES )
 add_library( ${CUR_LIB_NAME} ${SNAKEOIL_LIBRARY_BUILD_TYPE} ${SOURCES} )
 add_library( ${CUR_ALIAS_NAME} ALIAS ${CUR_LIB_NAME} )
 
-
-if( SNAKEOIL_LIBRARY_BUILD_SHARED )
-  set( RTMIDI_LIB rtmidi )
-else()
-  set( RTMIDI_LIB rtmidi_static )
-endif()
-
-target_include_directories( ${CUR_LIB_NAME} PRIVATE ${RTMIDI_INCLUDE_DIRS} )
-
 target_link_libraries( ${CUR_LIB_NAME}
-    PRIVATE ${RTMIDI_LIB}
+    PRIVATE xinput
     PUBLIC snakeoil::log
     PUBLIC snakeoil::memory
 )
+target_link_libraries( ${CUR_LIB_NAME} PRIVATE rtmidi_trg )
 
 #all 3rd party
 if( ${SNAKEOIL_TARGET_OS_WIN} )
     target_link_libraries( ${CUR_LIB_NAME}
-        PUBLIC ${XINPUT_LIBRARIES}
+    
         PUBLIC ${OS_SPECIFIC_LIBS}
     )
 endif()

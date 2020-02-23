@@ -78,4 +78,14 @@ set( OPENGL_LIBRARIES
     general ${GL_GLU_LIBRARY}
 )
 
+add_library( opengl INTERFACE )
+target_link_libraries( opengl INTERFACE ${GL_LIBRARY} INTERFACE ${GL_GLU_LIBRARY} )
+target_include_directories( opengl INTERFACE ${GL_INCLUDE_DIRS} )
+#target_compile_options( opengl INTERFACE "GL_CHECK_ERROR=${GL_CHECK_ERROR}" )
+
+unset( GL_ERROR_CHECK CACHE )
+unset( GL_GLU_LIBRARY CACHE )
+unset( GL_INCLUDE_DIRECTORY CACHE )
+unset( GL_LIBRARY CACHE )
+
 

@@ -62,17 +62,17 @@ so_export_clear()
 
 
 add_subdirectory( "externals/lua" )
-#set( KHRONOS_INSTALL_HEADER_BASE "include/${PROJECT_NAME}/externals" )
-#add_subdirectory( externals/khronos )
-#add_subdirectory( "externals/rapidxml" )
-#add_subdirectory( "externals/stb" )
-#add_subdirectory( "externals/ogg" )
-#add_subdirectory( "externals/vorbis" )
-#add_subdirectory( "externals/imgui" )
+add_subdirectory( "externals/khronos" )
 add_subdirectory( "externals/rtmidi" )
+add_subdirectory( "externals/rapidxml" )
+add_subdirectory( "externals/stb" )
+add_subdirectory( "externals/ogg" )
+add_subdirectory( "externals/vorbis" )
+add_subdirectory( "externals/imgui" )
+
 #add_subdirectory( "externals/libusb" )
-#add_subdirectory( "externals/glm" )
-#add_subdirectory( "externals/assimp" )
+add_subdirectory( "externals/glm" )
+add_subdirectory( "externals/assimp" )
 
 #zlib
 # todo
@@ -83,20 +83,13 @@ add_subdirectory( "externals/rtmidi" )
 # SECTION: find externals
 ################################################################
 
-#
-# build-in header only
-#find_package( Stb REQUIRED )
-#find_package( RapidXml REQUIRED )
-#find_package( RapidJson REQUIRED )
-
-#
 # optionals
 #find_package( OpenCtm )
 find_package( Fmod ) 
 
 if( SNAKEOIL_TARGET_OS_WIN )
     find_package( XInput REQUIRED )
-    #find_package( XAudio2 REQUIRED )
+    find_package( XAudio2 REQUIRED )
  #   find_package( Wddk REQUIRED )
 elseif( SNAKEOIL_OS_LINUX )
 endif()
